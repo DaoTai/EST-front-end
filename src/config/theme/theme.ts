@@ -12,9 +12,6 @@ const theme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        primary: {
-          main: "#333",
-        },
         gradient: {
           main: "#555",
         },
@@ -23,6 +20,15 @@ const theme = extendTheme({
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontSize: 17,
+        },
+      },
+    },
   },
 });
 
