@@ -12,8 +12,8 @@ const theme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
-        gradient: {
-          main: "#555",
+        text: {
+          primary: "#35414c",
         },
       },
     },
@@ -21,11 +21,40 @@ const theme = extendTheme({
   typography: {
     fontFamily: roboto.style.fontFamily,
   },
+
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           fontSize: 17,
+          padding: 8,
+          textTransform: "initial",
+        },
+      },
+      variants: [
+        {
+          props: { variant: "white" },
+          style: {
+            backgroundColor: "#fff",
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(255,255,255,0.8)",
+            },
+          },
+        },
+      ],
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: 17,
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          fontSize: 16,
         },
       },
     },

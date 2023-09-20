@@ -1,28 +1,53 @@
-import Stack from "@mui/material/Stack";
+"use client";
+import { SignInSchema } from "@/utils/validation/auth";
+import EmailIcon from "@mui/icons-material/Email";
+import PasswordIcon from "@mui/icons-material/Password";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import EmailIcon from "@mui/icons-material/Email";
+import { useFormik } from "formik";
 import Link from "next/link";
-import InputAdornment from "@mui/material/InputAdornment";
-import PasswordIcon from "@mui/icons-material/Password";
+import { signIn } from "next-auth/react";
+import ProviderButtons from "../_components/ProviderAuthButtons";
 const SignIn = () => {
+  const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: SignInSchema,
+    onSubmit: (values) => {
+      console.log("values: ", values);
+      signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: true,
+        callbackUrl: "/",
+      });
+    },
+  });
+
   return (
     <>
-      <Box component={"form"} width={"100%"}>
+      <Box component={"form"} width={"100%"} onSubmit={handleSubmit}>
         <Typography variant="h2" textAlign={"center"} gutterBottom>
-          Đăng nhập
+          Sign in
         </Typography>
-
         <TextField
-          type="email"
+          fullWidth
           label="Email"
           name="email"
+          type="email"
+          placeholder="example@gmail.com"
           variant="outlined"
-          fullWidth
           margin="normal"
-          required
+          value={values.email}
+          error={!!(touched.email && errors.email)}
+          helperText={touched.email && errors.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -39,7 +64,11 @@ const SignIn = () => {
           variant="outlined"
           fullWidth
           margin="normal"
-          required
+          value={values.password}
+          error={!!(touched.password && errors.password)}
+          helperText={touched.password && errors.password}
+          onChange={handleChange}
+          onBlur={handleBlur}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -49,13 +78,26 @@ const SignIn = () => {
           }}
         />
 
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 1, mb: 1, p: 1.5 }}>
-          Đăng nhập
+        <Button
+          fullWidth
+          disabled={!isValid}
+          type="submit"
+          variant="contained"
+          sx={{ mt: 1, mb: 1 }}
+        >
+          Sign in
         </Button>
       </Box>
+
+      {/* Next-Auth Provider */}
+      <ProviderButtons />
+
+      {/* Forgot passwrod */}
       <Box mt={1} mb={1} width={"100%"} textAlign={"center"}>
-        <Link href={"/forget-password"}>Quên mật khẩu ?</Link>
+        <Link href={"/forget-password"}>Forgot password ?</Link>
       </Box>
+
+      {/* Sign-up */}
       <Button
         variant="contained"
         color="success"
@@ -72,7 +114,7 @@ const SignIn = () => {
           },
         }}
       >
-        <Link href={"/sign-up"}> Đăng ký</Link>
+        <Link href={"/sign-up"}>Sign up</Link>
       </Button>
     </>
   );

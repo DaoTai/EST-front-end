@@ -24,7 +24,7 @@ export default function Home() {
       <Button variant="contained" onClick={() => signIn()}>
         Sign in
       </Button>
-      <Button variant="contained" onClick={() => signOut()}>
+      <Button variant="contained" onClick={() => signOut({ callbackUrl: "/sign-in" })}>
         Sign out
       </Button>
       <Stack flexDirection={"row"}>
