@@ -35,7 +35,7 @@ const theme = extendTheme({
         {
           props: { variant: "white" },
           style: {
-            backgroundColor: "#fff",
+            backgroundColor: "pink",
             color: "text.primary",
             "&:hover": {
               backgroundColor: "rgba(255,255,255,0.8)",

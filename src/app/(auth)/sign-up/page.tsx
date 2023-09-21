@@ -35,6 +35,7 @@ const SignUp = () => {
       onSubmit: async (values) => {
         if (captcha === captchaResult.current) {
           await signUp(values);
+          setCaptcha("");
         } else {
           toast.error("Captcha is unmatched");
         }
@@ -152,7 +153,7 @@ const SignUp = () => {
 
           {/* Send captcha */}
           <Button
-            disabled={!!errors.email || !values.email || isSending}
+            disabled={!!errors.email || !values.email || isSending || isSubmitting}
             variant="outlined"
             sx={{ flex: "1 1 auto" }}
             onClick={handleSendCaptcha}

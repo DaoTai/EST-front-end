@@ -1,4 +1,5 @@
 "use client";
+import { signIn as signInService } from "@/services/auth";
 import { SignInSchema } from "@/utils/validation/auth";
 import EmailIcon from "@mui/icons-material/Email";
 import PasswordIcon from "@mui/icons-material/Password";
@@ -8,24 +9,33 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import ProviderButtons from "../_components/ProviderAuthButtons";
 const SignIn = () => {
+  const { data: session, update } = useSession();
+  const router = useRouter();
   const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "daoductai24102001@gmail.com",
+      password: "123123",
     },
     validationSchema: SignInSchema,
-    onSubmit: (values) => {
-      console.log("values: ", values);
-      signIn("credentials", {
+    onSubmit: async (values) => {
+      // Nếu dùng Credentials Provider thì ko hiển thị đc toast
+      // Nếu dùng axios thì ko update đc session => Chỉ update đc session khi session !== null
+
+      const res = await signInService({
         email: values.email,
         password: values.password,
-        redirect: true,
-        callbackUrl: "/",
       });
+      res &&
+        (await update({
+          greeting: "123",
+        }));
+
+      // router.push("/");
     },
   });
 
@@ -86,6 +96,14 @@ const SignIn = () => {
           sx={{ mt: 1, mb: 1 }}
         >
           Sign in
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{ mt: 1, mb: 1 }}
+          onClick={() => console.log("Session: ", session)}
+        >
+          Log session
         </Button>
       </Box>
 

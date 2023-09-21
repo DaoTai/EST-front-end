@@ -7,19 +7,22 @@ import Button from "@mui/material/Button";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Avatar from "@mui/material/Avatar";
+import { useEffect } from "react";
 
 export default function Home() {
   const { data: session } = useSession();
   const { mode, setMode } = useColorScheme();
-
+  useEffect(() => {
+    console.log("Session: ", session);
+  }, [session]);
   return (
     <Container>
-      <Typography variant="h1">Hello {session?.user?.name}</Typography>
-      {session?.user?.image && (
-        <Image alt="avatar" src={session?.user.image} width={200} height={200} quality={100} />
+      <Typography variant="h1">Hello {session?.user?.fullName}</Typography>
+      {session?.user?.avatar && (
+        <Image alt="avatar" src={session?.user.avatar} width={200} height={200} quality={100} />
       )}
-      {session?.user?.image && (
-        <Avatar src={session?.user.image} sx={{ width: 300, height: 300 }} />
+      {session?.user?.avatar && (
+        <Avatar src={session?.user.avatar} sx={{ width: 300, height: 300 }} />
       )}
       <Button variant="contained" onClick={() => signIn()}>
         Sign in
