@@ -2,7 +2,6 @@ import { SignInSchema, SignUpSchema } from "@/utils/validation/auth";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { InferType } from "yup";
-import "react-toastify/dist/ReactToastify.css";
 import { SERVER_URI } from "@/utils/constants/common";
 
 type ISignUpWithProvider = {

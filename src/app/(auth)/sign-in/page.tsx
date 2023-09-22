@@ -1,5 +1,4 @@
 "use client";
-import { signIn as signInService } from "@/services/auth";
 import { SignInSchema } from "@/utils/validation/auth";
 import EmailIcon from "@mui/icons-material/Email";
 import PasswordIcon from "@mui/icons-material/Password";
@@ -9,9 +8,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import ProviderButtons from "../_components/ProviderAuthButtons";
 const SignIn = () => {
   const { data: session, update } = useSession();
@@ -23,19 +23,17 @@ const SignIn = () => {
     },
     validationSchema: SignInSchema,
     onSubmit: async (values) => {
-      // Nếu dùng Credentials Provider thì ko hiển thị đc toast
+      // Nếu dùng Credentials Provider thì ko hiển thị đc toast hiển thị res từ server
       // Nếu dùng axios thì ko update đc session => Chỉ update đc session khi session !== null
 
-      const res = await signInService({
+      const login = await signIn("credentials", {
         email: values.email,
         password: values.password,
+        redirect: false,
       });
-      res &&
-        (await update({
-          greeting: "123",
-        }));
+      console.log("Login: ", login);
 
-      // router.push("/");
+      login?.error ? toast.error("Sign in failed") : router.push("/");
     },
   });
 
@@ -96,14 +94,6 @@ const SignIn = () => {
           sx={{ mt: 1, mb: 1 }}
         >
           Sign in
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{ mt: 1, mb: 1 }}
-          onClick={() => console.log("Session: ", session)}
-        >
-          Log session
         </Button>
       </Box>
 
