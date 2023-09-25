@@ -1,15 +1,15 @@
 import React from "react";
 import { getServerSession } from "next-auth";
-import Container from "./_components/Container";
 import { redirect } from "next/navigation";
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession();
-
   if (session) {
-    redirect("/");
-  }
+    return <div>{children}</div>;
+  } else {
+    console.log("You are not authorize");
 
-  return <Container>{children}</Container>;
+    redirect("/sign-in");
+  }
 };
 
 export default RootLayout;

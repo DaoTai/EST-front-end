@@ -31,7 +31,6 @@ const SignIn = () => {
         password: values.password,
         redirect: false,
       });
-      console.log("Login: ", login);
 
       login?.error ? toast.error("Sign in failed") : router.push("/");
     },
@@ -102,7 +101,9 @@ const SignIn = () => {
 
       {/* Forgot passwrod */}
       <Box mt={1} mb={1} width={"100%"} textAlign={"center"}>
-        <Link href={"/forget-password"}>Forgot password ?</Link>
+        <Link href={"/forgot-password"} prefetch={false}>
+          Forgot password ?
+        </Link>
       </Box>
 
       {/* Sign-up */}

@@ -1,5 +1,9 @@
-import { checkExist, signIn } from "@/services/auth";
-import { SERVER_URI } from "@/utils/constants/common";
+import {
+  checkExistEmailAndProvider,
+  signIn,
+  signInByFetch,
+  signUpWithFetch,
+} from "@/services/auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
@@ -24,16 +28,7 @@ const handler = NextAuth({
         const email = credentials?.email;
         const password = credentials?.password;
         if (!email || !password) return null;
-        const res = await fetch(SERVER_URI + "/auth/sign-in", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        });
+        const res = await signInByFetch({ email, password });
 
         if (res.ok) {
           const user = await res.json();
@@ -47,17 +42,16 @@ const handler = NextAuth({
 
   callbacks: {
     async jwt({ token, account, user, trigger, session }) {
-      console.log("======JWT====");
-
       if (trigger === "update") {
-        console.log("Update: ", session);
-
         token.user = session;
       }
 
       if (account?.provider && account?.provider !== "credentials" && user) {
         try {
-          const existUser = await checkExist(user?.email as string, account?.provider as string);
+          const existUser = await checkExistEmailAndProvider(
+            user?.email as string,
+            account?.provider as string
+          );
 
           if (existUser) {
             const loginUser = await signIn({
@@ -66,25 +60,17 @@ const handler = NextAuth({
             });
             if (loginUser) token.user = loginUser;
           } else {
-            const res = await fetch(SERVER_URI + "/auth/sign-up", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email: user.email as string,
-                avatar: user.image as string,
-                fullName: user.name as string,
-                provider: account.provider as string,
-              }),
+            const createdUser = await signUpWithFetch({
+              email: user.email as string,
+              avatar: user.image as string,
+              fullName: user.name as string,
+              provider: account.provider as string,
             });
-            const createdUser = await res.json();
             if (createdUser && createdUser.provider) {
               const loginUser = await signIn({
                 email: createdUser.email,
                 provider: createdUser.provider,
               });
-
               if (loginUser) token.user = loginUser;
             }
           }
@@ -97,10 +83,7 @@ const handler = NextAuth({
       return payload;
     },
 
-    //
     async session({ session, token, newSession }) {
-      console.log("newSession: ", session);
-
       if (token.user) {
         session.user = token.user;
       }
