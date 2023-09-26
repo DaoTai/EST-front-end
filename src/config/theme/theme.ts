@@ -15,6 +15,25 @@ const theme = extendTheme({
         text: {
           primary: "#35414c",
         },
+        gradient: {
+          main: "linear-gradient(to right, #58a9eb, #cce5eb)",
+        },
+        backgroundGradient: {
+          main: "linear-gradient(to right, #58a9eb, #cce5eb)",
+        },
+      },
+    },
+    dark: {
+      palette: {
+        text: {
+          primary: "#fff",
+        },
+        gradient: {
+          main: "linear-gradient(to right, #58a9eb, #cce5eb)",
+        },
+        backgroundGradient: {
+          main: "#000",
+        },
       },
     },
   },
@@ -35,8 +54,8 @@ const theme = extendTheme({
         {
           props: { variant: "white" },
           style: {
-            backgroundColor: "pink",
-            color: "text.primary",
+            backgroundColor: "white",
+            color: "#35414c",
             "&:hover": {
               backgroundColor: "rgba(255,255,255,0.8)",
             },

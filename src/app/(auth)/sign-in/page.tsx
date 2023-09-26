@@ -7,14 +7,14 @@ import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import useTheme from "@mui/material/styles/useTheme";
 import { useFormik } from "formik";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ProviderButtons from "../_components/ProviderAuthButtons";
 const SignIn = () => {
-  const { data: session, update } = useSession();
   const router = useRouter();
   const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
     initialValues: {
@@ -87,9 +87,9 @@ const SignIn = () => {
 
         <Button
           fullWidth
+          variant="contained"
           disabled={!isValid}
           type="submit"
-          variant="contained"
           sx={{ mt: 1, mb: 1 }}
         >
           Sign in
@@ -100,7 +100,7 @@ const SignIn = () => {
       <ProviderButtons />
 
       {/* Forgot passwrod */}
-      <Box mt={1} mb={1} width={"100%"} textAlign={"center"}>
+      <Box mt={1.5} mb={1} width={"100%"} textAlign={"center"}>
         <Link href={"/forgot-password"} prefetch={false}>
           Forgot password ?
         </Link>
@@ -108,15 +108,14 @@ const SignIn = () => {
 
       {/* Sign-up */}
       <Button
-        variant="contained"
-        color="success"
+        variant="outlined"
+        color="info"
         fullWidth
         sx={{
           mt: 1,
           mb: 1,
           padding: 0,
           a: {
-            color: "white",
             padding: 1.5,
             display: "block",
             width: "100%",

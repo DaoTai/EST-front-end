@@ -177,7 +177,7 @@ const SignUp = () => {
       {/* Navigate to sign-in */}
       <Button
         fullWidth
-        variant="text"
+        variant="outlined"
         color="info"
         sx={{ mt: 2, textDecoration: "underline" }}
         onClick={() => router.push("/sign-in")}

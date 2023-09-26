@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession();
+  console.log("Sesion: ", session);
+
   if (session) {
     return <div>{children}</div>;
   } else {

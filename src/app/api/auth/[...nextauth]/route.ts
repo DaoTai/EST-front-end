@@ -80,6 +80,7 @@ const handler = NextAuth({
       }
 
       const payload = { ...token, ...user };
+
       return payload;
     },
 

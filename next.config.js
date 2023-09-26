@@ -7,6 +7,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  experimental: {
+    appDir: true,
+  },
   //To speed up development time and NextJS compilation time when using MUI, we have to use the modularizeImports
   modularizeImports: {
     "@mui/material": {

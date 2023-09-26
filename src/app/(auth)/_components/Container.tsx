@@ -1,13 +1,17 @@
 "use client";
-
+import Logo from "@/assets/icons/logo.svg";
 import Grid from "@mui/material/Grid";
+import { Theme, useColorScheme } from "@mui/material/styles";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import Logo from "@/assets/icons/logo.svg";
 import React from "react";
+
+const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"));
 const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
   const theme = useTheme();
+  const { mode } = useColorScheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
@@ -16,7 +20,9 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
       justifyContent="center"
       sx={{
         height: "100vh",
-        backgroundImage: "linear-gradient(to right, #58a9eb, #cce5eb)",
+        background: (them: Theme) => {
+          return them.palette.backgroundGradient.main;
+        },
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -25,7 +31,7 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
           textDecoration: "none",
           fontSize: 17,
           padding: 1,
-          color: "#1877f2",
+          color: "info.main",
           "&:hover": {
             textDecoration: "underline",
           },
@@ -39,8 +45,6 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
         md={6}
         lg={4}
         borderRadius={2}
-        ml={1}
-        mr={1}
         p={2}
         display={"flex"}
         flexDirection={"column"}
@@ -57,6 +61,9 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
         }}
       >
         <Image src={Logo} alt="logo" width={80} height={80} style={{ filter: "contrast(1.5)" }} />
+        <ToggleModeTheme
+          sx={{ position: "absolute", top: 8, right: 8, transform: "translate(-8px, 0px)" }}
+        />
         {children}
       </Grid>
     </Grid>
