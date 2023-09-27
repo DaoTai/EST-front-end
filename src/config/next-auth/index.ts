@@ -9,6 +9,7 @@ import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { toast } from "react-toastify";
 
 export const options: AuthOptions = {
   providers: [
@@ -31,7 +32,6 @@ export const options: AuthOptions = {
         const password = credentials?.password;
         if (!email || !password) return null;
         const res = await signInByFetch({ email, password });
-
         if (res.ok) {
           const user = await res.json();
           return { user } as any;
@@ -78,6 +78,7 @@ export const options: AuthOptions = {
           }
         } catch (error) {
           Promise.reject(error);
+          throw new Error(error as any);
         }
       }
 
@@ -87,11 +88,12 @@ export const options: AuthOptions = {
     },
 
     async session({ session, token, newSession, user }) {
-      session.user = token.user;
+      session = token.user as any;
       return session;
     },
   },
   pages: {
     signIn: "/sign-in",
+    error: "/auth/error",
   },
 };

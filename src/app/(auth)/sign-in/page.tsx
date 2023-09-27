@@ -26,13 +26,17 @@ const SignIn = () => {
       // Nếu dùng Credentials Provider thì ko hiển thị đc toast hiển thị res từ server
       // Nếu dùng axios thì ko update đc session => Chỉ update đc session khi session !== null
 
-      const login = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
+      try {
+        const login = await signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          redirect: false,
+        });
 
-      login?.error ? toast.error("Sign in failed") : router.push("/");
+        login?.error ? toast.error("Sign in failed") : router.push("/");
+      } catch (err) {
+        console.log("Erorr: ", err);
+      }
     },
   });
 

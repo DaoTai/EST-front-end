@@ -11,11 +11,11 @@ const ToggleModeTheme = ({ sx }: { sx?: SxProps }) => {
 
   return (
     <Fab
-      size="medium"
+      size="small"
       sx={{ ...sx, background: theme.palette.gradient.main }}
       onClick={() => setMode(mode === "light" ? "dark" : "light")}
     >
-      {mode === "light" ? <LightModeIcon /> : <DarkModeIcon />}
+      {mode === "light" ? <LightModeIcon sx={{ color: "#ffff00" }} /> : <DarkModeIcon />}
     </Fab>
   );
 };

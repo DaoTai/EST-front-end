@@ -32,7 +32,7 @@ const theme = extendTheme({
           main: "linear-gradient(to right, #58a9eb, #cce5eb)",
         },
         backgroundGradient: {
-          main: "#000",
+          main: "rgb(32,35,42)",
         },
       },
     },

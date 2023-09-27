@@ -5,10 +5,9 @@ import { options } from "@/config/next-auth";
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);
-  console.log("Sesion user: ", session);
 
   if (session) {
-    return <div>{children}</div>;
+    return <>{children}</>;
   } else {
     redirect("/sign-in");
   }
