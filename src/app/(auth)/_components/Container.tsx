@@ -20,9 +20,7 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
       justifyContent="center"
       sx={{
         height: "100vh",
-        background: (them: Theme) => {
-          return them.palette.backgroundGradient.main;
-        },
+        background: theme.palette.backgroundGradient.main,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
