@@ -7,6 +7,9 @@ declare module "@mui/material/styles" {
     backgroundGradient: {
       main: string;
     };
+    white: {
+      main: string;
+    };
   }
   interface PaletteOptions {
     gradient?: {
@@ -15,7 +18,18 @@ declare module "@mui/material/styles" {
     backgroundGradient?: {
       main: string;
     };
+    white: {
+      main: string;
+    };
   }
+
+  // interface TypographyVariants {
+  //   title: React.CSSProperties;
+  // }
+
+  // interface TypographyVariantsOptions {
+  //   title?: React.CSSProperties;
+  // }
 }
 
 declare module "@mui/material/Button" {

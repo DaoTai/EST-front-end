@@ -14,8 +14,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeRegistry>
           <NextAuthProvider>{children}</NextAuthProvider>
+          <ToastContainer />
         </ThemeRegistry>
-        <ToastContainer />
       </body>
     </html>
   );

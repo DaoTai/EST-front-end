@@ -1,11 +1,8 @@
 "use client";
-import { useState } from "react";
 import createCache from "@emotion/cache";
-import { useServerInsertedHTML } from "next/navigation";
 import { CacheProvider } from "@emotion/react";
-import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import theme from "./theme";
+import { useServerInsertedHTML } from "next/navigation";
+import { useState } from "react";
 
 export default function ThemeRegistry(props: { options: any; children: any }) {
   const { options, children } = props;
@@ -50,12 +47,5 @@ export default function ThemeRegistry(props: { options: any; children: any }) {
     );
   });
 
-  return (
-    <CacheProvider value={cache}>
-      <CssVarsProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </CssVarsProvider>
-    </CacheProvider>
-  );
+  return <CacheProvider value={cache}>{children}</CacheProvider>;
 }

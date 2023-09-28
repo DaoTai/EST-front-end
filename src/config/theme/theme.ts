@@ -1,6 +1,6 @@
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
-
+import { blue } from "@mui/material/colors";
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
   style: ["normal", "italic"],
@@ -13,13 +13,16 @@ const theme = extendTheme({
     light: {
       palette: {
         text: {
-          primary: "#35414c",
+          primary: "#292929",
         },
         gradient: {
-          main: "linear-gradient(to right, #58a9eb, #cce5eb)",
+          main: "linear-gradient(to right, #58a9eb, #aa99ff)",
         },
         backgroundGradient: {
-          main: "linear-gradient(to right, #58a9eb, #cce5eb)",
+          main: "linear-gradient(to right, #58a9eb, #aa99ff)",
+        },
+        white: {
+          main: "#fff",
         },
       },
     },
@@ -29,9 +32,12 @@ const theme = extendTheme({
           primary: "#fff",
         },
         gradient: {
-          main: "linear-gradient(to right, #58a9eb, #cce5eb)",
+          main: "linear-gradient(to right, #58a9eb, #aa99ff)",
         },
         backgroundGradient: {
+          main: "rgb(32,35,42)",
+        },
+        white: {
           main: "rgb(32,35,42)",
         },
       },
@@ -62,6 +68,13 @@ const theme = extendTheme({
           },
         },
       ],
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          caretColor: blue[700],
+        },
+      },
     },
     MuiInputLabel: {
       styleOverrides: {
