@@ -16,6 +16,7 @@ const Navbar = () => {
       boxShadow={2}
       flexShrink={0}
       sx={{
+        bgcolor: "white.main",
         ".MuiButtonBase-root": {
           position: "relative",
           transition: "all ease 0.2s",
@@ -29,7 +30,7 @@ const Navbar = () => {
         },
       }}
     >
-      <IconButton LinkComponent={Link} href="/profile">
+      <IconButton LinkComponent={Link} href="/">
         <HomeIcon fontSize="large" />
         <Typography variant="subtitle1">About</Typography>
       </IconButton>

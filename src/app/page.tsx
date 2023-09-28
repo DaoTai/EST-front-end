@@ -1,17 +1,25 @@
-import Header from "@/components/common/Header";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { Footer, Slider } from "@/components/about-components";
 import MainLayout from "@/components/common/MainLayout";
 import Navbar from "@/components/common/Navbar";
-import { Paper, Stack } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import { Divider } from "@mui/material";
 
 export default function Home() {
   return (
     <MainLayout>
       <Stack flexDirection={"row"} minHeight={"100vh"}>
         <Navbar />
-        <Paper sx={{ flex: "1 1" }}>
-          <Typography variant="h1">EST Edu</Typography>
-        </Paper>
+        <Box sx={{ flex: "1 1", bgcolor: "white.main" }}>
+          <Divider>
+            <Typography variant="h1" gutterBottom>
+              EST Edu
+            </Typography>
+          </Divider>
+          <Slider />
+          <Footer />
+        </Box>
       </Stack>
     </MainLayout>
   );
