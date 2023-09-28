@@ -1,6 +1,6 @@
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
-export const MyList = styled(List)(({ theme }) => ({
+const MyList = styled(List)(({ theme }) => ({
   ".MuiListItem-root": {
     cursor: "pointer",
     display: "flex",
@@ -15,3 +15,5 @@ export const MyList = styled(List)(({ theme }) => ({
     borderRadius: 1,
   },
 }));
+
+export default MyList;

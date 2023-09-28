@@ -1,5 +1,4 @@
 "use client";
-import Logo from "@/assets/icons/logo.svg";
 import Grid from "@mui/material/Grid";
 import { Theme, useColorScheme } from "@mui/material/styles";
 import useTheme from "@mui/material/styles/useTheme";
@@ -58,7 +57,13 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
           },
         }}
       >
-        <Image src={Logo} alt="logo" width={80} height={80} style={{ filter: "contrast(1.5)" }} />
+        <Image
+          src="/logo.svg"
+          alt="logo"
+          width={80}
+          height={80}
+          style={{ filter: "contrast(1.5)" }}
+        />
         <ToggleModeTheme
           sx={{ position: "absolute", top: 8, right: 8, transform: "translate(-8px, 0px)" }}
         />

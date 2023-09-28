@@ -16,7 +16,7 @@ const Logo = () => {
       }}
     >
       <Link href="/">
-        <Image src="/logo.png" alt="logo" width={48} height={48} />
+        <Image src="/logo.svg" alt="logo" width={48} height={48} />
       </Link>
     </Box>
   );

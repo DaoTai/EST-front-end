@@ -7,8 +7,16 @@ import SearchBar from "./SearchBar";
 import { Box, Stack } from "@mui/material";
 const Header = () => {
   return (
-    <AppBar position="fixed" sx={{ maxHeight: 80 }}>
-      <Toolbar sx={{ pt: 1, pb: 1, bgcolor: "white.main", justifyContent: "space-between" }}>
+    <AppBar position="fixed" sx={{ height: 80 }}>
+      <Toolbar
+        sx={{
+          height: "100%",
+          pt: 1,
+          pb: 1,
+          bgcolor: "white.main",
+          justifyContent: "space-between",
+        }}
+      >
         <Stack flexDirection={"row"} alignItems={"center"}>
           <Logo />
           <Title />

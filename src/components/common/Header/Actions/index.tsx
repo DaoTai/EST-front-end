@@ -1,5 +1,5 @@
 "use client";
-import { MyList } from "@/components/custom/MyList";
+import { MyList } from "@/components/custom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -207,7 +207,7 @@ const Actions = () => {
     );
   }
   return (
-    <Stack flexDirection={"row"} alignItems={"center"} gap={1} ml={"auto"}>
+    <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
       <ToggleModeTheme />
       <Button variant="contained" onClick={() => signIn()}>
         Sign in
