@@ -1,13 +1,8 @@
-import React from "react";
+import { Box, Paper } from "@mui/material";
+import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, Button, Paper } from "@mui/material";
 import Link from "next/link";
 const AmountInfor = () => {
   return (
