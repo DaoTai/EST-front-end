@@ -78,7 +78,7 @@ const Slider = () => {
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
               backgroundSize: "cover",
-              height: "65vh",
+              height: "70vh",
               width: "100%",
               filter: "contrast(1.3) brightness(1.1)",
             }}
@@ -113,7 +113,7 @@ const Slider = () => {
           },
         }}
       >
-        <Grid container spacing={2}>
+        <Grid container spacing={2} rowSpacing={3}>
           <Grid item lg={5} md={12}>
             {quotes.map(({ title }, i) => (
               <Typography key={i} variant="h1" textAlign="right">
@@ -121,7 +121,7 @@ const Slider = () => {
               </Typography>
             ))}
           </Grid>
-          <Grid item lg={7} md={12} display="flex">
+          <Grid item lg={7} md={12} display="flex" justifyContent="center" width="100%">
             {quotes.map(({ content }, i) => (
               <Grow key={i} in={i + 1 === index} timeout={1500}>
                 <Typography

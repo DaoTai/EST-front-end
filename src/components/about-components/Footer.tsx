@@ -32,7 +32,7 @@ export const business: { name: string; value: JSX.Element | string; icon: any }[
     value: "HaNoi, VietNam",
   },
   {
-    name: "© Copy right by",
+    name: "Copy right by",
     icon: <CopyrightIcon color="primary" />,
     value: <b>DaoTai</b>,
   },
@@ -78,26 +78,36 @@ const Footer = () => {
   return (
     <>
       <Divider />
-      <Grid container boxShadow={6} rowSpacing={2} pt={1} pb={4}>
+      <Grid
+        container
+        boxShadow={6}
+        rowSpacing={2}
+        pt={1}
+        pb={4}
+        sx={{
+          a: {
+            textDecoration: "none",
+          },
+          ".MuiTypography-root": {
+            fontWeight: 500,
+            lineHeight: 1.2,
+            width: "fit-content",
+          },
+        }}
+      >
         {/* Infomation business */}
         <Grid
           item
           lg={3}
           md={6}
-          xs={12}
+          xs={6}
           display="flex"
           flexDirection={"column"}
-          gap={1}
+          gap={2}
           p={1}
           overflow={"hidden"}
         >
-          <Typography
-            variant="h4"
-            fontWeight={500}
-            className="text-gradient"
-            sx={{ width: "fit-content" }}
-            lineHeight={1.2}
-          >
+          <Typography variant="h4" className="text-gradient" gutterBottom>
             EST Edu
           </Typography>
 
@@ -116,20 +126,14 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={12}
+          xs={6}
           display="flex"
           flexDirection={"column"}
-          gap={1}
+          gap={2}
           p={1}
           overflow={"hidden"}
         >
-          <Typography
-            variant="h4"
-            fontWeight={500}
-            className="text-gradient"
-            sx={{ width: "fit-content" }}
-            lineHeight={1.2}
-          >
+          <Typography variant="h4" className="text-gradient" gutterBottom>
             Social Media
           </Typography>
 
@@ -149,20 +153,14 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={12}
+          xs={6}
           display="flex"
           flexDirection={"column"}
-          gap={1}
+          gap={2}
           p={1}
           overflow={"hidden"}
         >
-          <Typography
-            variant="h4"
-            fontWeight={500}
-            className="text-gradient"
-            sx={{ width: "fit-content" }}
-            lineHeight={1.2}
-          >
+          <Typography variant="h4" className="text-gradient" gutterBottom>
             About
           </Typography>
 
@@ -187,20 +185,14 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={12}
+          xs={6}
           display="flex"
           flexDirection={"column"}
-          gap={1}
+          gap={2}
           p={1}
           overflow={"hidden"}
         >
-          <Typography
-            variant="h4"
-            fontWeight={500}
-            className="text-gradient"
-            sx={{ width: "fit-content" }}
-            lineHeight={1.2}
-          >
+          <Typography variant="h4" className="text-gradient" gutterBottom>
             Donate
           </Typography>
 

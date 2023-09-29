@@ -131,7 +131,7 @@ const Actions = () => {
             </Stack>
 
             {/* List action */}
-            <MyList>
+            <MyList sx={{ pb: 0 }}>
               <Divider light />
               <ListItem component={Link} href="/profile" divider>
                 Profile

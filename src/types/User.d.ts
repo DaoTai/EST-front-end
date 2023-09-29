@@ -8,6 +8,10 @@ interface IUser {
   deleted: boolean;
   username: string;
   createdAt: string;
+  bio?: string;
+  dob?: string;
+  gender?: string;
+  school?: string;
   updatedAt: string;
   accessToken?: string;
   provider?: string;

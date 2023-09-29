@@ -1,12 +1,10 @@
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import HomeIcon from "@mui/icons-material/Home";
-import LaptopMacIcon from "@mui/icons-material/LaptopMac";
 import ComputerIcon from "@mui/icons-material/Computer";
+import HomeIcon from "@mui/icons-material/Home";
 import StoreIcon from "@mui/icons-material/Store";
-import React from "react";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import Link from "next/link";
-import { Typography } from "@mui/material";
 
 const Navbar = () => {
   return (

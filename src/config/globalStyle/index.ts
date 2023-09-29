@@ -3,6 +3,9 @@ export default {
   a: {
     color: blue[700],
   },
+  ".bg-gradient": {
+    background: "linear-gradient(to right, #58a9eb, #aa99ff)",
+  },
   ".text-gradient": {
     position: "relative",
     "&:before": {
