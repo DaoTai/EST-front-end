@@ -4,6 +4,7 @@ export enum MessageValidation {
   fullName = "Full name is invalid",
   password = "Password is at least 6 characters",
   noSpace = "Please do not use any spaces",
+  gender = "Gender is invalid",
 }
 
 export const minCharacterValidator = (field: string, min: number): string => {
@@ -15,3 +16,6 @@ export const maxCharacterValidator = (field: string, max: number): string => {
   if (max < 1) return "";
   return `${field} is at maximum ${max} ` + (max > 1 ? "characters" : "character");
 };
+
+export const notMatchValidator = (field: string, compareField: string) =>
+  field + "unmatched with" + compareField;

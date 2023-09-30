@@ -4,7 +4,7 @@ interface IUser {
   roles: string[];
   fullName: string;
   avatar: string;
-  favouriteProramingLanguages: any[];
+  favouriteProrammingLanguages: string[];
   deleted: boolean;
   username: string;
   createdAt: string;
@@ -12,6 +12,7 @@ interface IUser {
   dob?: string;
   gender?: string;
   school?: string;
+  city?: string;
   updatedAt: string;
   accessToken?: string;
   provider?: string;

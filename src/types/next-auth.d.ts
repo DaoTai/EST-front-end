@@ -5,7 +5,7 @@ declare module "next-auth" {
 }
 
 declare module "next-auth/jwt" {
-  interface JWT {
-    user: IUser;
-  }
+  // interface JWT {
+  //   user: IUser;
+  // }
 }
