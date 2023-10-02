@@ -33,7 +33,8 @@ export const EditPasswordSchema = Yup.object().shape({
     .trim()
     .required(MessageValidation.required)
     .min(6, minCharacterValidator("New password", 6))
-    .matches(/^\S*$/, MessageValidation.noSpace),
+    .matches(/^\S*$/, MessageValidation.noSpace)
+    .notOneOf([Yup.ref("currentPassword")], MessageValidation.newPassword),
   confirmPassword: Yup.string()
     .required()
     .oneOf([Yup.ref("newPassword")], notMatchValidator("New password", "Password")),

@@ -1,10 +1,16 @@
-export const iniEditProfile = {
+export const initEditProfile = {
   fullName: "",
   username: "",
   bio: "",
-  dob: "",
+  dob: null,
   gender: "",
   school: "",
   city: "",
   favouriteProramingLanguages: [],
+};
+
+export const initChangePwd = {
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
 };

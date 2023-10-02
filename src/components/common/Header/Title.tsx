@@ -16,7 +16,7 @@ const Title = () => {
           fontWeight={500}
           color="text.primary"
           letterSpacing={2}
-          className="text-gradient"
+          className="underline-gradient"
           sx={{ ml: 1 }}
         >
           EST Edu

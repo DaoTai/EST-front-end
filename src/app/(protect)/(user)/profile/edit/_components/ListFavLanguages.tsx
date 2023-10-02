@@ -1,42 +1,59 @@
-import { Button, Chip, Fab, IconButton, Stack, TextField } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TextField from "@mui/material/TextField";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AddIcon from "@mui/icons-material/Add";
-import { ChangeEvent, useState } from "react";
+import { useState, useRef } from "react";
 
-const ListFavProgrammingLanguages = () => {
-  const [languages, setLanguages] = useState<string[]>(["Javascript", "Python", "C++", "HTML"]);
+const ListFavProgrammingLanguages = ({
+  value = [],
+  name,
+  setFieldValue,
+}: {
+  value: string[];
+  name: string;
+  setFieldValue: (field: string, value: string[]) => void;
+}) => {
   const [newLang, setNewLang] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
+  // Delete lang
   const handleDeleteLanguage = (lang: string) => {
-    const newLangs = languages.filter((oldLang) => oldLang !== lang);
-    setLanguages(newLangs);
+    const newLangs = value.filter((oldLang) => oldLang !== lang);
+    setFieldValue(name, newLangs);
   };
 
-  const handleAddLang = () => {
-    if (newLang.trim() && !languages.includes(newLang.trim()))
-      setLanguages((prev) => [...prev, newLang.trim()]);
+  // Add lang
+  const handleAddLanguage = () => {
+    if (newLang.trim() && !value?.includes(newLang.trim()))
+      setFieldValue(name, [...value, newLang.trim()]);
     setNewLang("");
+    inputRef.current?.focus();
   };
 
   return (
     <FormControl fullWidth>
-      <FormLabel>Love programming languages</FormLabel>
-      <Stack flexDirection="row" mt={1} gap={2} flexWrap={"wrap"}>
-        {languages.map((lang, i) => (
-          <Chip
-            key={i}
-            label={lang}
-            className="bg-gradient"
-            onDelete={() => handleDeleteLanguage(lang)}
-          />
-        ))}
-      </Stack>
+      <FormLabel>Love programming value</FormLabel>
+      {value.length > 0 && (
+        <Stack flexDirection="row" mt={1} gap={2} flexWrap={"wrap"}>
+          {value?.map((lang, i) => (
+            <Chip
+              key={i}
+              label={lang}
+              className="bg-gradient"
+              onDelete={() => handleDeleteLanguage(lang)}
+            />
+          ))}
+        </Stack>
+      )}
 
       <Accordion sx={{ ml: "auto", mt: 2 }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -50,17 +67,18 @@ const ListFavProgrammingLanguages = () => {
               spellCheck={false}
               size="small"
               placeholder="Enter new language"
+              ref={inputRef}
               value={newLang}
               onChange={(e) => setNewLang(e.target.value)}
               onKeyDown={(e) => {
-                e.key === "Enter" && handleAddLang();
+                e.key === "Enter" && handleAddLanguage();
               }}
             />
             <IconButton
               color="success"
-              disabled={languages.includes(newLang.trim())}
+              disabled={value?.includes(newLang.trim())}
               sx={{ border: 1 }}
-              onClick={handleAddLang}
+              onClick={handleAddLanguage}
             >
               <AddIcon />
             </IconButton>

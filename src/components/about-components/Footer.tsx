@@ -107,7 +107,7 @@ const Footer = () => {
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="text-gradient" gutterBottom>
+          <Typography variant="h4" className="underline-gradient" gutterBottom>
             EST Edu
           </Typography>
 
@@ -133,7 +133,7 @@ const Footer = () => {
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="text-gradient" gutterBottom>
+          <Typography variant="h4" className="underline-gradient" gutterBottom>
             Social Media
           </Typography>
 
@@ -160,7 +160,7 @@ const Footer = () => {
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="text-gradient" gutterBottom>
+          <Typography variant="h4" className="underline-gradient" gutterBottom>
             About
           </Typography>
 
@@ -192,7 +192,7 @@ const Footer = () => {
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="text-gradient" gutterBottom>
+          <Typography variant="h4" className="underline-gradient" gutterBottom>
             Donate
           </Typography>
 

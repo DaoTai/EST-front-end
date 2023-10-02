@@ -73,8 +73,8 @@ const Profile = async () => {
         <Box component={Link} href="/profile/edit">
           Edit
         </Box>
-        <Box component={Link} href="/profile">
-          Course
+        <Box component={Link} href="/profile/change-password">
+          Password
         </Box>
         <Box component={Link} href="/profile">
           Blog

@@ -1,72 +1,55 @@
 "use client";
 
-import { Box, Button, FormHelperText, Grid, Paper, TextField, TextFieldProps } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
-import dayjs, { Dayjs } from "dayjs";
-import { useEffect, useState } from "react";
-import { InferType } from "yup";
+import { FocusEvent, useEffect, useMemo } from "react";
 
-import { Heading, ListFavLanguages } from "./_components";
-import { iniEditProfile } from "@/utils/initialValues";
+import { initEditProfile } from "@/utils/initialValues";
 import { EditProfileSchema } from "@/utils/validation/profile";
-
-type NameField = InferType<typeof EditProfileSchema>;
-
-type CustomTextFieldProps = TextFieldProps & { name: keyof NameField };
-
-const textFields: CustomTextFieldProps[] = [
-  {
-    name: "fullName",
-    label: "Full name",
-    type: "text",
-    placeholder: "Enter your fullname",
-  },
-  {
-    name: "username",
-    label: "User name",
-    type: "text",
-    placeholder: "Enter your user name",
-  },
-  {
-    name: "city",
-    label: "City",
-    type: "text",
-    placeholder: "Enter your city",
-  },
-  {
-    name: "school",
-    label: "School",
-    type: "text",
-    placeholder: "Enter your school",
-  },
-];
+import { useRouter } from "next/navigation";
+import { Heading, ListFavLanguages } from "./_components";
+import { textFields } from "./_fields";
+import { MessageValidation } from "@/utils/constants/messages";
 
 const EditProfile = () => {
   const { data: user } = useSession();
+  const router = useRouter();
   const {
     values,
     errors,
     touched,
     setValues,
     setFieldValue,
+    setFieldError,
     handleChange,
     handleBlur,
     handleSubmit,
   } = useFormik({
-    initialValues: iniEditProfile,
+    initialValues: initEditProfile,
     validationSchema: EditProfileSchema,
     onSubmit: (values) => {
       console.log(values);
     },
   });
+
+  const isError = useMemo(() => {
+    return !!Object.keys(errors).length;
+  }, [errors, touched, values]);
 
   useEffect(() => {
     if (user) {
@@ -85,10 +68,33 @@ const EditProfile = () => {
     }
   }, [user]);
 
+  // On change date
+  const handleChangeDate = (value: any) => {
+    try {
+      if (!value) {
+        setFieldValue("dob", null);
+      } else {
+        const isValidYear = new Date().getFullYear() - dayjs(value).get("year") >= 0;
+        if (isValidYear) setFieldValue("dob", dayjs(value).toISOString());
+        else setFieldError("dob", MessageValidation.date);
+      }
+    } catch (error) {}
+  };
+
+  // On blur date
+  const handleBlurDate = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+    const isInvalid = new Date().getFullYear() - dayjs(e.target.value).get("year") >= 0;
+    if (isInvalid) setFieldError("dob", MessageValidation.date);
+  };
+
   return (
     <Paper sx={{ p: 1 }}>
       <Heading />
-      <Box component="form" onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+        onSubmit={handleSubmit}
+      >
         <Grid container spacing={2} mt={2} mb={2}>
           {/* Text field */}
           {textFields.map((props, i) => (
@@ -123,40 +129,22 @@ const EditProfile = () => {
           <Grid item sm={6} xs={12}>
             <FormControl fullWidth>
               <FormLabel sx={{ pb: 1 }}>Birthday</FormLabel>
-              {values?.dob ? (
-                <DatePicker
-                  value={dayjs(values?.dob)}
-                  onChange={(newValue) =>
-                    setFieldValue("dob", dayjs(newValue as any).format("YYYY-MM-DDTHH:mm:ss.SSSZ"))
-                  }
-                  slotProps={{
-                    textField: {
-                      name: "dob",
-                      error: !!errors.dob,
-                      helperText: errors.dob,
-                    },
-                  }}
-                />
-              ) : (
-                <DatePicker
-                  onAccept={(value) => console.log(value)}
-                  slotProps={{
-                    textField: {
-                      name: "dob",
-                      error: !!errors.dob,
-                      helperText: errors.dob,
-                      value: values.dob,
-                      onChange: (e) => {
-                        console.log(e.target.value);
-                        // setFieldValue(
-                        //   "dob",
-                        //   dayjs(e.target.value).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-                        // );
-                      },
-                    },
-                  }}
-                />
-              )}
+
+              <DatePicker
+                disableFuture
+                value={values?.dob ? dayjs(values?.dob) : null}
+                onError={(error: any) => setFieldError("dob", MessageValidation.date)}
+                onChange={handleChangeDate}
+                slotProps={{
+                  textField: {
+                    name: "dob",
+                    error: !!errors.dob,
+                    helperText: errors.dob,
+                    onBlur: handleBlurDate,
+                    onKeyDown: (e) => e.preventDefault(),
+                  },
+                }}
+              />
             </FormControl>
           </Grid>
 
@@ -173,17 +161,25 @@ const EditProfile = () => {
             />
           </Grid>
 
+          {/* List favourite programming languages */}
           <Grid item sm={6} xs={12}>
-            <ListFavLanguages />
+            <ListFavLanguages
+              name="favouriteProramingLanguages"
+              value={values.favouriteProramingLanguages}
+              setFieldValue={setFieldValue}
+            />
           </Grid>
         </Grid>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ ml: "auto", display: "block", mt: 2, pl: 3, pr: 3 }}
-        >
-          Save
-        </Button>
+
+        {/* Buttons */}
+        <Stack mt={2} flexDirection="row" justifyContent="space-between">
+          <Button variant="outlined" onClick={() => router.push("/profile/change-password")}>
+            Change password
+          </Button>
+          <Button type="submit" variant="contained" disabled={isError}>
+            Save
+          </Button>
+        </Stack>
       </Box>
     </Paper>
   );
