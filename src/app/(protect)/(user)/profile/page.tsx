@@ -37,7 +37,7 @@ const Profile = async () => {
           }}
         >
           {session?.avatar ? (
-            <Image src={session.avatar} alt="avatar" width={200} height={200} />
+            <Image src={session.avatar.uri} alt="avatar" width={200} height={200} />
           ) : (
             session?.username[0]
           )}

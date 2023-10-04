@@ -6,7 +6,7 @@ export const initEditProfile = {
   gender: "",
   school: "",
   city: "",
-  favouriteProramingLanguages: [],
+  favouriteProrammingLanguages: [],
 };
 
 export const initChangePwd = {

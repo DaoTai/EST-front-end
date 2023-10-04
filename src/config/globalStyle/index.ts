@@ -3,6 +3,10 @@ export default {
   a: {
     color: blue[700],
   },
+  img: {
+    objectFit: "cover",
+    objectPosition: "top",
+  },
   ".bg-gradient": {
     background: "linear-gradient(to right, #58a9eb, #aa99ff)",
   },

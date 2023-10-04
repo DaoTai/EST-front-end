@@ -1,28 +1,59 @@
 "use client";
-import { Avatar, Button, Divider, Stack } from "@mui/material";
+
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import useAuthAxios from "@/hooks/useAuthAxios";
+import { toast } from "react-toastify";
 
 const Heading = () => {
-  const { data: user } = useSession();
-  const [previewAvatar, setPreviewAvatar] = useState<string>();
+  const { data: user, update } = useSession();
+  const axios = useAuthAxios();
+  const [previewAvatar, setPreviewAvatar] = useState<{
+    url: string;
+    file?: File;
+  }>();
+
   useEffect(() => {
     return () => {
-      previewAvatar && URL.revokeObjectURL(previewAvatar);
+      previewAvatar && URL.revokeObjectURL(previewAvatar.url);
     };
   }, [previewAvatar]);
 
-  // Previre avatar
+  // Preview avatar
   const onPreviewAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
+
     if (file) {
       const url = URL.createObjectURL(file);
-      setPreviewAvatar(url);
+      setPreviewAvatar({
+        url,
+        file,
+      });
     }
   };
+
+  // Save avatar
+  const onSaveAvatar = async () => {
+    try {
+      console.log(previewAvatar);
+
+      const res = await axios.patch("/user/profile/edit", {
+        avatar: previewAvatar?.file,
+      });
+      update(res.data);
+      toast.success("Change avatar successfully");
+    } catch (error) {
+      console.log("Error");
+    }
+  };
+
   return (
     <>
       <Stack
@@ -35,25 +66,32 @@ const Heading = () => {
       >
         {user?.avatar ? (
           <Image
-            src={previewAvatar || user?.avatar}
+            src={previewAvatar?.url || user?.avatar?.uri}
             alt="avatar"
             width={200}
             height={200}
             style={{ borderRadius: 99, objectFit: "cover" }}
           />
         ) : (
-          <Avatar sx={{ width: 200, height: 200 }}>{user?.username[0]}</Avatar>
+          <Avatar src={previewAvatar?.url} sx={{ width: 200, height: 200, objectFit: "cover" }}>
+            {user?.username[0]}
+          </Avatar>
         )}
 
         {/*  Preview Avatar Control */}
-        <Stack justifyContent={previewAvatar ? "space-between" : "flex-end"} alignItems={"end"}>
+        <Stack
+          justifyContent={previewAvatar?.url ? "space-between" : "flex-end"}
+          alignItems={"end"}
+        >
           {/* Controls */}
-          {previewAvatar && (
+          {previewAvatar?.url && (
             <Stack flexDirection={"row"} gap={1}>
-              <Button variant="outlined" onClick={() => setPreviewAvatar("")}>
+              <Button variant="outlined" onClick={() => setPreviewAvatar({ url: "" })}>
                 Cancel
               </Button>
-              <Button variant="contained">Save</Button>
+              <Button variant="contained" onClick={onSaveAvatar}>
+                Save
+              </Button>
             </Stack>
           )}
 

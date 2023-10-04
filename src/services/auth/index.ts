@@ -60,7 +60,7 @@ export const signUpWithFetch = async ({
   provider,
 }: {
   email: string;
-  avatar: string;
+  avatar: IAttachment;
   fullName: string;
   provider: string;
 }) => {

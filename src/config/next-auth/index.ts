@@ -44,7 +44,10 @@ export const options: AuthOptions = {
   callbacks: {
     async jwt({ token, account, user, trigger, session }) {
       if (trigger === "update") {
-        token.user = session;
+        token.user = {
+          ...(token.user as any),
+          ...session,
+        };
       }
 
       if (account?.provider && account?.provider !== "credentials" && user) {
@@ -63,7 +66,7 @@ export const options: AuthOptions = {
           } else {
             const createdUser = await signUpWithFetch({
               email: user.email as string,
-              avatar: user.image as string,
+              avatar: { uri: user.image as string },
               fullName: user.name as string,
               provider: account.provider as string,
             });
@@ -77,7 +80,6 @@ export const options: AuthOptions = {
           }
         } catch (error) {
           Promise.reject(error);
-          throw new Error(error as any);
         }
       }
 

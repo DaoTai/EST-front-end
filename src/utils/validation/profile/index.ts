@@ -18,7 +18,7 @@ export const EditProfileSchema = Yup.object().shape({
     .min(3, minCharacterValidator("School", 3))
     .max(80, maxCharacterValidator("School", 80)),
   city: Yup.string().max(50, maxCharacterValidator("City", 50)),
-  favouriteProramingLanguages: Yup.array().of(
+  favouriteProrammingLanguages: Yup.array().of(
     Yup.string().min(1, minCharacterValidator("Programing language", 1))
   ),
 });

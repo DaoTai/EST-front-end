@@ -2,14 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+    domains: ["localhost", "avatars.githubusercontent.com", "lh3.googleusercontent.com"],
   },
   compiler: {
     styledComponents: true,
   },
-  experimental: {
-    appDir: true,
-  },
+
   //To speed up development time and NextJS compilation time when using MUI, we have to use the modularizeImports
   modularizeImports: {
     "@mui/material": {

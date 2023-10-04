@@ -25,10 +25,13 @@ import { useRouter } from "next/navigation";
 import { Heading, ListFavLanguages } from "./_components";
 import { textFields } from "./_fields";
 import { MessageValidation } from "@/utils/constants/messages";
-
+import { editProfile } from "@/services/profile";
+import useAuthAxios from "@/hooks/useAuthAxios";
+import { toast } from "react-toastify";
 const EditProfile = () => {
-  const { data: user } = useSession();
+  const { data: user, update } = useSession();
   const router = useRouter();
+  const axios = useAuthAxios();
   const {
     values,
     errors,
@@ -42,8 +45,10 @@ const EditProfile = () => {
   } = useFormik({
     initialValues: initEditProfile,
     validationSchema: EditProfileSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const res = await axios.patch("/user/profile/edit", values);
+      update(res.data);
+      toast.success("Update profile successfully");
     },
   });
 
@@ -52,6 +57,8 @@ const EditProfile = () => {
   }, [errors, touched, values]);
 
   useEffect(() => {
+    console.log("user: ", user);
+
     if (user) {
       const data = {
         fullName: user?.fullName,
@@ -61,7 +68,7 @@ const EditProfile = () => {
         gender: user?.gender,
         school: user?.school,
         city: user?.city,
-        favouriteProramingLanguages: user?.favouriteProrammingLanguages,
+        favouriteProrammingLanguages: user?.favouriteProrammingLanguages,
       } as any;
 
       setValues(data);
@@ -164,8 +171,8 @@ const EditProfile = () => {
           {/* List favourite programming languages */}
           <Grid item sm={6} xs={12}>
             <ListFavLanguages
-              name="favouriteProramingLanguages"
-              value={values.favouriteProramingLanguages}
+              name="favouriteProrammingLanguages"
+              value={values.favouriteProrammingLanguages}
               setFieldValue={setFieldValue}
             />
           </Grid>

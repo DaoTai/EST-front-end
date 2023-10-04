@@ -77,14 +77,16 @@ const Actions = () => {
           <Box onClick={handleClick} sx={{ cursor: "pointer" }}>
             {session?.avatar ? (
               <Image
-                src={session?.avatar as string}
+                src={session?.avatar?.uri as string}
                 alt="avatar"
                 width={48}
                 height={48}
                 style={{ borderRadius: "50%" }}
               />
             ) : (
-              session?.fullName
+              <Typography variant="body1" sx={{ color: "text.primary" }}>
+                {session?.fullName}
+              </Typography>
             )}
           </Box>
         </Stack>
@@ -101,6 +103,7 @@ const Actions = () => {
           }}
           sx={{
             ".MuiPaper-root": {
+              top: "80px !important",
               boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
             },
           }}
@@ -109,16 +112,14 @@ const Actions = () => {
             {/* Basic info */}
             <Stack gap={3} p={2} pb={0} flexDirection={"row"} alignItems={"center"}>
               <Box>
-                {session?.avatar ? (
+                {session?.avatar && (
                   <Image
-                    src={session?.avatar as string}
+                    src={session?.avatar?.uri as string}
                     alt="avatar"
                     width={54}
                     height={54}
                     style={{ borderRadius: "50%" }}
                   />
-                ) : (
-                  session?.fullName
                 )}
               </Box>
               <Stack>
@@ -179,7 +180,12 @@ const Actions = () => {
               <ListItem divider>
                 <ListItemAvatar>
                   <Avatar>
-                    <Image src={session?.avatar as string} alt="avatar" width={48} height={48} />
+                    <Image
+                      src={session?.avatar?.uri as string}
+                      alt="avatar"
+                      width={48}
+                      height={48}
+                    />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary="Photos" secondary="Jan 9, 2014" />
@@ -187,7 +193,12 @@ const Actions = () => {
               <ListItem divider component={Link} href="/profile">
                 <ListItemAvatar>
                   <Avatar>
-                    <Image src={session?.avatar as string} alt="avatar" width={48} height={48} />
+                    <Image
+                      src={session?.avatar?.uri as string}
+                      alt="avatar"
+                      width={48}
+                      height={48}
+                    />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary="Work" secondary="Jan 7, 2014" />
@@ -195,7 +206,12 @@ const Actions = () => {
               <ListItem divider component={Link} href="/profile">
                 <ListItemAvatar>
                   <Avatar>
-                    <Image src={session?.avatar as string} alt="avatar" width={48} height={48} />
+                    <Image
+                      src={session?.avatar?.uri as string}
+                      alt="avatar"
+                      width={48}
+                      height={48}
+                    />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary="Vacation" secondary="July 20, 2014" />

@@ -1,9 +1,15 @@
+interface IAttachment {
+  uri: string;
+  type?: string;
+  storedBy?: string;
+}
+
 interface IUser {
   _id: string;
   email: string;
   roles: string[];
   fullName: string;
-  avatar: string;
+  avatar: IAttachment;
   favouriteProrammingLanguages: string[];
   deleted: boolean;
   username: string;
