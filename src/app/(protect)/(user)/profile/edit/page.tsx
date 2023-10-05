@@ -17,17 +17,17 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
-import { FocusEvent, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
+import useAuthAxios from "@/hooks/useAuthAxios";
+import { editProfile } from "@/services/user/profile";
+import { MessageValidation } from "@/utils/constants/messages";
 import { initEditProfile } from "@/utils/initialValues";
 import { EditProfileSchema } from "@/utils/validation/profile";
 import { useRouter } from "next/navigation";
 import { Heading, ListFavLanguages } from "./_components";
 import { textFields } from "./_fields";
-import { MessageValidation } from "@/utils/constants/messages";
-import { editProfile } from "@/services/profile";
-import useAuthAxios from "@/hooks/useAuthAxios";
-import { toast } from "react-toastify";
+
 const EditProfile = () => {
   const { data: user, update } = useSession();
   const router = useRouter();
@@ -46,9 +46,8 @@ const EditProfile = () => {
     initialValues: initEditProfile,
     validationSchema: EditProfileSchema,
     onSubmit: async (values) => {
-      const res = await axios.patch("/user/profile/edit", values);
-      update(res.data);
-      toast.success("Update profile successfully");
+      const data = await editProfile(axios, values);
+      update(data);
     },
   });
 
@@ -57,8 +56,6 @@ const EditProfile = () => {
   }, [errors, touched, values]);
 
   useEffect(() => {
-    console.log("user: ", user);
-
     if (user) {
       const data = {
         fullName: user?.fullName,
@@ -85,19 +82,18 @@ const EditProfile = () => {
         if (isValidYear) setFieldValue("dob", dayjs(value).toISOString());
         else setFieldError("dob", MessageValidation.date);
       }
-    } catch (error) {}
+    } catch (error) {
+      setFieldError("dob", MessageValidation.date);
+    }
   };
 
   // On blur date
-  const handleBlurDate = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
-    const isInvalid = new Date().getFullYear() - dayjs(e.target.value).get("year") >= 0;
-    if (isInvalid) setFieldError("dob", MessageValidation.date);
-  };
 
   return (
-    <Paper sx={{ p: 1 }}>
+    <Paper sx={{ pb: 2 }}>
       <Heading />
       <Box
+        p={1}
         component="form"
         onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
         onSubmit={handleSubmit}
@@ -139,7 +135,7 @@ const EditProfile = () => {
 
               <DatePicker
                 disableFuture
-                value={values?.dob ? dayjs(values?.dob) : null}
+                value={values?.dob ? dayjs(values.dob) : null}
                 onError={(error: any) => setFieldError("dob", MessageValidation.date)}
                 onChange={handleChangeDate}
                 slotProps={{
@@ -147,8 +143,6 @@ const EditProfile = () => {
                     name: "dob",
                     error: !!errors.dob,
                     helperText: errors.dob,
-                    onBlur: handleBlurDate,
-                    onKeyDown: (e) => e.preventDefault(),
                   },
                 }}
               />

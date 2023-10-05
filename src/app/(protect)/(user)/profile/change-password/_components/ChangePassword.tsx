@@ -9,14 +9,17 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { initChangePwd } from "@/utils/initialValues";
 import { EditPasswordSchema } from "@/utils/validation/profile";
 import { useFormik } from "formik";
+import useAuthAxios from "@/hooks/useAuthAxios";
+import { changePassword } from "@/services/user/password";
 
 const ChangePwd = () => {
+  const axios = useAuthAxios();
   const { values, errors, touched, handleSubmit, handleBlur, handleChange, handleReset } =
     useFormik({
       initialValues: initChangePwd,
       validationSchema: EditPasswordSchema,
-      onSubmit: (values) => {
-        console.log(values);
+      onSubmit: async (values) => {
+        await changePassword(axios, values);
       },
     });
 
@@ -33,7 +36,7 @@ const ChangePwd = () => {
       </Typography>
 
       {/* Inputs */}
-      <Stack mt={2}>
+      <Stack mt={3}>
         <TextField
           fullWidth
           type="password"

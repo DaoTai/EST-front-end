@@ -12,7 +12,7 @@ export const EditProfileSchema = Yup.object().shape({
     .matches(/^([^0-9]*)$/, MessageValidation.fullName),
   username: Yup.string().required(MessageValidation.required).trim(),
   bio: Yup.string().max(300, maxCharacterValidator("Bio", 300)),
-  dob: Yup.string(),
+  dob: Yup.string().nullable(),
   gender: Yup.mixed().oneOf(["male", "female", "other", ""], MessageValidation.gender),
   school: Yup.string()
     .min(3, minCharacterValidator("School", 3))

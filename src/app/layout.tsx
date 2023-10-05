@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeRegistry>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <NextAuthProvider>{children}</NextAuthProvider>
-            <ToastContainer />
+            <ToastContainer position="top-center" pauseOnHover={false} />
           </LocalizationProvider>
         </ThemeRegistry>
       </body>

@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Paper from "@mui/material/Paper";
 
 import { useRouter } from "next/navigation";
-import ChangePwd from "../../../change-password/_components/ChangePwd";
+import ChangePwd from "../../../change-password/_components/ChangePassword";
 const style = {
   position: "absolute" as "absolute",
   top: "30%",

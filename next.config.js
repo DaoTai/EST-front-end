@@ -2,7 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost", "avatars.githubusercontent.com", "lh3.googleusercontent.com"],
+    domains: [
+      "localhost",
+      "avatars.githubusercontent.com",
+      "lh3.googleusercontent.com",
+      "res.cloudinary.com",
+    ],
   },
   compiler: {
     styledComponents: true,

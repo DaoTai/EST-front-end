@@ -2,12 +2,13 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { AmountInfor, Footer, Slider } from "@/components/about-components";
+import { AmountInfor, Slider } from "@/components/about-components";
 import MainLayout from "@/components/common/MainLayout";
 import Navbar from "@/components/common/Navbar";
 import useTheme from "@mui/material/styles/useTheme";
 import Divider from "@mui/material/Divider";
 import { useMediaQuery } from "@mui/material";
+import Footer from "@/components/common/Footer";
 
 export default function Home() {
   const theme = useTheme();
