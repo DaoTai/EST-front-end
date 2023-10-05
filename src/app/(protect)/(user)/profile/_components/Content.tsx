@@ -1,4 +1,3 @@
-import { options } from "@/config/next-auth";
 import CakeIcon from "@mui/icons-material/Cake";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import SchoolIcon from "@mui/icons-material/School";
@@ -15,11 +14,9 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { getServerSession } from "next-auth";
 
 import dayjs from "dayjs";
-const Content = async () => {
-  const session = await getServerSession(options);
+const Content = async ({ user }: { user: IUser }) => {
   return (
     <Grid container mt={1} spacing={2}>
       <Grid item md={3}>
@@ -32,7 +29,7 @@ const Content = async () => {
                   Bio
                 </Typography>
                 <Typography variant="body1" component="article" gutterBottom>
-                  {session?.bio}
+                  {user?.bio}
                 </Typography>
               </Box>
               <Divider />
@@ -52,13 +49,13 @@ const Content = async () => {
                   <ListItemIcon>
                     <CakeIcon />
                   </ListItemIcon>
-                  <ListItemText primary={dayjs(session?.dob).format("DD/MM/YYYY")} />
+                  <ListItemText primary={dayjs(user?.dob).format("DD/MM/YYYY")} />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
                     <SchoolIcon />
                   </ListItemIcon>
-                  <ListItemText primary={session?.school} />
+                  <ListItemText primary={user?.school} />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
@@ -66,13 +63,13 @@ const Content = async () => {
                   </ListItemIcon>
 
                   <ListItemText
-                    primary={"Started " + dayjs(session?.createdAt).format("DD/MM/YYYY")}
+                    primary={"Started " + dayjs(user?.createdAt).format("DD/MM/YYYY")}
                   />
                 </ListItem>
               </List>
               <Divider />
               <Stack gap={1} flexDirection={"row"} flexWrap={"wrap"}>
-                {session?.favouriteProrammingLanguages.map((lang, i) => (
+                {user?.favouriteProrammingLanguages.map((lang, i) => (
                   <Chip key={i} className="bg-gradient" label={lang} />
                 ))}
               </Stack>

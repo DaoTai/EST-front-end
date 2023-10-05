@@ -4,12 +4,9 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { options } from "@/config/next-auth";
 
-const HeadingProfile = async () => {
-  const session = await getServerSession(options);
+const HeadingProfile = async (data: Partial<Pick<IUser, "avatar" | "username" | "roles">>) => {
   return (
     <Stack
       p={2}
@@ -28,24 +25,24 @@ const HeadingProfile = async () => {
           background: "white",
         }}
       >
-        {session?.avatar ? (
+        {data?.avatar ? (
           <Image
-            src={session.avatar.uri}
+            src={data.avatar.uri}
             alt="avatar"
             width={200}
             height={200}
             style={{ borderRadius: 99 }}
           />
         ) : (
-          session?.username[0]
+          data?.username && data?.username[0]
         )}
       </Avatar>
       <Box>
         <Typography variant="h4" fontWeight={500}>
-          {session?.username}
+          {data?.username}
         </Typography>
         <Stack flexDirection="row" mt={1} gap={1}>
-          {session?.roles?.map((role, i) => (
+          {data?.roles?.map((role, i) => (
             <Chip
               key={i}
               label={role}

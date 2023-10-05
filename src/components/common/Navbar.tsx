@@ -4,6 +4,8 @@ import StoreIcon from "@mui/icons-material/Store";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
+import GroupsIcon from "@mui/icons-material/Groups";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -28,9 +30,13 @@ const Navbar = () => {
         },
       }}
     >
-      <IconButton LinkComponent={Link} href="/">
+      {/* <IconButton LinkComponent={Link} href="/">
         <HomeIcon fontSize="large" />
         <Typography variant="subtitle1">About</Typography>
+      </IconButton> */}
+      <IconButton LinkComponent={Link} href="/teacher">
+        <ModelTrainingIcon fontSize="large" />
+        <Typography variant="subtitle1">Teacher</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/profile">
         <ComputerIcon fontSize="large" />
@@ -39,6 +45,10 @@ const Navbar = () => {
       <IconButton LinkComponent={Link} href="/profile">
         <StoreIcon fontSize="large" />
         <Typography variant="subtitle1">Courses</Typography>
+      </IconButton>
+      <IconButton LinkComponent={Link} href="/explore">
+        <GroupsIcon fontSize="large" />
+        <Typography variant="subtitle1">Members</Typography>
       </IconButton>
     </Stack>
   );

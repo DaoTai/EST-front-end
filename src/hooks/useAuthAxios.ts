@@ -1,8 +1,6 @@
 import authAxios from "@/config/axios/authAxios";
-import { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
 const useAuthAxios = () => {
   const { data: session } = useSession();
   useEffect(() => {

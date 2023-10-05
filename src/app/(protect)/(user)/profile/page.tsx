@@ -1,15 +1,17 @@
-import Box from "@mui/material/Box";
+import { options } from "@/config/next-auth";
 import Divider from "@mui/material/Divider";
-
+import { getServerSession } from "next-auth";
 import { Content, Heading, Panel } from "./_components";
 
-const Profile = () => {
+const Profile = async () => {
+  const session = await getServerSession(options);
+
   return (
     <>
-      <Heading />
+      <Heading avatar={session?.avatar} username={session?.username} roles={session?.roles} />
       <Panel />
       <Divider />
-      <Content />
+      {session && <Content user={session} />}
     </>
   );
 };
