@@ -18,13 +18,13 @@ import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 import useAuthAxios from "@/hooks/useAuthAxios";
 import { editProfile } from "@/services/user/profile";
 import { MessageValidation } from "@/utils/constants/messages";
 import { initEditProfile } from "@/utils/initialValues";
 import { EditProfileSchema } from "@/utils/validation/profile";
-import { useRouter } from "next/navigation";
 import { Heading, ListFavLanguages } from "./_components";
 import { textFields } from "./_fields";
 
@@ -86,8 +86,6 @@ const EditProfile = () => {
       setFieldError("dob", MessageValidation.date);
     }
   };
-
-  // On blur date
 
   return (
     <Paper sx={{ pb: 2 }}>
@@ -173,11 +171,18 @@ const EditProfile = () => {
         </Grid>
 
         {/* Buttons */}
-        <Stack mt={2} flexDirection="row" justifyContent="space-between">
-          <Button variant="outlined" onClick={() => router.push("/profile/change-password")}>
-            Change password
-          </Button>
-          <Button type="submit" variant="contained" disabled={isError}>
+        <Stack mt={2} flexDirection="row">
+          {!user?.provider && (
+            <Button variant="outlined" onClick={() => router.push("/profile/change-password")}>
+              Change password
+            </Button>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isError}
+            style={{ marginLeft: "auto" }}
+          >
             Save
           </Button>
         </Stack>

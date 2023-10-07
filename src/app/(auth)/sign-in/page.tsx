@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ProviderButtons from "../_components/ProviderAuthButtons";
+import { signIn as signInAxios } from "@/services/auth";
 const SignIn = () => {
   const router = useRouter();
   const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
@@ -33,6 +34,8 @@ const SignIn = () => {
         });
 
         login?.error ? toast.error("Sign in failed") : router.push("/");
+        // const login = await signInAxios(values);
+        // console.log("Login: ", login);
       } catch (err) {
         console.log("Erorr: ", err);
       }

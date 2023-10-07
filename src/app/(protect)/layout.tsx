@@ -1,10 +1,9 @@
-import React from "react";
+import MainLayout from "@/components/common/MainLayout";
+import { options } from "@/config/next-auth";
+import { Box } from "@mui/material";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { options } from "@/config/next-auth";
-import MainLayout from "@/components/common/MainLayout";
-import Navbar from "@/components/common/Navbar";
-import { Box } from "@mui/material";
+import React from "react";
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);

@@ -36,19 +36,19 @@ const Navbar = () => {
       </IconButton> */}
       <IconButton LinkComponent={Link} href="/teacher">
         <ModelTrainingIcon fontSize="large" />
-        <Typography variant="subtitle1">Teacher</Typography>
+        <Typography variant="subtitle2">Teacher</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/profile">
         <ComputerIcon fontSize="large" />
-        <Typography variant="subtitle1">My courses</Typography>
+        <Typography variant="subtitle2">My courses</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/profile">
         <StoreIcon fontSize="large" />
-        <Typography variant="subtitle1">Courses</Typography>
+        <Typography variant="subtitle2">Courses</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/explore">
         <GroupsIcon fontSize="large" />
-        <Typography variant="subtitle1">Members</Typography>
+        <Typography variant="subtitle2">Members</Typography>
       </IconButton>
     </Stack>
   );

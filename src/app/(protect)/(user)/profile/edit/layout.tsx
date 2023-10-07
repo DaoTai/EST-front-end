@@ -1,12 +1,20 @@
-import { Box } from "@mui/material";
 import Container from "@mui/material/Container";
 import React from "react";
+import { getServerSession } from "next-auth";
+import { options } from "@/config/next-auth";
+const RootLayout = async ({
+  children,
+  modal,
+}: {
+  children: React.ReactNode;
+  modal: React.ReactNode;
+}) => {
+  const session = await getServerSession(options);
 
-const RootLayout = ({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) => {
   return (
     <Container>
       {children}
-      {modal}
+      {!session?.provider && modal}
     </Container>
   );
 };

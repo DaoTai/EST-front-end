@@ -4,8 +4,9 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
+import { memo } from "react";
 
-const CardMember = () => {
+const CardMember = ({ data }: { data: IProfile }) => {
   return (
     <Card
       variant="outlined"
@@ -16,17 +17,17 @@ const CardMember = () => {
         justifyContent: "space-between",
       }}
     >
-      <CardMedia component="img" alt="green iguana" height="200" image="/intro-1.jpg" />
+      <CardMedia component="img" alt="green iguana" height="220" image={data?.avatar.uri} />
       <CardContent sx={{ flexGrow: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Đào Tài
+          {data.username}
         </Typography>
         <Typography variant="body1" gutterBottom>
-          School: ThuyLoi University 121212122121212
+          School: {data.school}
         </Typography>
       </CardContent>
       <CardActions>
-        <Link href="/profile/123" className="btn-link">
+        <Link href={"/profile/" + data._id} className="btn-link">
           More
         </Link>
       </CardActions>
@@ -34,4 +35,4 @@ const CardMember = () => {
   );
 };
 
-export default CardMember;
+export default memo(CardMember);

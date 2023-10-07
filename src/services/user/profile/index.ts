@@ -2,12 +2,30 @@ import { IEditProfile } from "@/types/IProfile";
 import { AxiosInstance } from "axios";
 import { toast } from "react-toastify";
 
+export const searchProfile = async (
+  axios: AxiosInstance,
+  query: { page?: number; search?: string; role?: string }
+) => {
+  try {
+    const res = await axios.get<{
+      users: IProfile[];
+      maxPage: number;
+      total: number;
+    }>("/user/profile", {
+      params: query,
+    });
+    return res.data;
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
 export const editProfile = async (
   axios: AxiosInstance,
   value: Partial<IEditProfile> | { avatar: File }
 ) => {
   try {
-    const res = await axios.patch<Omit<IUser, "accessToken">>("/user/profile/edit", value, {
+    const res = await axios.patch<IProfile>("/user/profile/edit", value, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

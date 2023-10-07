@@ -31,6 +31,7 @@ export const options: AuthOptions = {
         const password = credentials?.password;
         if (!email || !password) return null;
         const res = await signInByFetch({ email, password });
+
         if (res.ok) {
           const user = await res.json();
           return { user } as any;

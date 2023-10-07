@@ -16,11 +16,11 @@ type ISignInWithProvider = { email: string; provider: string };
 type ISignUp = InferType<typeof SignUpSchema> | ISignUpWithProvider;
 type ISignIn = InferType<typeof SignInSchema> | ISignInWithProvider;
 
-const authAxios = axios.create({
+const authRouteAxios = axios.create({
   baseURL: SERVER_URI + "/auth",
 });
 
-authAxios.interceptors.response.use(
+authRouteAxios.interceptors.response.use(
   function (response) {
     return response;
   },
@@ -28,6 +28,8 @@ authAxios.interceptors.response.use(
     if (axios.isAxiosError(error)) {
       const axiosError = error as AxiosError;
       const message = axiosError.response?.data as string;
+      console.log("Error: ", axiosError);
+
       toast.error(message);
     }
     return Promise.reject(error);
@@ -36,7 +38,7 @@ authAxios.interceptors.response.use(
 
 export const verifyEmail = async (email: string) => {
   try {
-    const res = await authAxios.post<string>("/verify-email", { email });
+    const res = await authRouteAxios.post<string>("/verify-email", { email });
     toast("We have sent captchat to your email \n Please check your email");
     return res.data;
   } catch (err) {}
@@ -44,7 +46,7 @@ export const verifyEmail = async (email: string) => {
 
 export const signUp = async (values: ISignUp) => {
   try {
-    const res = await authAxios.post<Omit<IUser, "accessToken" | "hashedPassword">>(
+    const res = await authRouteAxios.post<Omit<IUser, "accessToken" | "hashedPassword">>(
       "/sign-up",
       values
     );
@@ -86,7 +88,7 @@ export const signUpWithFetch = async ({
 
 export const signIn = async (values: ISignIn) => {
   try {
-    const res = await authAxios.post<IUser>("/sign-in", values);
+    const res = await authRouteAxios.post<IUser>("/sign-in", values);
     return res.data;
   } catch (error) {}
 };
@@ -102,12 +104,13 @@ export const signInByFetch = async ({ email, password }: { email: string; passwo
       password,
     }),
   });
+
   return res;
 };
 
 export const checkExistEmailAndProvider = async (email: string, provider: string) => {
   try {
-    const res = await authAxios.post("/exist-email-and-provider", {
+    const res = await authRouteAxios.post("/exist-email-and-provider", {
       email,
       provider,
     });
@@ -118,8 +121,20 @@ export const checkExistEmailAndProvider = async (email: string, provider: string
 
 export const sendNewPasswordToEmail = async (email: string) => {
   try {
-    const result = await authAxios.post<boolean>("/forgot-password", { email });
+    const result = await authRouteAxios.post<boolean>("/forgot-password", { email });
     toast.success("Let's check your email");
     return result.data;
+  } catch (error) {}
+};
+
+export const refreshToken = async (refreshToken: string) => {
+  try {
+    const res = await authRouteAxios.post<{ accessToken: string; refreshToken: string }>(
+      "/refresh-token",
+      {
+        refreshToken,
+      }
+    );
+    return res.data;
   } catch (error) {}
 };
