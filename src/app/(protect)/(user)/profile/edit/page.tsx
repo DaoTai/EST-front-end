@@ -17,10 +17,9 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useMemo } from "react";
 
-import useAuthAxios from "@/hooks/useAuthAxios";
 import { editProfile } from "@/services/user/profile";
 import { MessageValidation } from "@/utils/constants/messages";
 import { initEditProfile } from "@/utils/initialValues";
@@ -31,7 +30,6 @@ import { textFields } from "./_fields";
 const EditProfile = () => {
   const { data: user, update } = useSession();
   const router = useRouter();
-  const axios = useAuthAxios();
   const {
     values,
     errors,
@@ -42,11 +40,12 @@ const EditProfile = () => {
     handleChange,
     handleBlur,
     handleSubmit,
+    isSubmitting,
   } = useFormik({
     initialValues: initEditProfile,
     validationSchema: EditProfileSchema,
-    onSubmit: async (values) => {
-      const data = await editProfile(axios, values);
+    onSubmit: async (values, formikBag: any) => {
+      const data = await editProfile(values);
       update(data);
     },
   });
@@ -90,6 +89,7 @@ const EditProfile = () => {
   return (
     <Paper sx={{ pb: 2 }}>
       <Heading />
+
       <Box
         p={1}
         component="form"
@@ -183,7 +183,7 @@ const EditProfile = () => {
             disabled={isError}
             style={{ marginLeft: "auto" }}
           >
-            Save
+            {isSubmitting ? "Submitting" : "Save"}
           </Button>
         </Stack>
       </Box>

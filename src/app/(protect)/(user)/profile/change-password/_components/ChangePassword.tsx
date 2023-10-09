@@ -1,25 +1,22 @@
 "use client";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import Typography from "@mui/material/Typography";
 
+import { changePassword } from "@/services/user/password";
 import { initChangePwd } from "@/utils/initialValues";
 import { EditPasswordSchema } from "@/utils/validation/profile";
 import { useFormik } from "formik";
-import useAuthAxios from "@/hooks/useAuthAxios";
-import { changePassword } from "@/services/user/password";
-
 const ChangePwd = () => {
-  const axios = useAuthAxios();
   const { values, errors, touched, handleSubmit, handleBlur, handleChange, handleReset } =
     useFormik({
       initialValues: initChangePwd,
       validationSchema: EditPasswordSchema,
       onSubmit: async (values) => {
-        await changePassword(axios, values);
+        await changePassword(values);
       },
     });
 

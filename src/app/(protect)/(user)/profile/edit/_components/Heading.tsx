@@ -1,21 +1,19 @@
 "use client";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
-import useAuthAxios from "@/hooks/useAuthAxios";
 import { editProfile } from "@/services/user/profile";
+import { useMediaQuery } from "@mui/material";
+import useTheme from "@mui/material/styles/useTheme";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import useTheme from "@mui/material/styles/useTheme";
-import { useMediaQuery } from "@mui/material";
 const Heading = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: user, update } = useSession();
-  const axios = useAuthAxios();
   const [previewAvatar, setPreviewAvatar] = useState<{
     url: string;
     file?: File;
@@ -41,8 +39,7 @@ const Heading = () => {
   // Save avatar
   const onSaveAvatar = async () => {
     if (!previewAvatar?.file) return;
-    const data = await editProfile(axios, { avatar: previewAvatar.file });
-
+    const data = await editProfile({ avatar: previewAvatar.file });
     update(data);
     setPreviewAvatar({ url: "", file: undefined });
   };

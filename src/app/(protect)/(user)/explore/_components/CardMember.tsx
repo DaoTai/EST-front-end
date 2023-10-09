@@ -1,8 +1,10 @@
+import { Chip, Stack } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
 
@@ -17,14 +19,22 @@ const CardMember = ({ data }: { data: IProfile }) => {
         justifyContent: "space-between",
       }}
     >
-      <CardMedia component="img" alt="green iguana" height="220" image={data?.avatar.uri} />
+      <CardMedia component="img" alt="card member" height="240" image={data?.avatar.uri} />
       <CardContent sx={{ flexGrow: 2 }}>
         <Typography variant="h6" gutterBottom>
           {data.username}
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          School: {data.school}
-        </Typography>
+        {data.school && (
+          <Typography variant="body1" gutterBottom>
+            {data.school}
+          </Typography>
+        )}
+
+        <Stack flexDirection="row" gap={1}>
+          {data?.favouriteProrammingLanguages.map((lang, i) => (
+            <Chip key={i} label={lang} />
+          ))}
+        </Stack>
       </CardContent>
       <CardActions>
         <Link href={"/profile/" + data._id} className="btn-link">

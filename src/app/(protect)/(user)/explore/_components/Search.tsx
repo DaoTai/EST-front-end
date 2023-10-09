@@ -77,7 +77,7 @@ const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ totalResult, onSear
 
       {value.trim() && (
         <Typography variant="subtitle1" gutterBottom marginTop={1}>
-          Search results: <b>{totalResult}</b>
+          Searched results: <b>{totalResult}</b>
         </Typography>
       )}
     </>

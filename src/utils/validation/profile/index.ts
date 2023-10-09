@@ -8,6 +8,8 @@ import {
 
 export const EditProfileSchema = Yup.object().shape({
   fullName: Yup.string()
+    .min(2, minCharacterValidator("Full name", 2))
+    .max(30, maxCharacterValidator("Full name", 30))
     .required(MessageValidation.required)
     .matches(/^([^0-9]*)$/, MessageValidation.fullName),
   username: Yup.string().required(MessageValidation.required).trim(),

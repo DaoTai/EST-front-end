@@ -1,16 +1,13 @@
 import { IEditPassword } from "@/types/IProfile";
-import { AxiosError, AxiosInstance } from "axios";
+import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
-
-export const changePassword = async (axios: AxiosInstance, data: IEditPassword) => {
+export const changePassword = async (data: IEditPassword) => {
   try {
-    await axios.patch("/user/change-password", data);
-    toast.success("Change password successfully");
+    await axios.patch("/api/user/change-password", data);
+    toast.success("Changed password");
   } catch (error) {
     if (error instanceof AxiosError) {
-      if (error.response?.status !== 500) {
-        toast.error(error.response?.data);
-      }
+      toast.error(error.response?.data);
     }
   }
 };

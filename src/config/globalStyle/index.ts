@@ -5,7 +5,7 @@ export default {
   },
   img: {
     objectFit: "cover",
-    objectPosition: "top",
+    objectPosition: "center",
   },
   ".btn-link": {
     textDecoration: "none",

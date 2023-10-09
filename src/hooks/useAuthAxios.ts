@@ -1,7 +1,7 @@
 import { signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode";
-import authAxios from "@/config/axios/authAxios";
+import authAxios from "@/config/axios";
 import { refreshToken } from "@/services/auth";
 
 interface DecodedToken {

@@ -3,14 +3,23 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 
+import useAuthAxios from "@/hooks/useAuthAxios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CardMember from "./_components/CardMember";
 import Search from "./_components/Search";
-import useAuthAxios from "@/hooks/useAuthAxios";
-import { searchProfile } from "@/services/user/profile";
+
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+
+type ISearchProfileResult = {
+  users: IProfile[];
+  maxPage: number;
+  total: number;
+};
+
 const ExplorePage = () => {
+  const { data: session } = useSession();
   const axios = useAuthAxios();
 
   const [listMember, setListMember] = useState<IProfile[]>([]);
@@ -21,15 +30,21 @@ const ExplorePage = () => {
 
   // Serching member
   const handleSearch = async (value?: string, role?: string, currentPage: number = 1) => {
-    const data = await searchProfile(axios, {
-      search: value?.trim(),
-      role,
-      page: currentPage,
+    const query = new URLSearchParams({
+      search: value?.trim() || "",
+      role: role || "",
+      page: String(currentPage),
     });
 
-    setListMember(data?.users ?? []);
-    maxPageRef.current = data?.maxPage as number;
-    totalResult.current = data?.total as number;
+    const res = await fetch("/api/user/profile?" + query);
+    const data: ISearchProfileResult = await res.json();
+    if (res.ok) {
+      setListMember(data?.users ?? []);
+      maxPageRef.current = data?.maxPage as number;
+      totalResult.current = data?.total as number;
+    } else {
+      toast.error(String(data));
+    }
   };
 
   // Changing page
@@ -46,8 +61,9 @@ const ExplorePage = () => {
   }, []);
 
   useEffect(() => {
-    handleSearch();
-  }, []);
+    // Nếu mà dependencies của useEffect [] => handleSearch run 1 lần thì phát sinh vấn đề khi user refresh lại trang session chưa được lấy (undefined)
+    session && handleSearch();
+  }, [session]);
 
   return (
     <Container sx={{ pt: 1 }}>
