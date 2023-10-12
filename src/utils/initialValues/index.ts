@@ -18,7 +18,7 @@ export const initChangePwd = {
 export const initFormCourse = {
   name: "",
   category: "",
-  consumer: "",
   intro: "",
+  consumer: "all",
   type: "public",
 };

@@ -100,7 +100,6 @@ const EditProfile = () => {
               <TextField
                 {...props}
                 fullWidth
-                label={props.label}
                 value={values[props.name] || ""}
                 onChange={handleChange}
                 onBlur={handleBlur}

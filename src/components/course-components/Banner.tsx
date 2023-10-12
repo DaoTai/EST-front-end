@@ -23,18 +23,24 @@ const Banner = ({ course }: { course: ICourse }) => {
           },
         }}
       >
+        {/* Thumbnail */}
         <Grid
           item
+          lg={4}
           md={4}
+          sm={12}
+          xs={12}
           sx={{
             img: {
               borderRadius: 2,
+              width: "100%",
             },
           }}
         >
-          <Image src={course.thumbnail} alt="course-thumbnail" width={300} height={150} />
+          <Image src={course.thumbnail} alt="course-thumbnail" width={250} height={200} />
         </Grid>
-        <Grid item md={8} textTransform={"capitalize"}>
+        {/* Information */}
+        <Grid item lg={8} md={8} sm={12} xs={12} textTransform={"capitalize"}>
           <Typography variant="h5" gutterBottom>
             {course.name}
           </Typography>
@@ -44,6 +50,7 @@ const Banner = ({ course }: { course: ICourse }) => {
               label={course.status.toUpperCase()}
               color={course.status === "approved" ? "success" : "warning"}
               size="small"
+              sx={{ ml: 1 }}
             />
           </Typography>
           <Typography variant="subtitle1">Type: {course.type}</Typography>
