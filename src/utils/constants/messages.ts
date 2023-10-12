@@ -7,6 +7,8 @@ export enum MessageValidation {
   noSpace = "Please do not use any spaces",
   gender = "Gender is invalid",
   date = "Date is invalid",
+  consumerCourse = "Consumer course is invalid",
+  typeCourse = "Type course is invalid",
 }
 
 export const minCharacterValidator = (field: string, min: number): string => {

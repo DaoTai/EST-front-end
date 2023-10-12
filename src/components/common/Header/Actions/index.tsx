@@ -47,9 +47,11 @@ const Actions = () => {
   if (session) {
     return (
       <>
-        <Stack flexDirection={"row"} gap={3} alignItems={"center"}>
+        <Stack flexDirection={"row"} gap={2} alignItems={"center"}>
+          <ToggleModeTheme />
+
           {/* Notifycation */}
-          <Box onClick={handleClickNofity}>
+          <Box onClick={handleClickNofity} mr={1}>
             <Badge
               badgeContent={99}
               color="info"
@@ -91,59 +93,7 @@ const Actions = () => {
           </Box>
         </Stack>
 
-        {/* Menu user */}
-        <Popover
-          disableScrollLock
-          open={!!anchorEl}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          sx={{
-            ".MuiPaper-root": {
-              top: "80px !important",
-              boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
-            },
-          }}
-        >
-          <Stack gap={1}>
-            {/* Basic info */}
-            <Stack gap={3} p={2} pb={0} flexDirection={"row"} alignItems={"center"}>
-              <Box>
-                {session?.avatar && (
-                  <Image
-                    src={session?.avatar?.uri as string}
-                    alt="avatar"
-                    width={54}
-                    height={54}
-                    style={{ borderRadius: "50%" }}
-                  />
-                )}
-              </Box>
-              <Stack>
-                <Typography variant="h6">{session?.fullName}</Typography>
-                <Typography variant="body2" color="GrayText">
-                  @{session?.username}
-                </Typography>
-              </Stack>
-              <ToggleModeTheme />
-            </Stack>
-
-            {/* List action */}
-            <MyList sx={{ pb: 0 }}>
-              <Divider light />
-              <ListItem component={Link} href="/profile" divider>
-                Profile
-              </ListItem>
-              <ListItem divider>
-                <ListItemText primary="Sign out" onClick={() => signOut()} />
-              </ListItem>
-            </MyList>
-          </Stack>
-        </Popover>
-
+        {/* ========================= */}
         {/* Notifications */}
         <Popover
           open={!!anchorElNotify}
@@ -218,6 +168,58 @@ const Actions = () => {
               </ListItem>
             </MyList>
           </Paper>
+        </Popover>
+
+        {/* Menu user */}
+        <Popover
+          disableScrollLock
+          open={!!anchorEl}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          sx={{
+            ".MuiPaper-root": {
+              top: "80px !important",
+              boxShadow: "0px 0px 8px rgba(0,0,0,0.3)",
+            },
+          }}
+        >
+          <Stack gap={1}>
+            {/* Basic info */}
+            <Stack gap={3} p={2} pb={0} flexDirection={"row"} alignItems={"center"}>
+              <Box>
+                {session?.avatar && (
+                  <Image
+                    src={session?.avatar?.uri as string}
+                    alt="avatar"
+                    width={54}
+                    height={54}
+                    style={{ borderRadius: "50%" }}
+                  />
+                )}
+              </Box>
+              <Stack>
+                <Typography variant="h6">{session?.fullName}</Typography>
+                <Typography variant="body2" color="GrayText">
+                  @{session?.username}
+                </Typography>
+              </Stack>
+            </Stack>
+
+            {/* List action */}
+            <MyList sx={{ pb: 0 }}>
+              <Divider light />
+              <ListItem component={Link} href="/profile" divider>
+                Profile
+              </ListItem>
+              <ListItem divider>
+                <ListItemText primary="Sign out" onClick={() => signOut()} />
+              </ListItem>
+            </MyList>
+          </Stack>
         </Popover>
       </>
     );

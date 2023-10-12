@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
-import useAuthAxios from "@/hooks/useAuthAxios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import CardMember from "./_components/CardMember";
 import Search from "./_components/Search";
@@ -20,7 +19,6 @@ type ISearchProfileResult = {
 
 const ExplorePage = () => {
   const { data: session } = useSession();
-  const axios = useAuthAxios();
 
   const [listMember, setListMember] = useState<IProfile[]>([]);
   const [page, setPage] = useState<number>(1);

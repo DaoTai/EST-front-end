@@ -1,12 +1,16 @@
-import { Chip, Grid, Typography } from "@mui/material";
+import { Chip, Grid, Stack, Typography } from "@mui/material";
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-const Banner = () => {
+import "dayjs/plugin/relativeTime";
+
+const Banner = ({ course }: { course: ICourse }) => {
   return (
-    <Link href="/teacher/course/123" style={{ textDecoration: "none" }}>
+    <Link href={"/teacher/course/" + course._id} style={{ textDecoration: "none" }}>
       <Grid
         container
         mt={2}
+        pb={1}
         spacing={1}
         alignItems={"center"}
         borderRadius={2}
@@ -28,20 +32,38 @@ const Banner = () => {
             },
           }}
         >
-          <Image src="/course-thumbnail.jpg" alt="course-thumbnail" width={300} height={150} />
+          <Image src={course.thumbnail} alt="course-thumbnail" width={300} height={150} />
         </Grid>
-        <Grid item md={8}>
+        <Grid item md={8} textTransform={"capitalize"}>
           <Typography variant="h5" gutterBottom>
-            ReactJS Beginner
+            {course.name}
           </Typography>
+          <Typography variant="subtitle1">
+            Status:
+            <Chip
+              label={course.status.toUpperCase()}
+              color={course.status === "approved" ? "success" : "warning"}
+              size="small"
+            />
+          </Typography>
+          <Typography variant="subtitle1">Type: {course.type}</Typography>
+          <Typography variant="subtitle1">Category: {course.category}</Typography>
+          <Typography variant="subtitle1">Consumer: {course.consumer}</Typography>
           <Typography variant="subtitle1" gutterBottom>
-            Đã tạo cách đây 5 tháng
+            Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
           </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Status: <b>Pending</b>
-          </Typography>
-
-          <Chip label="50 videos" className="bg-gradient" />
+          <Stack direction="row" spacing={1} textTransform={"lowercase"}>
+            <Chip
+              label={course.lessons.length + " lesson" + (course.lessons.length > 1 ? "s" : "")}
+              className="bg-gradient"
+              size="small"
+            />
+            <Chip
+              label={course.members.length + " member" + (course.members.length > 1 ? "s" : "")}
+              className="bg-gradient"
+              size="small"
+            />
+          </Stack>
         </Grid>
       </Grid>
     </Link>

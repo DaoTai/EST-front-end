@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(options);
-  // const { searchParams } = new URL(req.url);
   const searchParams = req.nextUrl.searchParams;
 
   const res = await fetch(SERVER_URI + "/user/profile?" + searchParams, {
@@ -28,7 +27,6 @@ export async function PATCH(req: NextRequest) {
   const session = await getServerSession(options);
 
   const body = await req.formData();
-  console.log("Body: ", body);
 
   try {
     const res = await axios.patch("/user/profile", body, {

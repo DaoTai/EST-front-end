@@ -34,7 +34,6 @@ interface IProfile {
   favouriteProrammingLanguages: string[];
   deleted: boolean;
   username: string;
-  createdAt: string;
   bio?: string;
   dob?: string;
   gender?: string;

@@ -41,6 +41,7 @@ const EditProfile = () => {
     handleBlur,
     handleSubmit,
     isSubmitting,
+    isValid,
   } = useFormik({
     initialValues: initEditProfile,
     validationSchema: EditProfileSchema,
@@ -49,10 +50,6 @@ const EditProfile = () => {
       update(data);
     },
   });
-
-  const isError = useMemo(() => {
-    return !!Object.keys(errors).length;
-  }, [errors, touched, values]);
 
   useEffect(() => {
     if (user) {
@@ -180,7 +177,7 @@ const EditProfile = () => {
           <Button
             type="submit"
             variant="contained"
-            disabled={isError}
+            disabled={!isValid}
             style={{ marginLeft: "auto" }}
           >
             {isSubmitting ? "Submitting" : "Save"}

@@ -14,3 +14,11 @@ export const initChangePwd = {
   newPassword: "",
   confirmPassword: "",
 };
+
+export const initFormCourse = {
+  name: "",
+  category: "",
+  consumer: "",
+  intro: "",
+  type: "public",
+};

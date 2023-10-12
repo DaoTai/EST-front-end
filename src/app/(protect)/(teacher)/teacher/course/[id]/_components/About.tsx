@@ -1,17 +1,19 @@
-import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 
-const About = () => {
+const About = ({ course }: { course: ICourse }) => {
   return (
     <Paper>
       <Image
-        src="/intro-1.jpg"
+        src={course.thumbnail}
         alt="coure-thumbnail"
         width={300}
         height={150}
@@ -24,33 +26,43 @@ const About = () => {
       />
 
       <Stack gap={1} p={1}>
-        <Typography variant="h3">
-          ReactJS
-          <Divider />
+        <Typography variant="h3">{course.name}</Typography>
+        <Divider />
+        <Chip
+          label={course.status.toUpperCase()}
+          color={course.status === "approved" ? "success" : "warning"}
+          size="small"
+          sx={{ width: "fit-content" }}
+        />
+        <Typography variant="body1">
+          <b>Members: </b> {course.members.length}
         </Typography>
         <Typography variant="body1">
-          Type: <b>Public</b>
+          <b>Lessons: </b> {course.lessons.length}
         </Typography>
         <Typography variant="body1">
-          Started from <b>24/10/2023</b>
+          <b>Object: </b>
+          {course.consumer}
         </Typography>
         <Typography variant="body1">
-          Course has <b>300</b> user
+          <b>Category: </b>
+          {course.category}
         </Typography>
         <Typography variant="body1">
-          Object: <b>Beginner</b>
+          <b>Created time:</b> {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
         </Typography>
         <Typography variant="body1">
-          Category: <b>Web programming</b>
+          <b>Lastest updated time:</b> {dayjs(course.updatedAt).format("MMMM D, YYYY h:mm A")}
         </Typography>
-        <Box
+        <Button
+          fullWidth
           component={Link}
           href="/teacher/course/123/edit"
-          className="btn-link"
-          sx={{ bgcolor: "info.main" }}
+          className="btn-link bg-gradient"
+          sx={{ color: "#fff" }}
         >
           Edit
-        </Box>
+        </Button>
       </Stack>
     </Paper>
   );

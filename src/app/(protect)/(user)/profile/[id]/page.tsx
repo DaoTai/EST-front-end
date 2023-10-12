@@ -12,7 +12,6 @@ const getData = async (id: string): Promise<IProfile | undefined> => {
       Authorization: "Bearer " + session?.accessToken,
     },
   });
-  console.log("Res: ", res);
 
   if (!res.ok) {
     return undefined;

@@ -1,25 +1,45 @@
-import Banner from "@/components/course-components/Banner";
 import Box from "@mui/material/Box";
-
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import { getServerSession } from "next-auth";
 import Link from "next/link";
-import React from "react";
+import Banner from "@/components/course-components/Banner";
+import { options } from "@/config/next-auth";
+import { SERVER_URI } from "@/utils/constants/common";
+const getListCourses = async (): Promise<ICourse[] | undefined> => {
+  const session = await getServerSession(options);
+  const res = await fetch(SERVER_URI + "/courses", {
+    headers: {
+      Authorization: "Bearer " + session?.accessToken,
+    },
+  });
 
-const Teacher = () => {
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  }
+};
+
+const Teacher = async () => {
+  const listCourses = (await getListCourses()) ?? [];
+  const numberPendingCourses =
+    listCourses?.reduce((acc, course) => {
+      return acc + (course.status === "pending" ? 1 : 0);
+    }, 0) ?? 0;
+
   return (
-    <Container>
-      <Typography gutterBottom variant="h2" className="underline-gradient" margin={"0 auto"}>
+    <Container sx={{ pt: 1, pb: 4 }}>
+      <Typography gutterBottom variant="h3" className="underline-gradient" margin={"0 auto"}>
         List courses
       </Typography>
       <Box mt={2}>
         <Typography gutterBottom variant="body1">
-          Approved courses: <b>12</b>
+          Approved courses: <b>{listCourses.length - numberPendingCourses}</b>
         </Typography>
         <Typography gutterBottom variant="body1">
-          Pending status courses by admin : <b>12</b>
+          Pending courses: <b>{numberPendingCourses}</b>
         </Typography>
         <Box
           component={Link}
@@ -41,9 +61,9 @@ const Teacher = () => {
         </Box>
       </Box>
       <Stack>
-        <Banner />
-        <Banner />
-        <Banner />
+        {listCourses?.map((course) => (
+          <Banner key={course._id} course={course} />
+        ))}
       </Stack>
     </Container>
   );

@@ -112,9 +112,9 @@ const Footer = () => {
           </Typography>
 
           {business.map(({ name, value, icon }, i) => (
-            <Stack key={i} flexDirection={"row"} gap={1}>
+            <Stack key={i} flexDirection={"row"} alignItems={"center"} gap={1}>
               {icon}
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body1">
                 <b>{name} </b> {value}
               </Typography>
             </Stack>
@@ -138,7 +138,7 @@ const Footer = () => {
           </Typography>
 
           {socials.map(({ name, url, icon }, i) => (
-            <Stack key={i} flexDirection={"row"} gap={1} alignItems="stretch">
+            <Stack key={i} flexDirection={"row"} gap={1} alignItems="center">
               {icon}
               <Typography variant="body1" gutterBottom>
                 <b>{name}: </b>
@@ -193,7 +193,7 @@ const Footer = () => {
           overflow={"hidden"}
         >
           <Typography variant="h4" className="underline-gradient" gutterBottom>
-            Donate
+            Donatation
           </Typography>
 
           <Image src="/qr-donate-banking.jpg" alt="qr-bank" width={100} height={100} />
