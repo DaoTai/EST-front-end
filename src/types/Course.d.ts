@@ -7,14 +7,14 @@ interface ICourse {
   deleted: boolean;
   type: "public" | "private";
   slug: string;
-  thumbnail: string;
   createdBy: string;
   createdAt: string;
   updatedAt: string;
   members: any[];
   lessons: any[];
-  intro?: string;
+  intro: string;
+  thumbnail: IAttachment;
   openDate?: string;
   closeDate?: string;
-  roadmap?: string;
+  roadmap?: IAttachment;
 }

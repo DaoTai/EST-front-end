@@ -13,7 +13,7 @@ const About = ({ course }: { course: ICourse }) => {
   return (
     <Paper>
       <Image
-        src={course.thumbnail}
+        src={course.thumbnail.uri}
         alt="coure-thumbnail"
         width={300}
         height={150}
@@ -40,8 +40,8 @@ const About = ({ course }: { course: ICourse }) => {
         <Typography variant="body1">
           <b>Lessons: </b> {course.lessons.length}
         </Typography>
-        <Typography variant="body1">
-          <b>Object: </b>
+        <Typography variant="body1" textTransform={"capitalize"}>
+          <b>Consumer: </b>
           {course.consumer}
         </Typography>
         <Typography variant="body1">
@@ -52,12 +52,12 @@ const About = ({ course }: { course: ICourse }) => {
           <b>Created time:</b> {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
         </Typography>
         <Typography variant="body1">
-          <b>Lastest updated time:</b> {dayjs(course.updatedAt).format("MMMM D, YYYY h:mm A")}
+          <b>Updated time:</b> {dayjs(course.updatedAt).format("MMMM D, YYYY h:mm A")}
         </Typography>
         <Button
           fullWidth
           component={Link}
-          href="/teacher/course/123/edit"
+          href={`/teacher/course/${course._id}/edit`}
           className="btn-link bg-gradient"
           sx={{ color: "#fff" }}
         >

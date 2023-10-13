@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 import { editProfile } from "@/services/user/profile";
 import { MessageValidation } from "@/utils/constants/messages";

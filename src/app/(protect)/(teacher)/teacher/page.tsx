@@ -9,10 +9,15 @@ import Banner from "@/components/course-components/Banner";
 import { options } from "@/config/next-auth";
 import { SERVER_URI } from "@/utils/constants/common";
 const getListCourses = async (): Promise<ICourse[] | undefined> => {
+  console.log("Get lists courses");
+
   const session = await getServerSession(options);
   const res = await fetch(SERVER_URI + "/courses", {
     headers: {
       Authorization: "Bearer " + session?.accessToken,
+    },
+    next: {
+      tags: ["listCourses"],
     },
   });
 
@@ -60,6 +65,23 @@ const Teacher = async () => {
           Create new course
         </Box>
       </Box>
+
+      {listCourses.length === 0 && (
+        <Stack alignItems={"center"}>
+          <Typography gutterBottom variant="body1" textAlign={"center"} marginTop={2}>
+            You have no course
+          </Typography>
+          <Typography
+            variant="body1"
+            textAlign={"center"}
+            component={Link}
+            href="/teacher/course/create"
+          >
+            Let's create course
+          </Typography>
+        </Stack>
+      )}
+
       <Stack>
         {listCourses?.map((course) => (
           <Banner key={course._id} course={course} />

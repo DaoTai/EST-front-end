@@ -3,28 +3,29 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SendIcon from "@mui/icons-material/Send";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import FormHelperText from "@mui/material/FormHelperText";
-import { styled } from "@mui/material/styles";
+import styled from "@mui/material/styles/styled";
+import useTheme from "@mui/material/styles/useTheme";
 
-import { initFormCourse } from "@/utils/initialValues";
-import { FormCourseSchema } from "@/utils/validation/course";
-import { DateTimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-
-import { textFields, selectFields } from "../_fields";
-import dayjs from "dayjs";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { initFormCourse } from "@/utils/initialValues";
+import { FormCourseSchema } from "@/utils/validation/course";
+import { selectFields, textFields } from "../_fields";
+import { IFormCourse } from "@/types/ICourse";
+import { Stack } from "@mui/material";
 const VisuallyHiddenInput = styled("input")({
   overflow: "hidden",
   position: "absolute",
@@ -36,18 +37,20 @@ const VisuallyHiddenInput = styled("input")({
 
 interface IPropsFormCourse {
   type: "create" | "edit";
+  course?: ICourse;
+  onSubmit: (value: IFormCourse) => Promise<void>;
 }
 
-const FormCourse = ({ type }: IPropsFormCourse) => {
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
+  const { values, errors, touched, setValues, handleBlur, handleChange, handleSubmit } = useFormik({
     validationSchema: FormCourseSchema,
     initialValues: initFormCourse,
     onSubmit: async (values) => {
       const payload = {
         ...values,
-        thumbnail: thumbnail?.file,
-        roadmap,
-      };
+      } as IFormCourse;
+      if (thumbnail?.file) payload["thumbnail"] = thumbnail?.file;
+      if (roadmap) payload["roadmap"] = roadmap;
 
       if (payload.type === "private") {
         Object.assign(payload, {
@@ -55,17 +58,26 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
           closeDate: dayjs(closeDate).toISOString(),
         });
       }
-
-      console.log("payload: ", payload);
+      await onSubmit(payload);
     },
   });
 
   const [thumbnail, setThumbnail] = useState<{ file: File | null; preview: string }>();
   const [roadmap, setRoadmap] = useState<File | null>();
-  const [openDate, setOpenDate] = useState<string | null | dayjs.Dayjs>();
-  const [closeDate, setCloseDate] = useState<string | null | dayjs.Dayjs>();
+  const [openDate, setOpenDate] = useState<string | null | dayjs.Dayjs>(null);
+  const [closeDate, setCloseDate] = useState<string | null | dayjs.Dayjs>(null);
+  const [errorOpenDate, setErrorOpenDate] = useState<DateTimeValidationError | null>(null);
+  const [errorCloseDate, setErrorCloseDate] = useState<DateTimeValidationError | null>(null);
 
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (course) {
+      setValues(course);
+      course.openDate && setOpenDate(course.openDate);
+      course.closeDate && setCloseDate(course.closeDate);
+    }
+  }, [course]);
 
   useEffect(() => {
     return () => {
@@ -75,15 +87,15 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
 
   useEffect(() => {
     if (values.type === "private") {
-      if (!openDate) setOpenDate(dayjs().add(1, "day"));
-      if (!closeDate) setCloseDate(dayjs().add(1, "day"));
+      if (!openDate) setOpenDate(dayjs().add(1, "hour"));
+      if (!closeDate) setCloseDate(dayjs().add(2, "day"));
     }
   }, [values.type]);
 
   // Peview thumbnail
   const onPreviewThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    if (file)
+    if (file && file.type.includes("image"))
       setThumbnail({
         file,
         preview: URL.createObjectURL(file),
@@ -100,25 +112,47 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
 
   // On change open date
   const handleChangeOpenDate = (value: any) => {
-    try {
-      if (!value) {
-        setOpenDate(null);
-      } else {
-        setOpenDate(dayjs(value).toISOString());
-      }
-    } catch (error) {}
+    if (!value) {
+      setOpenDate(null);
+    } else {
+      setOpenDate(value);
+    }
   };
 
   // On change close date
   const handleChangeCloseDate = (value: any) => {
-    try {
-      if (!value) {
-        setCloseDate(null);
-      } else {
-        setCloseDate(dayjs(value).toISOString());
-      }
-    } catch (error) {}
+    if (!value) {
+      setCloseDate(null);
+    } else {
+      setCloseDate(value);
+    }
   };
+
+  // Message for open date
+  const errorOpenDateMessage = useMemo(() => {
+    switch (errorOpenDate) {
+      case "minTime": {
+        return "Please select a datetime more than 30 minutes now";
+      }
+
+      default: {
+        return "";
+      }
+    }
+  }, [errorOpenDate]);
+
+  // Message for close date
+  const errorCloseDateMessage = useMemo(() => {
+    switch (errorCloseDate) {
+      case "minTime": {
+        return "Please select a datetime more than 4 hours open date";
+      }
+
+      default: {
+        return "";
+      }
+    }
+  }, [errorCloseDate]);
 
   return (
     <Box pt={1} pb={2}>
@@ -132,8 +166,41 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
         {type} course
       </Typography>
 
+      {course && (
+        <Stack mt={2} gap={1} flexDirection={"row"} flexWrap={"wrap"}>
+          <Image
+            src={course.thumbnail.uri}
+            alt="thumb-nail"
+            width={300}
+            height={300}
+            style={{ borderRadius: 12, objectFit: "contain" }}
+          />
+          <Box component={"ul"}>
+            <Typography component={"li"} variant="body1" gutterBottom>
+              Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
+            </Typography>
+            <Typography component={"li"} variant="body1" gutterBottom>
+              Updated time: {dayjs(course.updatedAt).format("MMMM D, YYYY h:mm A")}
+            </Typography>
+            <Typography component={"li"} variant="body1" gutterBottom>
+              Lessons: {course.lessons.length}
+            </Typography>
+            <Typography component={"li"} variant="body1" gutterBottom>
+              Members: {course.members.length}
+            </Typography>
+          </Box>
+        </Stack>
+      )}
+
       {/* Form */}
-      <Grid container mt={2} spacing={2} component={"form"} onSubmit={handleSubmit}>
+      <Grid
+        container
+        mt={2}
+        spacing={2}
+        component={"form"}
+        onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+        onSubmit={handleSubmit}
+      >
         {/* Text fields */}
         {textFields.map((props, i) => (
           <Grid key={i} item md={6} xs={12}>
@@ -157,6 +224,9 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
               </Typography>
               <Select
                 {...props}
+                MenuProps={{
+                  disableScrollLock: true,
+                }}
                 value={values[props.name]}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -173,27 +243,57 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
           </Grid>
         ))}
 
-        {/* Date */}
+        {/* Open date*/}
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <DateTimePicker
               disablePast
               label="Open date register"
               disabled={!!(values.type === "public")}
-              minDate={dayjs()}
-              value={values.type === "private" ? openDate ?? dayjs().add(1, "day") : null}
+              minDateTime={dayjs().add(29, "minutes")}
+              value={values.type === "private" ? openDate ?? dayjs().add(1, "hour") : null}
+              slotProps={{
+                textField: {
+                  helperText: errorOpenDateMessage,
+                  InputProps: {
+                    disabled: true,
+                    sx: {
+                      ".mui-aw45kt-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled": {
+                        WebkitTextFillColor: "text.primary",
+                      },
+                    },
+                  },
+                },
+              }}
+              onError={(newError) => setErrorOpenDate(newError)}
               onChange={handleChangeOpenDate}
             />
           </FormControl>
         </Grid>
+
+        {/* Close date */}
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <DateTimePicker
               disablePast
               label="Close date register"
               disabled={!!(values.type === "public")}
-              value={values.type === "private" ? closeDate ?? dayjs().add(1, "day") : null}
-              minDate={dayjs(openDate) || dayjs()}
+              value={values.type === "private" ? closeDate ?? dayjs().add(2, "day") : null}
+              minDateTime={dayjs(openDate).add(4, "hour") || dayjs().add(4, "hour")}
+              slotProps={{
+                textField: {
+                  helperText: errorCloseDateMessage,
+                  InputProps: {
+                    disabled: true,
+                  },
+                  sx: {
+                    ".mui-aw45kt-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled": {
+                      WebkitTextFillColor: "text.primary",
+                    },
+                  },
+                },
+              }}
+              onError={(newError) => setErrorCloseDate(newError)}
               onChange={handleChangeCloseDate}
             />
           </FormControl>
@@ -244,10 +344,14 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
               Upload thumbnail
               <VisuallyHiddenInput
                 type="file"
+                accept="image/png, image/gif, image/jpeg"
                 ref={thumbnailInputRef}
                 onChange={onPreviewThumbnail}
               />
             </Button>
+            <Typography variant="caption" ml={1} mt={1}>
+              Accept: image/png, image/gif, image/jpeg
+            </Typography>
           </FormControl>
         </Grid>
 
@@ -268,12 +372,18 @@ const FormCourse = ({ type }: IPropsFormCourse) => {
               helperText={touched.intro && errors.intro}
               onChange={handleChange}
               onBlur={handleBlur}
+              onKeyDown={(e) => e.stopPropagation()}
             />
           </FormControl>
         </Grid>
 
         <Grid item md={12} display={"flex"} justifyContent={"end"}>
-          <Button type="submit" variant="contained" endIcon={<SendIcon />}>
+          <Button
+            type="submit"
+            variant="contained"
+            endIcon={<SendIcon />}
+            disabled={!!(errorOpenDate || errorCloseDate)}
+          >
             {type === "create" ? "Send" : "Edit"}
           </Button>
         </Grid>
