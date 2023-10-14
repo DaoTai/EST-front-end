@@ -14,18 +14,19 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import styled from "@mui/material/styles/styled";
-import useTheme from "@mui/material/styles/useTheme";
 
+import { IFormCourse, IEditFormCouse } from "@/types/ICourse";
+import { initFormCourse } from "@/utils/initialValues";
+import { FormCourseSchema } from "@/utils/validation/course";
+import { Stack } from "@mui/material";
 import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
-import { initFormCourse } from "@/utils/initialValues";
-import { FormCourseSchema } from "@/utils/validation/course";
 import { selectFields, textFields } from "../_fields";
-import { IFormCourse } from "@/types/ICourse";
-import { Stack } from "@mui/material";
+import { getChangedValuesObject } from "@/utils/functions";
+
 const VisuallyHiddenInput = styled("input")({
   overflow: "hidden",
   position: "absolute",
@@ -42,23 +43,47 @@ interface IPropsFormCourse {
 }
 
 const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
-  const { values, errors, touched, setValues, handleBlur, handleChange, handleSubmit } = useFormik({
+  const {
+    values,
+    errors,
+    touched,
+    isSubmitting,
+    setValues,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+  } = useFormik({
     validationSchema: FormCourseSchema,
     initialValues: initFormCourse,
     onSubmit: async (values) => {
-      const payload = {
-        ...values,
-      } as IFormCourse;
-      if (thumbnail?.file) payload["thumbnail"] = thumbnail?.file;
-      if (roadmap) payload["roadmap"] = roadmap;
+      try {
+        let payload = {
+          ...values,
+        } as IFormCourse;
+        if (thumbnail?.file) payload["thumbnail"] = thumbnail?.file;
+        if (roadmap) payload["roadmap"] = roadmap;
 
-      if (payload.type === "private") {
-        Object.assign(payload, {
-          openDate: dayjs(openDate).toISOString(),
-          closeDate: dayjs(closeDate).toISOString(),
-        });
-      }
-      await onSubmit(payload);
+        if (payload.type === "private") {
+          const formatOpenDate = dayjs(openDate).toISOString();
+          const formatCloseDate = dayjs(closeDate).toISOString();
+
+          if (type === "edit") {
+            if (formatOpenDate !== course?.openDate) payload.openDate = formatOpenDate;
+            if (formatCloseDate !== course?.closeDate) payload.closeDate = formatCloseDate;
+          } else {
+            Object.assign(payload, {
+              openDate: formatOpenDate,
+              closeDate: formatCloseDate,
+            });
+          }
+        }
+
+        if (type === "edit" && course) {
+          payload = getChangedValuesObject(payload, course);
+        }
+
+        await onSubmit(payload);
+      } catch (error) {}
     },
   });
 
@@ -73,9 +98,16 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
 
   useEffect(() => {
     if (course) {
-      setValues(course);
-      course.openDate && setOpenDate(course.openDate);
-      course.closeDate && setCloseDate(course.closeDate);
+      console.log("course: ", course);
+
+      const data = {} as any;
+      // Get value is compatiable with values
+      for (const key of Object.keys(initFormCourse)) {
+        data[key] = course[key as keyof ICourse];
+      }
+      setValues(data);
+      course.openDate && setOpenDate(dayjs(course.openDate));
+      course.closeDate && setCloseDate(dayjs(course.closeDate));
     }
   }, [course]);
 
@@ -154,6 +186,15 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
     }
   }, [errorCloseDate]);
 
+  // Disabled open date register: when open date is past time
+  const isPastOpenDate = useMemo(() => {
+    if (course?.openDate) {
+      const now = new Date().getTime();
+      const openDate = new Date(course.openDate).getTime();
+      return now - openDate > 0;
+    }
+  }, [course, type]);
+
   return (
     <Box pt={1} pb={2}>
       <Typography
@@ -162,12 +203,14 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         margin={"0 auto"}
         textTransform="capitalize"
         gutterBottom
+        mb={2}
       >
         {type} course
       </Typography>
 
+      {/* About */}
       {course && (
-        <Stack mt={2} gap={1} flexDirection={"row"} flexWrap={"wrap"}>
+        <Stack mt={2} gap={1} flexDirection={"row"} justifyContent={"center"} flexWrap={"wrap"}>
           <Image
             src={course.thumbnail.uri}
             alt="thumb-nail"
@@ -175,18 +218,21 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
             height={300}
             style={{ borderRadius: 12, objectFit: "contain" }}
           />
-          <Box component={"ul"}>
+          <Box component={"ul"} flexGrow={2}>
             <Typography component={"li"} variant="body1" gutterBottom>
-              Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
+              Created time: {dayjs(course.createdAt).format("dddd, MMMM D, YYYY h:mm A")}
             </Typography>
             <Typography component={"li"} variant="body1" gutterBottom>
-              Updated time: {dayjs(course.updatedAt).format("MMMM D, YYYY h:mm A")}
+              Updated time: {dayjs(course.updatedAt).format("dddd, MMMM D, YYYY h:mm A")}
             </Typography>
             <Typography component={"li"} variant="body1" gutterBottom>
               Lessons: {course.lessons.length}
             </Typography>
             <Typography component={"li"} variant="body1" gutterBottom>
               Members: {course.members.length}
+            </Typography>
+            <Typography component={"li"} variant="body1" gutterBottom>
+              Roadmap: {course.roadmap?.uri}
             </Typography>
           </Box>
         </Stack>
@@ -195,7 +241,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
       {/* Form */}
       <Grid
         container
-        mt={2}
+        mt={1}
         spacing={2}
         component={"form"}
         onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
@@ -247,14 +293,14 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <DateTimePicker
-              disablePast
+              disablePast={type === "create"}
               label="Open date register"
-              disabled={!!(values.type === "public")}
-              minDateTime={dayjs().add(29, "minutes")}
+              disabled={!!(values.type === "public") || isPastOpenDate}
+              minDateTime={type === "create" ? dayjs().add(29, "minutes") : undefined}
               value={values.type === "private" ? openDate ?? dayjs().add(1, "hour") : null}
               slotProps={{
                 textField: {
-                  helperText: errorOpenDateMessage,
+                  helperText: errorOpenDateMessage || (isPastOpenDate && "Open date was past"),
                   InputProps: {
                     disabled: true,
                     sx: {
@@ -382,7 +428,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
             type="submit"
             variant="contained"
             endIcon={<SendIcon />}
-            disabled={!!(errorOpenDate || errorCloseDate)}
+            disabled={!!(errorOpenDate || errorCloseDate || isSubmitting)}
           >
             {type === "create" ? "Send" : "Edit"}
           </Button>

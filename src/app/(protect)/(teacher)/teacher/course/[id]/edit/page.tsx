@@ -3,16 +3,8 @@ import { IFormCourse } from "@/types/ICourse";
 import Container from "@mui/material/Container";
 import { useEffect, useState } from "react";
 import FormCourse from "../../_components/FormCourse";
-import { Box, Paper } from "@mui/material";
-
-const getCourseById = async (id: string) => {
-  try {
-    const res = await fetch("/api/teacher/courses/" + id);
-    if (res.ok) return await res.json();
-
-    return undefined;
-  } catch (error) {}
-};
+import { toast } from "react-toastify";
+import { convertObjectToFormData } from "@/utils/functions";
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
   const [course, setCourse] = useState<ICourse>();
@@ -23,12 +15,43 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     })();
   }, []);
 
-  const handleEdit = async (values: IFormCourse) => {};
+  // Chưa revalidate
+  const getCourseById = async (id: string) => {
+    try {
+      const res = await fetch("/api/teacher/courses/" + id, {
+        next: {
+          tags: ["course"],
+        },
+      });
+
+      if (res.ok) return await res.json();
+
+      return undefined;
+    } catch (error) {}
+  };
+
+  const handleEdit = async (values: IFormCourse) => {
+    try {
+      const formData = convertObjectToFormData(values);
+
+      const res = await fetch("/api/teacher/courses/" + params.id, {
+        method: "PATCH",
+        body: formData,
+      });
+      const data = await res.json();
+      console.log("Data: ", data);
+
+      toast.success("Edited course successfully");
+      return data;
+    } catch (error) {
+      toast.error("Edit course failed");
+    }
+  };
 
   return (
-    <Box pr={2} pl={2}>
+    <Container>
       {course && <FormCourse type="edit" course={course} onSubmit={handleEdit} />}
-    </Box>
+    </Container>
   );
 };
 

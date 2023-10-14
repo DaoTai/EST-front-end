@@ -8,9 +8,8 @@ import Link from "next/link";
 import Banner from "@/components/course-components/Banner";
 import { options } from "@/config/next-auth";
 import { SERVER_URI } from "@/utils/constants/common";
-const getListCourses = async (): Promise<ICourse[] | undefined> => {
-  console.log("Get lists courses");
 
+const getListCourses = async (): Promise<ICourse[] | undefined> => {
   const session = await getServerSession(options);
   const res = await fetch(SERVER_URI + "/courses", {
     headers: {
