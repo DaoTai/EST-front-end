@@ -1,7 +1,7 @@
 "use client";
 import { IFormCourse } from "@/types/ICourse";
 import Container from "@mui/material/Container";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormCourse from "../../_components/FormCourse";
 import { toast } from "react-toastify";
 import { convertObjectToFormData } from "@/utils/functions";
@@ -30,7 +30,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     } catch (error) {}
   };
 
-  const handleEdit = async (values: IFormCourse) => {
+  const handleEdit = useCallback(async (values: IFormCourse) => {
     try {
       const formData = convertObjectToFormData(values);
 
@@ -46,7 +46,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     } catch (error) {
       toast.error("Edit course failed");
     }
-  };
+  }, []);
 
   return (
     <Container>

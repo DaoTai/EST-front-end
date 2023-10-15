@@ -13,19 +13,22 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import styled from "@mui/material/styles/styled";
 
 import { IFormCourse, IEditFormCouse } from "@/types/ICourse";
 import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
-import { Stack } from "@mui/material";
+
 import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
 import { selectFields, textFields } from "../_fields";
 import { getChangedValuesObject } from "@/utils/functions";
+import { toast } from "react-toastify";
+import AboutCourse from "./AboutCourse";
 
 const VisuallyHiddenInput = styled("input")({
   overflow: "hidden",
@@ -81,9 +84,14 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         if (type === "edit" && course) {
           payload = getChangedValuesObject(payload, course);
         }
-
+        if (type === "create" && !payload["thumbnail"]) {
+          toast.error("Thumbnail is required");
+          return;
+        }
         await onSubmit(payload);
-      } catch (error) {}
+      } catch (error) {
+        console.log("Error: ", error);
+      }
     },
   });
 
@@ -98,8 +106,6 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
 
   useEffect(() => {
     if (course) {
-      console.log("course: ", course);
-
       const data = {} as any;
       // Get value is compatiable with values
       for (const key of Object.keys(initFormCourse)) {
@@ -209,34 +215,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
       </Typography>
 
       {/* About */}
-      {course && (
-        <Stack mt={2} gap={1} flexDirection={"row"} justifyContent={"center"} flexWrap={"wrap"}>
-          <Image
-            src={course.thumbnail.uri}
-            alt="thumb-nail"
-            width={300}
-            height={300}
-            style={{ borderRadius: 12, objectFit: "contain" }}
-          />
-          <Box component={"ul"} flexGrow={2}>
-            <Typography component={"li"} variant="body1" gutterBottom>
-              Created time: {dayjs(course.createdAt).format("dddd, MMMM D, YYYY h:mm A")}
-            </Typography>
-            <Typography component={"li"} variant="body1" gutterBottom>
-              Updated time: {dayjs(course.updatedAt).format("dddd, MMMM D, YYYY h:mm A")}
-            </Typography>
-            <Typography component={"li"} variant="body1" gutterBottom>
-              Lessons: {course.lessons.length}
-            </Typography>
-            <Typography component={"li"} variant="body1" gutterBottom>
-              Members: {course.members.length}
-            </Typography>
-            <Typography component={"li"} variant="body1" gutterBottom>
-              Roadmap: {course.roadmap?.uri}
-            </Typography>
-          </Box>
-        </Stack>
-      )}
+      {course && <AboutCourse course={course} />}
 
       {/* Form */}
       <Grid
@@ -387,7 +366,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               color="info"
               startIcon={<AddPhotoAlternateIcon />}
             >
-              Upload thumbnail
+              Upload thumbnail*
               <VisuallyHiddenInput
                 type="file"
                 accept="image/png, image/gif, image/jpeg"
@@ -430,7 +409,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
             endIcon={<SendIcon />}
             disabled={!!(errorOpenDate || errorCloseDate || isSubmitting)}
           >
-            {type === "create" ? "Send" : "Edit"}
+            {type === "create" ? "Create" : "Edit"}
           </Button>
         </Grid>
       </Grid>
@@ -438,4 +417,4 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
   );
 };
 
-export default FormCourse;
+export default memo(FormCourse);

@@ -1,5 +1,9 @@
 import { blue } from "@mui/material/colors";
 export default {
+  body: {
+    padding: "0px !important",
+  },
+
   a: {
     color: blue[700],
   },

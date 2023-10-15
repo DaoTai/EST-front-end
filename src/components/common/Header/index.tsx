@@ -7,7 +7,7 @@ import SearchBar from "./SearchBar";
 import { Box, Stack } from "@mui/material";
 const Header = () => {
   return (
-    <AppBar position="fixed" sx={{ height: 80 }}>
+    <AppBar position="fixed" sx={{ height: 80, p: "unset !important" }}>
       <Toolbar
         sx={{
           height: "100%",

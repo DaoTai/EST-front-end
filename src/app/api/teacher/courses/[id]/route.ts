@@ -48,3 +48,19 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     return NextResponse.json(null);
   }
 }
+
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+  const id = params.id;
+
+  try {
+    const session = await getServerSession(options);
+
+    await serverAxios.delete("/courses/" + id, {
+      headers: {
+        Authorization: "Bearer " + session?.accessToken,
+      },
+    });
+  } catch (error) {
+    return NextResponse.error();
+  }
+}

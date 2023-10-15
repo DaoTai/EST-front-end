@@ -2,12 +2,13 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Banner from "@/components/course-components/Banner";
 import { options } from "@/config/next-auth";
 import { SERVER_URI } from "@/utils/constants/common";
+import { IconButton, Tooltip } from "@mui/material";
 
 const getListCourses = async (): Promise<ICourse[] | undefined> => {
   const session = await getServerSession(options);
@@ -45,25 +46,45 @@ const Teacher = async () => {
         <Typography gutterBottom variant="body1">
           Pending courses: <b>{numberPendingCourses}</b>
         </Typography>
-        <Box
-          component={Link}
-          href="/teacher/course/create"
-          className="btn-link"
-          sx={{
-            color: "text.primary",
-            pl: 2,
-            pr: 2,
-            borderRadius: 1,
-            display: "block",
-            bgcolor: "info.main",
-            ":hover": {
-              bgcolor: "info.light",
-            },
-          }}
-        >
-          Create new course
-        </Box>
+        {/* Actions */}
+        <Stack flexDirection={"row"} alignItems={"center"} justifyContent={"space-between"}>
+          <Box
+            component={Link}
+            href="/teacher/course/create"
+            className="btn-link"
+            sx={{
+              color: "#fff",
+              pl: 2,
+              pr: 2,
+              borderRadius: 1,
+              display: "block",
+              bgcolor: "info.main",
+              ":hover": {
+                bgcolor: "info.light",
+              },
+            }}
+          >
+            Create new course
+          </Box>
+          <Tooltip arrow title="Trashes" placement="right">
+            <IconButton
+              component={Link}
+              href="/teacher/course/trashes"
+              size="medium"
+              color="info"
+              sx={{ border: 1 }}
+            >
+              <DeleteSweepIcon />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       </Box>
+
+      <Stack>
+        {listCourses?.map((course) => (
+          <Banner key={course._id} course={course} />
+        ))}
+      </Stack>
 
       {listCourses.length === 0 && (
         <Stack alignItems={"center"}>
@@ -80,12 +101,6 @@ const Teacher = async () => {
           </Typography>
         </Stack>
       )}
-
-      <Stack>
-        {listCourses?.map((course) => (
-          <Banner key={course._id} course={course} />
-        ))}
-      </Stack>
     </Container>
   );
 };

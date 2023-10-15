@@ -37,7 +37,9 @@ const Banner = ({ course }: { course: ICourse }) => {
             },
           }}
         >
-          <Image src={course.thumbnail.uri} alt="course-thumbnail" width={250} height={250} />
+          {course.thumbnail && (
+            <Image src={course.thumbnail.uri} alt="course-thumbnail" width={250} height={250} />
+          )}
         </Grid>
         {/* Information */}
         <Grid item lg={8} md={8} sm={12} xs={12} textTransform={"capitalize"}>
