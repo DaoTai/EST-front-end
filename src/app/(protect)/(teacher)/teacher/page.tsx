@@ -17,9 +17,10 @@ const getListCourses = async (): Promise<ICourse[] | undefined> => {
       Authorization: "Bearer " + session?.accessToken,
     },
     next: {
-      tags: ["listCourses"],
+      tags: ["list-courses"],
     },
   });
+  console.log("hello");
 
   if (res.ok) {
     const data = await res.json();

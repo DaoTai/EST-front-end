@@ -1,5 +1,7 @@
 import ComputerIcon from "@mui/icons-material/Computer";
 import HomeIcon from "@mui/icons-material/Home";
+import SchoolIcon from "@mui/icons-material/School";
+import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import StoreIcon from "@mui/icons-material/Store";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -11,7 +13,7 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <Stack
-      p={1}
+      p={2}
       spacing={2}
       boxShadow={2}
       flexShrink={0}
@@ -21,7 +23,9 @@ const Navbar = () => {
           position: "relative",
           transition: "all ease 0.2s",
           borderRadius: 2,
-          display: "block",
+          display: "flex",
+          gap: 2,
+          justifyContent: "space-between",
           color: "text.primary",
           "&:hover": {
             color: "text.primary",
@@ -36,19 +40,19 @@ const Navbar = () => {
       </IconButton> */}
       <IconButton LinkComponent={Link} href="/teacher">
         <ModelTrainingIcon fontSize="large" />
-        <Typography variant="subtitle2">Teacher</Typography>
+        <Typography variant="subtitle1">Teacher</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/profile">
-        <ComputerIcon fontSize="large" />
-        <Typography variant="subtitle2">My courses</Typography>
+        <SchoolIcon fontSize="large" />
+        <Typography variant="subtitle1">Mine</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/profile">
         <StoreIcon fontSize="large" />
-        <Typography variant="subtitle2">Courses</Typography>
+        <Typography variant="subtitle1">Courses</Typography>
       </IconButton>
       <IconButton LinkComponent={Link} href="/explore">
         <GroupsIcon fontSize="large" />
-        <Typography variant="subtitle2">Members</Typography>
+        <Typography variant="subtitle1">Members</Typography>
       </IconButton>
     </Stack>
   );

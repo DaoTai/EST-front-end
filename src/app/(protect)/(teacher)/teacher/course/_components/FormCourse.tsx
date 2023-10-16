@@ -90,9 +90,9 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           return;
         }
         await onSubmit?.(payload);
-        setTimeout(() => {
-          router.back();
-        }, 2000);
+        // setTimeout(() => {
+        //   router.back();
+        // }, 2000);
       } catch (error) {
         console.log("Error: ", error);
       }

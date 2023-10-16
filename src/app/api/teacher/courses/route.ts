@@ -4,7 +4,6 @@ import { revalidateTag } from "next/cache";
 import serverAxios from "@/config/axios";
 import { options } from "@/config/next-auth";
 import { SERVER_URI } from "@/utils/constants/common";
-
 export const POST = async (req: NextRequest) => {
   try {
     const session = await getServerSession(options);
@@ -15,7 +14,8 @@ export const POST = async (req: NextRequest) => {
         Authorization: "Bearer " + session?.accessToken,
       },
     });
-    // revalidateTag("listCourses");
+
+    revalidateTag("list-courses");
 
     return NextResponse.json(res.data, {
       status: 200,

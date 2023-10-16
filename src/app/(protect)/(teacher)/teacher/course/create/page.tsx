@@ -3,6 +3,7 @@ import { Container } from "@mui/material";
 import FormCourse from "../_components/FormCourse";
 import { IFormCourse } from "@/types/ICourse";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const CreateCourse = () => {
   const handleCreateCourse = async (value: IFormCourse) => {
@@ -21,7 +22,8 @@ const CreateCourse = () => {
     }
   };
   return (
-    <Container>
+    <Container sx={{ pt: 2 }}>
+      <Link href="/teacher">Back</Link>
       <FormCourse type="create" onSubmit={handleCreateCourse} />
     </Container>
   );

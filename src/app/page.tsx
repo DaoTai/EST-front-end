@@ -19,7 +19,7 @@ export default function Home() {
         {!isMobile && <Navbar />}
         <Stack gap={2} sx={{ flex: "1 1", bgcolor: "white.main" }}>
           <Divider>
-            <Typography gutterBottom variant="h1" fontWeight={700} className="underline-gradient">
+            <Typography gutterBottom variant="h2" fontWeight={700} className="underline-gradient">
               EST Edu
             </Typography>
           </Divider>

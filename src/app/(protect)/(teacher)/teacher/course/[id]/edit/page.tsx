@@ -1,10 +1,12 @@
 "use client";
 import { IFormCourse } from "@/types/ICourse";
-import Container from "@mui/material/Container";
-import { useCallback, useEffect, useState } from "react";
-import FormCourse from "../../_components/FormCourse";
-import { toast } from "react-toastify";
 import { convertObjectToFormData } from "@/utils/functions";
+import Container from "@mui/material/Container";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import FormCourse from "../../_components/FormCourse";
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
   const [course, setCourse] = useState<ICourse>();
@@ -20,7 +22,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     try {
       const res = await fetch("/api/teacher/courses/" + id, {
         next: {
-          tags: ["course"],
+          tags: ["item"],
         },
       });
 
@@ -39,7 +41,6 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
         body: formData,
       });
       const data = await res.json();
-      console.log("Data: ", data);
 
       toast.success("Edited course successfully");
       return data;
@@ -48,8 +49,14 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
     }
   }, []);
 
+  if (course?.deleted) {
+    console.log("course: ", course);
+    redirect("/");
+  }
+
   return (
     <Container>
+      <Link href={"/teacher"}>Back</Link>
       {course && <FormCourse type="edit" course={course} onSubmit={handleEdit} />}
     </Container>
   );
