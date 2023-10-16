@@ -17,6 +17,7 @@ export default {
     padding: "8px 16px",
     borderRadius: "4px",
     width: "fit-content",
+    cursor: "pointer",
     "&:hover": {
       backgroundColor: "rgba(0,0,0,0.15)",
     },

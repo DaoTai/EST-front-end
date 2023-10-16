@@ -13,22 +13,22 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
 import styled from "@mui/material/styles/styled";
 
-import { IFormCourse, IEditFormCouse } from "@/types/ICourse";
+import { IFormCourse } from "@/types/ICourse";
 import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
 
+import { getChangedValuesObject } from "@/utils/functions";
 import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
-import { selectFields, textFields } from "../_fields";
-import { getChangedValuesObject } from "@/utils/functions";
 import { toast } from "react-toastify";
+import { selectFields, textFields } from "../_fields";
 import AboutCourse from "./AboutCourse";
+import { useRouter } from "next/navigation";
 
 const VisuallyHiddenInput = styled("input")({
   overflow: "hidden",
@@ -40,12 +40,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 interface IPropsFormCourse {
-  type: "create" | "edit";
+  type: "create" | "edit" | "watch";
   course?: ICourse;
-  onSubmit: (value: IFormCourse) => Promise<void>;
+  onSubmit?: (value: IFormCourse) => Promise<void>;
 }
 
 const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
+  const router = useRouter();
   const {
     values,
     errors,
@@ -88,7 +89,10 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           toast.error("Thumbnail is required");
           return;
         }
-        await onSubmit(payload);
+        await onSubmit?.(payload);
+        setTimeout(() => {
+          router.back();
+        }, 2000);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -215,7 +219,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
       </Typography>
 
       {/* About */}
-      {course && <AboutCourse course={course} />}
+      {course && <AboutCourse course={course} type={type} />}
 
       {/* Form */}
       <Grid
@@ -236,6 +240,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               onBlur={handleBlur}
               error={!!(touched[props.name] && errors[props.name])}
               helperText={touched[props.name] && errors[props.name]}
+              disabled={type === "watch"}
             />
           </Grid>
         ))}
@@ -256,6 +261,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={!!(touched[props.name] && errors[props.name])}
+                disabled={type === "watch"}
               >
                 {menuItem.map((menu, j) => (
                   <MenuItem key={j} value={menu.value}>
@@ -324,61 +330,65 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           </FormControl>
         </Grid>
 
-        {/* Upload files */}
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
-            <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-              Upload roadmap
-              <VisuallyHiddenInput type="file" onChange={onChangeRoadmap} />
-            </Button>
-            <FormHelperText>{roadmap?.name}</FormHelperText>
-          </FormControl>
-        </Grid>
+        {type !== "watch" && (
+          <>
+            {/* Upload files */}
+            <Grid item md={6} xs={12}>
+              <FormControl fullWidth>
+                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                  Upload roadmap
+                  <VisuallyHiddenInput type="file" onChange={onChangeRoadmap} />
+                </Button>
+                <FormHelperText>{roadmap?.name}</FormHelperText>
+              </FormControl>
+            </Grid>
 
-        {/* Upload thumbnail */}
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
-            {thumbnail?.preview && (
-              <Box position={"relative"} mb={2}>
-                <Image
-                  src={thumbnail.preview}
-                  alt="thumb-nail"
-                  width={300}
-                  height={300}
-                  style={{ borderRadius: 12, margin: "0 auto" }}
-                />
-                <IconButton
-                  sx={{ position: "absolute", top: 0, right: 5 }}
-                  onClick={() =>
-                    setThumbnail({
-                      file: null,
-                      preview: "",
-                    })
-                  }
+            {/* Upload thumbnail */}
+            <Grid item md={6} xs={12}>
+              <FormControl fullWidth>
+                {thumbnail?.preview && (
+                  <Box position={"relative"} mb={2}>
+                    <Image
+                      src={thumbnail.preview}
+                      alt="thumb-nail"
+                      width={300}
+                      height={300}
+                      style={{ borderRadius: 12, margin: "0 auto" }}
+                    />
+                    <IconButton
+                      sx={{ position: "absolute", top: 0, right: 5 }}
+                      onClick={() =>
+                        setThumbnail({
+                          file: null,
+                          preview: "",
+                        })
+                      }
+                    >
+                      <CloseIcon fontSize="large" />
+                    </IconButton>
+                  </Box>
+                )}
+                <Button
+                  component="label"
+                  variant="contained"
+                  color="info"
+                  startIcon={<AddPhotoAlternateIcon />}
                 >
-                  <CloseIcon fontSize="large" />
-                </IconButton>
-              </Box>
-            )}
-            <Button
-              component="label"
-              variant="contained"
-              color="info"
-              startIcon={<AddPhotoAlternateIcon />}
-            >
-              Upload thumbnail*
-              <VisuallyHiddenInput
-                type="file"
-                accept="image/png, image/gif, image/jpeg"
-                ref={thumbnailInputRef}
-                onChange={onPreviewThumbnail}
-              />
-            </Button>
-            <Typography variant="caption" ml={1} mt={1}>
-              Accept: image/png, image/gif, image/jpeg
-            </Typography>
-          </FormControl>
-        </Grid>
+                  Upload thumbnail*
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/png, image/gif, image/jpeg"
+                    ref={thumbnailInputRef}
+                    onChange={onPreviewThumbnail}
+                  />
+                </Button>
+                <Typography variant="caption" ml={1} mt={1}>
+                  Accept: image/png, image/gif, image/jpeg
+                </Typography>
+              </FormControl>
+            </Grid>
+          </>
+        )}
 
         {/* Intro */}
         <Grid item md={12} xs={12}>
@@ -392,6 +402,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               placeholder="Introduce course"
               spellCheck={false}
               minRows={5}
+              disabled={type === "watch"}
               value={values.intro || ""}
               error={!!(touched.intro && errors.intro)}
               helperText={touched.intro && errors.intro}
@@ -402,16 +413,18 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           </FormControl>
         </Grid>
 
-        <Grid item md={12} display={"flex"} justifyContent={"end"}>
-          <Button
-            type="submit"
-            variant="contained"
-            endIcon={<SendIcon />}
-            disabled={!!(errorOpenDate || errorCloseDate || isSubmitting)}
-          >
-            {type === "create" ? "Create" : "Edit"}
-          </Button>
-        </Grid>
+        {type !== "watch" && (
+          <Grid item md={12} display={"flex"} justifyContent={"end"}>
+            <Button
+              type="submit"
+              variant="contained"
+              endIcon={<SendIcon />}
+              disabled={!!(errorOpenDate || errorCloseDate || isSubmitting)}
+            >
+              {type === "create" ? "Create" : "Edit"}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );

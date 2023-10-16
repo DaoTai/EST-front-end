@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -13,7 +13,7 @@ type Props = {
   onSubmit: () => void;
 };
 
-export default function AlertDialogSlide({ title, content, onClose, onSubmit }: Props) {
+export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
   return (
     <Dialog open keepMounted fullWidth scroll="paper" onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>

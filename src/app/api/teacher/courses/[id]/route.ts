@@ -34,7 +34,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   try {
     const session = await getServerSession(options);
     const body = await request.formData();
-    console.log("Form data: ", body);
 
     const res = await serverAxios.patch("/courses/" + id, body, {
       headers: {

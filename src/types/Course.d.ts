@@ -16,5 +16,6 @@ interface ICourse {
   thumbnail: IAttachment;
   openDate?: string;
   closeDate?: string;
+  deletedAt?: string;
   roadmap?: IAttachment;
 }

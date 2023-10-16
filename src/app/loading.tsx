@@ -1,10 +1,7 @@
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
+import React from "react";
+import Loading from "@/components/custom/Loading";
+const loading = () => {
+  return <Loading />;
+};
 
-export default function SimpleBackdrop() {
-  return (
-    <Backdrop open>
-      <CircularProgress color="inherit" />
-    </Backdrop>
-  );
-}
+export default loading;

@@ -1,4 +1,4 @@
-import Dialog from "@/components/common/Dialog";
+import Dialog from "@/components/custom/Dialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { memo, useState } from "react";
 import { toast } from "react-toastify";
 
-const AboutCourse = ({ course }: { course: ICourse }) => {
+const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edit" | "watch" }) => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const handleDeleteCouse = async () => {
@@ -63,14 +63,17 @@ const AboutCourse = ({ course }: { course: ICourse }) => {
             </Typography>
           )}
         </Box>
-        {/* Delete */}
-        <IconButton
-          color="error"
-          sx={{ alignSelf: "start", border: 1 }}
-          onClick={() => setOpen(true)}
-        >
-          <DeleteIcon />
-        </IconButton>
+
+        {/* Delete button*/}
+        {type !== "watch" && (
+          <IconButton
+            color="error"
+            sx={{ alignSelf: "start", border: 1 }}
+            onClick={() => setOpen(true)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        )}
       </Stack>
 
       {open && (

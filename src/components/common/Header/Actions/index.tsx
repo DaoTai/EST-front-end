@@ -1,5 +1,5 @@
 "use client";
-import { MyList } from "@/components/custom";
+import MyList from "@/components/custom/MyList";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";

@@ -62,6 +62,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.23.1":
+  version "7.23.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
+  integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/types@^7.22.15":
   version "7.23.0"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.23.0.tgz#8c1f020c9df0e737e4e247c0619f58c68458aaeb"
@@ -346,6 +353,17 @@
     "@types/prop-types" "^15.7.5"
     prop-types "^15.8.1"
     react-is "^18.2.0"
+
+"@mui/x-data-grid@^6.16.2":
+  version "6.16.2"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.16.2.tgz#115354c32827c4a92a05c7576dbe3b152ca718f3"
+  integrity sha512-nKZxlzkcqXUbgxvz01J0okziBH4uvnEVVneOSzp5TeCOC7Wke1YFBJRRjR6H6tVpbaqlOw/LFULrTfcJtiaMBQ==
+  dependencies:
+    "@babel/runtime" "^7.23.1"
+    "@mui/utils" "^5.14.11"
+    clsx "^2.0.0"
+    prop-types "^15.8.1"
+    reselect "^4.1.8"
 
 "@mui/x-date-pickers@^6.16.0":
   version "6.16.0"

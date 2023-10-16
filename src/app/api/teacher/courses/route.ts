@@ -9,7 +9,6 @@ export const POST = async (req: NextRequest) => {
   try {
     const session = await getServerSession(options);
     const body = await req.formData();
-
     const res = await serverAxios.post("/courses", body, {
       headers: {
         "Content-Type": "multipart/form-data",

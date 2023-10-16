@@ -25,9 +25,7 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const session = await getServerSession(options);
-
   const body = await req.formData();
-
   try {
     const res = await axios.patch("/user/profile", body, {
       headers: {

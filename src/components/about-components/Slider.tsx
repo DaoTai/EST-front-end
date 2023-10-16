@@ -1,13 +1,14 @@
 "use client";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 import Grid from "@mui/material/Grid";
 import Grow from "@mui/material/Grow";
+import Paper from "@mui/material/Paper";
 import Slide from "@mui/material/Slide";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
+
 import { useRef, useState } from "react";
 
 type Quote = {
@@ -22,7 +23,7 @@ const quotes: Quote[] = [
   },
   {
     title: "Self-learning",
-    content: '"Education is the kindling of a flame, not the filling of a vessel." - Socrates',
+    content: '"Education is the kindling of a flame, not the filling of a vessel"-Socrates',
   },
   {
     title: "Together",
@@ -82,7 +83,7 @@ const Slider = () => {
               width: "100%",
               filter: "contrast(1.3) brightness(1.1)",
             }}
-          ></Paper>
+          />
         </Slide>
       ))}
 
@@ -96,6 +97,7 @@ const Slider = () => {
           width: "100%",
           transform: "translate(-3%, -50%)",
           ".MuiTypography-root.MuiTypography-h1": {
+            fontSize: "5.2rem",
             letterSpacing: 2,
             textShadow: "6px 3px 12px #333",
             color: "#fff",
@@ -113,7 +115,7 @@ const Slider = () => {
           },
         }}
       >
-        <Grid container spacing={2} rowSpacing={3}>
+        <Grid container spacing={2} rowSpacing={3} justifyContent={"center"}>
           <Grid item lg={5} md={12}>
             {quotes.map(({ title }, i) => (
               <Typography key={i} variant="h1" textAlign="right">
@@ -130,12 +132,15 @@ const Slider = () => {
                   className={i + 1 === index ? "show" : ""}
                   letterSpacing={1}
                   sx={{
-                    p: 2,
-                    color: "#000",
+                    pl: 2,
+                    pr: 2,
+                    pt: 1,
+                    pb: 1,
+                    color: "#333",
                     bgcolor: "rgba(255,255,255,0.8)",
                     height: "fit-content",
                     borderRadius: 12,
-                    lineHeight: 1.8,
+                    lineHeight: 1.5,
                     boxShadow: 4,
                     display: "none",
                     "&.show": {
@@ -154,13 +159,13 @@ const Slider = () => {
       {/* Control slide */}
       <>
         <Fab
-          size="large"
+          size="medium"
           sx={{
             position: "absolute",
             top: "50%",
             left: 0,
             transform: "translateY(-50%)",
-            bgcolor: "rgba(255,255,255,0.6)",
+            bgcolor: "rgba(255,255,255,0.4)",
             "&:hover": {
               bgcolor: "unset",
             },
@@ -170,13 +175,13 @@ const Slider = () => {
           <ArrowBackIosIcon />
         </Fab>
         <Fab
-          size="large"
+          size="medium"
           sx={{
             position: "absolute",
             top: "50%",
             right: 0,
             transform: "translateY(-50%)",
-            bgcolor: "rgba(255,255,255,0.6)",
+            bgcolor: "rgba(255,255,255,0.4)",
             "&:hover": {
               bgcolor: "unset",
             },
