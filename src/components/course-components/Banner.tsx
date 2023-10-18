@@ -1,82 +1,123 @@
-import { Chip, Grid, Stack, Typography } from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
+import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
-import Image from "next/image";
-import Link from "next/link";
-import "dayjs/plugin/relativeTime";
 
-const Banner = ({ course }: { course: ICourse }) => {
+import Image from "next/image";
+import { memo } from "react";
+
+type Props = {
+  course: ICourse;
+  mode?: "manager" | "visitor" | "mine";
+};
+
+const Banner = ({ course, mode = "visitor" }: Props) => {
   return (
-    <Link href={"/teacher/course/" + course._id} style={{ textDecoration: "none" }}>
+    <Box>
       <Grid
         container
-        mt={2}
+        pt={1}
         pb={1}
-        spacing={1}
-        alignItems={"center"}
-        borderRadius={2}
-        border={1}
+        columnSpacing={1}
+        flexDirection={"row"}
+        flexWrap={"wrap"}
         sx={{
           color: "text.primary",
-          transition: "all ease 0.2s",
+          cursor: "pointer",
+          textTransform: "capitalize",
+          img: {
+            width: "100%",
+            transition: "all linear 0.2s",
+            borderRadius: 2,
+            boxShadow: "1px 1px 4px rgba(0,0,0,0.3)",
+          },
           ":hover": {
-            bgcolor: "rgba(22,24,35,.05)",
+            img: {
+              filter: "opacity(0.85)",
+            },
           },
         }}
       >
-        {/* Thumbnail */}
-        <Grid
-          item
-          lg={4}
-          md={4}
-          sm={12}
-          xs={12}
-          sx={{
-            img: {
-              borderRadius: 2,
-              width: "100%",
-            },
-          }}
-        >
-          {course.thumbnail && (
-            <Image src={course.thumbnail.uri} alt="course-thumbnail" width={250} height={250} />
-          )}
+        <Grid item lg={3} md={3}>
+          <Image alt="thumbnail-course" src={course.thumbnail.uri} width={350} height={230} />
         </Grid>
-        {/* Information */}
-        <Grid item lg={8} md={8} sm={12} xs={12} textTransform={"capitalize"}>
-          <Typography variant="h5" gutterBottom>
+
+        {/* Content  */}
+        <Grid item lg={9} md={9}>
+          <Typography variant="h6" gutterBottom>
             {course.name}
           </Typography>
-          <Typography variant="subtitle1">
-            Status:
-            <Chip
-              label={course.status.toUpperCase()}
-              color={course.status === "approved" ? "success" : "warning"}
-              size="small"
-              sx={{ ml: 1 }}
-            />
-          </Typography>
-          <Typography variant="subtitle1">Type: {course.type}</Typography>
-          <Typography variant="subtitle1">Category: {course.category}</Typography>
-          <Typography variant="subtitle1">Level: {course.level}</Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
-          </Typography>
-          <Stack direction="row" spacing={1} textTransform={"lowercase"}>
-            <Chip
-              label={course.lessons.length + " lesson" + (course.lessons.length > 1 ? "s" : "")}
-              className="bg-gradient"
-              size="small"
-            />
-            <Chip
-              label={course.members.length + " member" + (course.members.length > 1 ? "s" : "")}
-              className="bg-gradient"
-              size="small"
-            />
-          </Stack>
+          <Chip
+            label={course.type}
+            size="small"
+            color={course.type === "public" ? "success" : "info"}
+            sx={{ mb: 1 }}
+          />
+          {mode === "manager" && (
+            <>
+              <Box mb={1}>
+                <Chip
+                  label={course.status}
+                  color={course.status === "approved" ? "success" : "warning"}
+                  size="small"
+                />
+              </Box>
+              <Typography variant="subtitle1" gutterBottom>
+                Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
+              </Typography>
+            </>
+          )}
+
+          {mode === "visitor" && (
+            <Typography variant="subtitle1" gutterBottom>
+              Teacher: <b style={{ marginLeft: 4 }}>{course.createdBy.username}</b>
+            </Typography>
+          )}
+
+          <Box mb={1}>
+            Level: <Chip label={course.level} size="small" />
+          </Box>
+
+          {mode === "visitor" && (
+            <>
+              <Typography variant="subtitle2" mt={1} gutterBottom>
+                Open time: {dayjs(course.openDate).format("DD/MM/YYYY")}
+              </Typography>
+              <Typography variant="subtitle2" gutterBottom>
+                Close time: {dayjs(course.closeDate).format("DD/MM/YYYY")}
+              </Typography>
+            </>
+          )}
+
+          {/* Rating */}
+          {/* <Stack flexDirection={"row"} alignItems={"center"} mb={1} gap={0.75}>
+            <Typography variant="body2" fontWeight={600}>
+              4.8
+            </Typography>
+            <Rating name="read-only" value={1} readOnly size="small" />
+            <Typography variant="body2">(190.5)</Typography>
+          </Stack> */}
+
+          {mode === "manager" && (
+            <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
+              <Chip
+                label={course.lessons?.length + " lesson" + (course.lessons.length > 1 ? "s" : "")}
+                className="bg-gradient"
+                size="small"
+              />
+              <Chip
+                label={course.members?.length + " member" + (course.members.length > 1 ? "s" : "")}
+                className="bg-gradient"
+                size="small"
+              />
+            </Stack>
+          )}
         </Grid>
       </Grid>
-    </Link>
+      <Divider />
+    </Box>
   );
 };
 
-export default Banner;
+export default memo(Banner);

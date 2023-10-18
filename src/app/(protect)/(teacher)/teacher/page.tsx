@@ -80,9 +80,15 @@ const Teacher = async () => {
         </Stack>
       </Box>
 
-      <Stack>
+      <Stack mt={1}>
         {listCourses?.map((course) => (
-          <Banner key={course._id} course={course} />
+          <Link
+            key={course._id}
+            href={"/teacher/course/" + course._id}
+            style={{ textDecoration: "none" }}
+          >
+            <Banner course={course} mode="manager" />
+          </Link>
         ))}
       </Stack>
 

@@ -5,29 +5,43 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { memo } from "react";
+import { memo, useRef } from "react";
 
 type SearchBoxProps = {
   value: string;
   onClear: () => any;
   onChange: (val: string) => void;
   onSearch: () => any;
+  placeholder?: string;
 };
 
-const SearchBox = ({ value, onClear, onChange, onSearch }: SearchBoxProps) => {
+const SearchBox = ({
+  placeholder = "Search",
+  value,
+  onClear,
+  onChange,
+  onSearch,
+}: SearchBoxProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClear = async () => {
+    await onClear();
+    inputRef.current!.focus();
+  };
+
   return (
     <TextField
       fullWidth
       spellCheck={false}
       autoComplete="off"
-      placeholder="Search"
+      placeholder={placeholder}
       value={value}
       InputProps={{
         endAdornment: (
           <>
             {value && (
               <Stack flexDirection={"row"} alignItems="center" gap={1}>
-                <IconButton onClick={onClear}>
+                <IconButton onClick={handleClear}>
                   <CloseIcon fontSize="small" color="action" />
                 </IconButton>
                 <IconButton className="bg-gradient" onClick={onSearch}>
@@ -37,6 +51,7 @@ const SearchBox = ({ value, onClear, onChange, onSearch }: SearchBoxProps) => {
             )}
           </>
         ),
+        inputRef: inputRef,
       }}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={async (e) => e.key === "Enter" && (await onSearch())}
