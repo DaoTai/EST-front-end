@@ -20,7 +20,6 @@ const getListCourses = async (): Promise<ICourse[] | undefined> => {
       tags: ["list-courses"],
     },
   });
-  console.log("hello");
 
   if (res.ok) {
     const data = await res.json();

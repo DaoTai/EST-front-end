@@ -1,13 +1,10 @@
-import ComputerIcon from "@mui/icons-material/Computer";
-import HomeIcon from "@mui/icons-material/Home";
+import GroupsIcon from "@mui/icons-material/Groups";
+import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
 import SchoolIcon from "@mui/icons-material/School";
-import TipsAndUpdatesIcon from "@mui/icons-material/TipsAndUpdates";
 import StoreIcon from "@mui/icons-material/Store";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
-import GroupsIcon from "@mui/icons-material/Groups";
+import Typography from "@mui/material/Typography";
 import Link from "next/link";
 
 const Navbar = () => {
@@ -30,6 +27,9 @@ const Navbar = () => {
           "&:hover": {
             color: "text.primary",
             bgcolor: "rgba(0,0,0,0.1)",
+            svg: {
+              transform: "scale(1.1)",
+            },
           },
         },
       }}
@@ -46,7 +46,7 @@ const Navbar = () => {
         <SchoolIcon fontSize="large" />
         <Typography variant="subtitle1">Mine</Typography>
       </IconButton>
-      <IconButton LinkComponent={Link} href="/profile">
+      <IconButton LinkComponent={Link} href="/search/course">
         <StoreIcon fontSize="large" />
         <Typography variant="subtitle1">Courses</Typography>
       </IconButton>

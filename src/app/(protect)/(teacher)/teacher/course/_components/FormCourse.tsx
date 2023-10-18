@@ -28,7 +28,6 @@ import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { selectFields, textFields } from "../_fields";
 import AboutCourse from "./AboutCourse";
-import { useRouter } from "next/navigation";
 
 const VisuallyHiddenInput = styled("input")({
   overflow: "hidden",
@@ -46,7 +45,6 @@ interface IPropsFormCourse {
 }
 
 const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
-  const router = useRouter();
   const {
     values,
     errors,

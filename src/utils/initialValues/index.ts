@@ -19,6 +19,6 @@ export const initFormCourse = {
   name: "",
   category: "",
   intro: "",
-  consumer: "all",
+  level: "all",
   type: "public",
 };

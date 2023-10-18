@@ -23,7 +23,7 @@ const quotes: Quote[] = [
   },
   {
     title: "Self-learning",
-    content: '"Education is the kindling of a flame, not the filling of a vessel"-Socrates',
+    content: "Education is the kindling of a flame, not the filling of a vessel",
   },
   {
     title: "Together",
@@ -163,7 +163,7 @@ const Slider = () => {
           sx={{
             position: "absolute",
             top: "50%",
-            left: 0,
+            left: 4,
             transform: "translateY(-50%)",
             bgcolor: "rgba(255,255,255,0.4)",
             "&:hover": {
@@ -179,7 +179,7 @@ const Slider = () => {
           sx={{
             position: "absolute",
             top: "50%",
-            right: 0,
+            right: 4,
             transform: "translateY(-50%)",
             bgcolor: "rgba(255,255,255,0.4)",
             "&:hover": {

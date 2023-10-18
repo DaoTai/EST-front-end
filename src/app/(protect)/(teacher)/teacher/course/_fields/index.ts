@@ -33,8 +33,8 @@ export const textFields: CustomTextFieldProps[] = [
 export const selectFields: SelectFields[] = [
   {
     props: {
-      name: "consumer",
-      label: "Consumer",
+      name: "level",
+      label: "Level",
       fullWidth: true,
       required: true,
     },
@@ -50,6 +50,10 @@ export const selectFields: SelectFields[] = [
       {
         value: "junior",
         label: "Junior",
+      },
+      {
+        value: "senior",
+        label: "Senior",
       },
       {
         value: "all",

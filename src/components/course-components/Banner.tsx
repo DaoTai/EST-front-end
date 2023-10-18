@@ -57,7 +57,7 @@ const Banner = ({ course }: { course: ICourse }) => {
           </Typography>
           <Typography variant="subtitle1">Type: {course.type}</Typography>
           <Typography variant="subtitle1">Category: {course.category}</Typography>
-          <Typography variant="subtitle1">Consumer: {course.consumer}</Typography>
+          <Typography variant="subtitle1">Level: {course.level}</Typography>
           <Typography variant="subtitle1" gutterBottom>
             Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
           </Typography>

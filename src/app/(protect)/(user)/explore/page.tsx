@@ -59,7 +59,6 @@ const ExplorePage = () => {
   }, []);
 
   useEffect(() => {
-    // Nếu mà dependencies của useEffect [] => handleSearch run 1 lần thì phát sinh vấn đề khi user refresh lại trang session chưa được lấy (undefined)
     session && handleSearch();
   }, [session]);
 

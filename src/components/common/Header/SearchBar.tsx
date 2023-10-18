@@ -33,7 +33,7 @@ const SearchBar = () => {
   const router = useRouter();
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [value, setValue] = useState<string>("");
   const [showBox, setShowBox] = useState<boolean>(false);

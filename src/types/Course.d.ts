@@ -2,12 +2,12 @@ interface ICourse {
   _id: string;
   name: string;
   category: string;
-  consumer: string;
+  level: "beginner" | "fresher" | "junior" | "senior" | "all";
   status: "pending" | "approved";
   deleted: boolean;
   type: "public" | "private";
   slug: string;
-  createdBy: string;
+  createdBy: IProfile;
   createdAt: string;
   updatedAt: string;
   members: any[];

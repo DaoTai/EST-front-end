@@ -1,10 +1,10 @@
+import { Stack } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Actions from "./Actions";
 import Logo from "./Logo";
-import Title from "./Title";
 import SearchBar from "./SearchBar";
-import { Box, Stack } from "@mui/material";
+import Title from "./Title";
 const Header = () => {
   return (
     <AppBar position="fixed" sx={{ height: 80, p: "unset !important" }}>

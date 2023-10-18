@@ -33,6 +33,8 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
   };
 
   const handleEdit = useCallback(async (values: IFormCourse) => {
+    console.log("value: ", values);
+
     try {
       const formData = convertObjectToFormData(values);
 

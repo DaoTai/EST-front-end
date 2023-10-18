@@ -7,7 +7,7 @@ export enum MessageValidation {
   noSpace = "Please do not use any spaces",
   gender = "Gender is invalid",
   date = "Date is invalid",
-  consumerCourse = "Consumer course is invalid",
+  levelCourse = "Level course is invalid",
   typeCourse = "Type course is invalid",
 }
 

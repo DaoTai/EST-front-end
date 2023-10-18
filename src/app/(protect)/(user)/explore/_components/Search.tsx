@@ -1,17 +1,13 @@
 "use client";
-import CloseIcon from "@mui/icons-material/Close";
-import SearchIcon from "@mui/icons-material/Search";
-import { Typography } from "@mui/material";
-
+import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 
 import { ForwardRefRenderFunction, forwardRef, memo, useImperativeHandle, useState } from "react";
+import SearchBox from "@/components/common/SearchBox";
 
 type IProps = { totalResult: number; onSearch: (value: string, role: string) => Promise<void> };
 type IRef = { value: string; role: string };
@@ -22,6 +18,19 @@ const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ totalResult, onSear
 
   const handleChange = (event: SelectChangeEvent) => {
     setRole(event.target.value);
+  };
+
+  const handleClear = async () => {
+    setValue("");
+    try {
+      await onSearch("", role);
+    } catch (error) {}
+  };
+
+  const handleSearch = async () => {
+    try {
+      await onSearch(value, role);
+    } catch (error) {}
   };
 
   useImperativeHandle(
@@ -38,29 +47,11 @@ const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ totalResult, onSear
   return (
     <>
       <Stack flexDirection={"row"} gap={2}>
-        <TextField
-          fullWidth
-          spellCheck={false}
-          autoComplete="off"
-          placeholder="Search"
+        <SearchBox
           value={value}
-          InputProps={{
-            endAdornment: (
-              <>
-                {value && (
-                  <Stack flexDirection={"row"} alignItems="center" gap={1}>
-                    <IconButton onClick={() => setValue("")}>
-                      <CloseIcon fontSize="small" color="action" />
-                    </IconButton>
-                    <IconButton className="bg-gradient" onClick={() => onSearch(value, role)}>
-                      <SearchIcon color="action" fontSize="medium" />
-                    </IconButton>
-                  </Stack>
-                )}
-              </>
-            ),
-          }}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={setValue}
+          onClear={handleClear}
+          onSearch={handleSearch}
         />
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>role</InputLabel>
