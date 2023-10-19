@@ -45,7 +45,7 @@ const SearchBar = () => {
           onClick={() => router.push("/search")}
           sx={{ background: theme.palette.gradient.main }}
         >
-          <SearchIcon fontSize="large" sx={{ color: "#fff" }} />
+          <SearchIcon fontSize="medium" sx={{ color: "#fff" }} />
         </IconButton>
       ) : (
         <TextField

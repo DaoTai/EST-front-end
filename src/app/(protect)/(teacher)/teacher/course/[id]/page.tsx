@@ -24,8 +24,25 @@ const getCourseById = async (id: string): Promise<ICourse | undefined> => {
   }
 };
 
+const getLessonByIdCourse = async (id: string): Promise<ICourse | undefined> => {
+  const session = await getServerSession(options);
+  const res = await fetch(SERVER_URI + "/lessons/" + id, {
+    headers: {
+      Authorization: "Bearer " + session?.accessToken,
+    },
+    cache: "no-store",
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  }
+};
+
 const DetailCourse = async ({ params }: { params: { id: string } }) => {
   const course = await getCourseById(params.id);
+  const listLessons = await getLessonByIdCourse(params.id);
+
   if (course) {
     if (course.deleted) redirect("/");
     return (
@@ -38,7 +55,6 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
             <ListVideo />
           </Grid>
         </Grid>
-
         <CreateLesson />
       </>
     );

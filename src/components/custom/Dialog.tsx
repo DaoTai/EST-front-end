@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Grow from "@mui/material/Grow";
 
 type Props = {
   title: string;
@@ -15,7 +16,18 @@ type Props = {
 
 export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
   return (
-    <Dialog open keepMounted fullWidth scroll="paper" onClose={onClose}>
+    <Dialog
+      open
+      keepMounted
+      fullWidth
+      scroll="paper"
+      sx={{
+        ".MuiDialog-container": {
+          alignItems: "start",
+        },
+      }}
+      onClose={onClose}
+    >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{content}</DialogContentText>

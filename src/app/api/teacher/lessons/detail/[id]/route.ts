@@ -1,26 +1,22 @@
 import serverAxios from "@/config/axios";
 import { options } from "@/config/next-auth";
 import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
-export const POST = async (req: NextRequest) => {
-  try {
-    const session = await getServerSession(options);
-    const body = await req.formData();
 
-    const res = await serverAxios.post("/courses", body, {
+export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
+  try {
+    const id = params.id;
+    const session = await getServerSession(options);
+    const res = await serverAxios.get("/lessons/detail/" + id, {
       headers: {
-        "Content-Type": "multipart/form-data",
         Authorization: "Bearer " + session?.accessToken,
       },
     });
 
-    revalidateTag("list-courses");
-
     return NextResponse.json(res.data, {
-      status: 200,
+      status: res.status,
     });
   } catch (error) {
-    console.log("Error: ", error);
+    return NextResponse.json("Get lesson failed", { status: 400 });
   }
 };

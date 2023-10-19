@@ -13,7 +13,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import styled from "@mui/material/styles/styled";
 
 import { IFormCourse } from "@/types/ICourse";
 import { initFormCourse } from "@/utils/initialValues";
@@ -28,15 +27,7 @@ import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { selectFields, textFields } from "../_fields";
 import AboutCourse from "./AboutCourse";
-
-const VisuallyHiddenInput = styled("input")({
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 
 interface IPropsFormCourse {
   type: "create" | "edit" | "watch";

@@ -22,3 +22,10 @@ export const initFormCourse = {
   level: "all",
   type: "public",
 };
+
+export const initFormLesson = {
+  name: "",
+  isLaunching: true,
+  theory: "",
+  references: [] as string[],
+};
