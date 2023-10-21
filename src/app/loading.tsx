@@ -1,7 +1,7 @@
 import React from "react";
-import Loading from "@/components/custom/Loading";
+import Spinner from "@/components/custom/Spinner";
 const loading = () => {
-  return <Loading />;
+  return <Spinner />;
 };
 
 export default loading;

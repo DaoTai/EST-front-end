@@ -3,6 +3,7 @@ import { Box, Chip, Container, Divider, Grid, Paper, Stack, Typography } from "@
 import React, { useEffect, useState } from "react";
 import FormLesson from "../../course/_components/FormLesson";
 import VideoPlayer from "@/components/custom/VideoPlayer";
+import Spinner from "@/components/custom/Spinner";
 
 const getLesson = async (id: string) => {
   const res = await fetch("/api/teacher/lessons/detail/" + id);
@@ -12,18 +13,20 @@ const getLesson = async (id: string) => {
 
 const Lesson = ({ params }: { params: { id: string } }) => {
   const [lesson, setLesson] = useState<ILesson>();
+  const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const data = await getLesson(params.id);
       setLesson(data);
-      console.log(data);
+      setLoading(false);
     })();
   }, []);
 
   if (!lesson)
     return (
       <Container>
-        <Typography variant="body1">Not found lesson</Typography>
+        {loading ? <Spinner /> : <Typography variant="body1">Not found lesson</Typography>}
       </Container>
     );
 

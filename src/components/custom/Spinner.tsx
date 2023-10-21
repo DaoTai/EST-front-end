@@ -1,7 +1,7 @@
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
-const Loading = () => {
+const Spinner = () => {
   return (
     <Backdrop open>
       <CircularProgress color="primary" />
@@ -9,4 +9,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default Spinner;

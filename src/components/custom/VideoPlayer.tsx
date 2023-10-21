@@ -5,15 +5,19 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
-import { Box, IconButton, Slider, Stack } from "@mui/material";
+import { Box, IconButton, Slider, Stack, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 const VideoPlayer = ({ uri }: { uri: string }) => {
   const [isPlay, setPlay] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(1);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+
   const containerVideo = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const btnFullScreen = useRef<HTMLButtonElement>(null);
+  const duration = useRef<number>(0);
 
+  // Toggle play / pause
   const onTogglePlay = () => {
     if (video.current?.paused) {
       video.current?.play();
@@ -21,8 +25,11 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
       video.current?.pause();
     }
     setPlay(!isPlay);
+    duration.current = video.current!.duration;
+    containerVideo.current?.classList.remove("show-controls");
   };
 
+  // Change volume
   const onChangeVol = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number" && video.current) {
       video.current.volume = newValue;
@@ -30,13 +37,13 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
     }
   };
 
+  // Toggle mute/unmuted
   const onToggleMute = () => {
     setVolume(volume === 0 ? 1 : 0);
   };
 
+  // Toggle open/exit full screen
   const handleToggleFullScreen = async () => {
-    console.log(btnFullScreen.current?.classList);
-
     try {
       document.fullscreenElement
         ? await document.exitFullscreen()
@@ -45,6 +52,29 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
     } catch (error) {
       console.log("Error: ", error);
     }
+  };
+
+  // Format time for currentTime & duration
+  const formatTime = (time: number) => {
+    let output = "";
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    if (hours > 0) output += hours + ":";
+    output += `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return output;
+  };
+
+  // Handle when video playing
+  const handleTimeUpdate = () => {
+    const currentTimer = video.current!.currentTime;
+    setCurrentTime(currentTimer);
+  };
+
+  // Handle pause video
+
+  const onPause = () => {
+    containerVideo.current?.classList.add("show-controls");
   };
 
   return (
@@ -60,21 +90,28 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
           },
         },
 
+        "&.show-controls": {
+          ".controls": {
+            display: "flex",
+          },
+        },
+
         video: {
           position: "relative",
           width: "100%",
           height: "100%",
-          cursor: "pointer",
           "&::-webkit-media-controls-panel": {
             display: "none !important",
           },
         },
         svg: {
+          color: "#fff",
           transition: "0.2s ease all",
           ":hover": {
-            transform: "scale(1.2)",
+            transform: "scale(1.15)",
           },
         },
+
         "#btn-full-screen": {
           "&.full-screen": {
             ".full-screen-icon": {
@@ -96,7 +133,15 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
       width={"100%"}
       position={"relative"}
     >
-      <video ref={video as any} controls={false} onClick={onTogglePlay}>
+      <video
+        ref={video as any}
+        controls={false}
+        muted={!volume}
+        onTimeUpdate={handleTimeUpdate}
+        onClick={onTogglePlay}
+        onPause={onPause}
+        onError={() => console.log("Error")}
+      >
         <source src={uri} type="video/mp4" />
       </video>
 
@@ -109,21 +154,87 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
         bottom={0}
         left={0}
         right={0}
-        bgcolor={"rgba(0,0,0,0.3)"}
-        p={1}
-        pt={0}
+        zIndex={2}
+        p={0.5}
+        color={"#fff"}
       >
+        {/* Progress bar */}
+        <Box
+          position={"absolute"}
+          top={0}
+          left={0}
+          right={0}
+          bgcolor={"rgba(255,255,255,0.3)"}
+          height={"4px"}
+          sx={{ cursor: "pointer" }}
+        >
+          <Box
+            position={"absolute"}
+            top={0}
+            left={0}
+            width={(currentTime / duration.current) * 100 + "%"}
+            bgcolor={"red"}
+            height={"100%"}
+          ></Box>
+        </Box>
+
+        {/* Controller */}
         <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+          {/* Play / pause */}
           <IconButton size="small" onClick={onTogglePlay}>
             {isPlay ? <PauseIcon /> : <PlayArrowIcon />}
           </IconButton>
-          <IconButton size="small" onClick={onToggleMute}>
-            {volume === 0 ? <VolumeOffIcon /> : <VolumeUpIcon />}
-          </IconButton>
-          <Stack sx={{ width: 100 }}>
-            <Slider value={volume} min={0} max={1} step={0.01} onChange={onChangeVol} />
-          </Stack>
+
+          {/* Volume & Time */}
+          <Box
+            display={"flex"}
+            alignItems={"center"}
+            gap={1}
+            sx={{
+              ":hover": {
+                "#volume": {
+                  width: 80,
+                  transform: "scaleX(1)",
+                },
+              },
+            }}
+          >
+            <IconButton size="small" onClick={onToggleMute}>
+              {volume === 0 ? <VolumeOffIcon /> : <VolumeUpIcon />}
+            </IconButton>
+
+            {/* Change volume */}
+            <Stack
+              id="volume"
+              sx={{
+                width: 0,
+                transform: "scaleX(0)",
+                transformOrigin: "left",
+                transition: "all 0.3s ease-in-out",
+              }}
+            >
+              <Slider
+                size="small"
+                min={0}
+                max={1}
+                step={0.01}
+                sx={{ color: "#fff" }}
+                value={volume}
+                onChange={onChangeVol}
+              />
+            </Stack>
+
+            {/* Time */}
+            {!!currentTime && (
+              <Box id="times" display={"flex"} gap={1} ml={2}>
+                <Typography variant="subtitle1">{formatTime(currentTime)} /</Typography>
+                <Typography variant="subtitle1">{formatTime(duration.current)}</Typography>
+              </Box>
+            )}
+          </Box>
         </Stack>
+
+        {/* Full screen */}
         <Stack flexDirection={"row"} gap={1}>
           <IconButton
             ref={btnFullScreen}
