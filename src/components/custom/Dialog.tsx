@@ -11,7 +11,7 @@ type Props = {
   title: string;
   content: string;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: () => void | Promise<void>;
 };
 
 export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
@@ -37,7 +37,13 @@ export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
         <Button variant="outlined" onClick={onClose}>
           Disagree
         </Button>
-        <Button variant="contained" onClick={onSubmit}>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await onSubmit();
+            onClose();
+          }}
+        >
           Agree
         </Button>
       </DialogActions>

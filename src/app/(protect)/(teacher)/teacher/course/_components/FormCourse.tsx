@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import { selectFields, textFields } from "../_fields";
 import AboutCourse from "./AboutCourse";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
+import { useRouter } from "next/navigation";
 
 interface IPropsFormCourse {
   type: "create" | "edit" | "watch";
@@ -36,6 +37,7 @@ interface IPropsFormCourse {
 }
 
 const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
+  const router = useRouter();
   const {
     values,
     errors,
@@ -79,9 +81,10 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           return;
         }
         await onSubmit?.(payload);
-        // setTimeout(() => {
-        //   router.back();
-        // }, 2000);
+        router.refresh();
+        setTimeout(() => {
+          router.back();
+        }, 2000);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -178,7 +181,6 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
       case "minTime": {
         return "Please select a datetime more than 4 hours open date";
       }
-
       default: {
         return "";
       }
@@ -274,7 +276,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               value={values.type === "private" ? openDate ?? dayjs().add(1, "hour") : null}
               slotProps={{
                 textField: {
-                  helperText: errorOpenDateMessage || (isPastOpenDate && "Open date was past"),
+                  helperText: errorOpenDateMessage,
                   InputProps: {
                     disabled: true,
                     sx: {
@@ -295,7 +297,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <DateTimePicker
-              disablePast
+              disablePast={type === "create"}
               label="Close date register"
               disabled={!!(values.type === "public")}
               value={values.type === "private" ? closeDate ?? dayjs().add(2, "day") : null}
@@ -313,7 +315,11 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
                   },
                 },
               }}
-              onError={(newError) => setErrorCloseDate(newError)}
+              onError={(newError) => {
+                console.log("error: ", newError);
+
+                setErrorCloseDate(newError);
+              }}
               onChange={handleChangeCloseDate}
             />
           </FormControl>

@@ -2,7 +2,6 @@
 import { IFormCourse } from "@/types/ICourse";
 import { convertObjectToFormData } from "@/utils/functions";
 import Container from "@mui/material/Container";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -35,28 +34,24 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
   const handleEdit = useCallback(async (values: IFormCourse) => {
     try {
       const formData = convertObjectToFormData(values);
-
-      const res = await fetch("/api/teacher/courses/" + params.id, {
+      await fetch("/api/teacher/courses/" + params.id, {
         method: "PATCH",
         body: formData,
       });
-      const data = await res.json();
-
       toast.success("Edited course successfully");
-      return data;
     } catch (error) {
+      console.log("error: ", error);
+
       toast.error("Edit course failed");
     }
   }, []);
 
   if (course?.deleted) {
-    console.log("course: ", course);
     redirect("/");
   }
 
   return (
     <Container>
-      <Link href={"/teacher"}>Back</Link>
       {course && <FormCourse type="edit" course={course} onSubmit={handleEdit} />}
     </Container>
   );

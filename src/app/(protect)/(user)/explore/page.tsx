@@ -34,14 +34,14 @@ const ExplorePage = () => {
       page: String(currentPage),
     });
 
-    const res = await fetch("/api/user/profile?" + query);
-    const data: ISearchProfileResult = await res.json();
-    if (res.ok) {
+    try {
+      const res = await fetch("/api/user/profile?" + query);
+      const data: ISearchProfileResult = await res.json();
       setListMember(data?.users ?? []);
       maxPageRef.current = data?.maxPage as number;
       totalResult.current = data?.total as number;
-    } else {
-      toast.error(String(data));
+    } catch (error) {
+      toast.error("Get infor failed");
     }
   };
 

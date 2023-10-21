@@ -1,24 +1,27 @@
-import Dialog from "@/components/custom/Dialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+
 import dayjs from "dayjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { memo, useState } from "react";
 import { toast } from "react-toastify";
+import Dialog from "@/components/custom/Dialog";
 
 const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edit" | "watch" }) => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
+
   const handleDeleteCouse = async () => {
     try {
       await fetch("/api/teacher/courses/" + course._id, {
         method: "DELETE",
       });
       toast.success("Deleted course successfully");
+      router.refresh();
       setTimeout(() => {
         router.push("/teacher");
       }, 1500);

@@ -208,6 +208,7 @@ const TrashedCourses = () => {
       });
       setOpenDialogConfirm(false);
       setLoading(false);
+      router.refresh();
     } catch (error) {
       toast.success("Restore course failed!");
     }

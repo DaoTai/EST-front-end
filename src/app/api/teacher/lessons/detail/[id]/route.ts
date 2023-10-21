@@ -1,17 +1,10 @@
 import serverAxios from "@/config/axios";
-import { options } from "@/config/next-auth";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const id = params.id;
-    const session = await getServerSession(options);
-    const res = await serverAxios.get("/lessons/detail/" + id, {
-      headers: {
-        Authorization: "Bearer " + session?.accessToken,
-      },
-    });
+    const res = await serverAxios.get("/lessons/detail/" + id);
 
     return NextResponse.json(res.data, {
       status: res.status,
