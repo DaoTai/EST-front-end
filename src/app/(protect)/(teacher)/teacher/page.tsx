@@ -1,31 +1,28 @@
+import Banner from "@/components/course-components/Banner";
+import serverAxios from "@/config/axios";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
-import Banner from "@/components/course-components/Banner";
-import { options } from "@/config/next-auth";
-import { SERVER_URI } from "@/utils/constants/common";
-import { IconButton, Tooltip } from "@mui/material";
+import { notFound } from "next/navigation";
 
 const getListCourses = async (): Promise<ICourse[] | undefined> => {
-  const session = await getServerSession(options);
-  const res = await fetch(SERVER_URI + "/courses", {
-    headers: {
-      Authorization: "Bearer " + session?.accessToken,
-    },
-  });
+  try {
+    const res = await serverAxios.get("/courses");
 
-  if (res.ok) {
-    const data = await res.json();
-    return data;
+    return res.data;
+  } catch (error) {
+    notFound();
   }
 };
 
 const Teacher = async () => {
   const listCourses = (await getListCourses()) ?? [];
+
   const numberPendingCourses =
     listCourses?.reduce((acc, course) => {
       return acc + (course.status === "pending" ? 1 : 0);

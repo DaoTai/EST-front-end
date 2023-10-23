@@ -35,7 +35,7 @@ export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
       <Divider />
       <DialogActions>
         <Button variant="outlined" onClick={onClose}>
-          Disagree
+          Close
         </Button>
         <Button
           variant="contained"

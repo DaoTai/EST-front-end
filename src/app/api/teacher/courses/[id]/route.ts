@@ -3,11 +3,12 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   const id = params.id;
+
   try {
     const res = await serverAxios.get("/courses/" + id);
     return NextResponse.json(res.data);
   } catch (error) {
-    return NextResponse.json(null);
+    return NextResponse.error();
   }
 }
 

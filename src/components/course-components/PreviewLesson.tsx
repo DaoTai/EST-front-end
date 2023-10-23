@@ -22,6 +22,7 @@ const PreviewLesson = ({ lesson }: { lesson: ILesson }) => {
         },
         img: {
           borderRadius: 1,
+          objectFit: "none",
         },
       }}
     >

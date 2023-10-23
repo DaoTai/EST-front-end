@@ -1,6 +1,6 @@
 interface ILesson {
   _id: string;
-  course: ICourse | string;
+  course: ICourse & string;
   name: string;
   slug: string;
   isLaunching: boolean;

@@ -55,7 +55,7 @@ serverAxios.interceptors.response.use(
   },
   function (error) {
     if (error instanceof AxiosError) {
-      error.status === 500 ? toast.error("Error server") : toast.error(error.response?.data);
+      // error.status === 500 ? toast.error("Error server") : toast.error(error.response?.data);
     }
     return Promise.reject(error);
   }

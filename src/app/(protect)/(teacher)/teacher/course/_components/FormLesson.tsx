@@ -35,7 +35,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     values,
     touched,
     errors,
-    setValues,
+    isSubmitting,
     handleChange,
     handleBlur,
     setFieldValue,
@@ -59,7 +59,10 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
 
   useEffect(() => {
     if (lesson) {
-      setValues(lesson);
+      setFieldValue("name", lesson.name);
+      setFieldValue("isLaunching", lesson.isLaunching);
+      setFieldValue("theory", lesson.theory);
+      setFieldValue("references", lesson.references);
     }
   }, [lesson]);
 
@@ -201,6 +204,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
               variant="contained"
               color="primary"
               endIcon={<SendIcon />}
+              disabled={isSubmitting}
               sx={{ textTransform: "capitalize" }}
             >
               {type}
@@ -213,6 +217,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
                 variant="contained"
                 color="primary"
                 endIcon={<SendIcon />}
+                disabled={isSubmitting}
                 sx={{ textTransform: "capitalize" }}
                 onClick={() => setOpenDialog(true)}
               >

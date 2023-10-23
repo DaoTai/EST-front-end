@@ -1,14 +1,73 @@
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 
 import { Box, IconButton, Slider, Stack, Typography } from "@mui/material";
-import { useRef, useState } from "react";
-const VideoPlayer = ({ uri }: { uri: string }) => {
+import styled from "@mui/material/styles/styled";
+import { MouseEvent, useRef, useState } from "react";
+
+const ContainerVideo = styled(Box)(({ ...theme }) => ({
+  height: "50vh",
+  background: "black",
+  ":not(.hide-controls):hover": {
+    ".controls": {
+      display: "flex",
+    },
+  },
+
+  "&.show-controls": {
+    ".controls": {
+      display: "flex",
+    },
+  },
+
+  "&.hide-controls": {
+    ".controls": {
+      display: "none",
+    },
+  },
+
+  video: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    "&::-webkit-media-controls-panel": {
+      display: "none !important",
+    },
+  },
+  svg: {
+    color: "#fff",
+    transition: "0.2s ease all",
+    ":hover": {
+      transform: "scale(1.15)",
+    },
+  },
+
+  "#btn-full-screen": {
+    "&.full-screen": {
+      ".full-screen-icon": {
+        display: "block",
+      },
+      ".exit-full-screen-icon": {
+        display: "none",
+      },
+    },
+    ".full-screen-icon": {
+      display: "none",
+    },
+  },
+  ".controls": {
+    display: "none",
+    transition: "0.5s ease all",
+  },
+}));
+
+const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) => {
   const [isPlay, setPlay] = useState<boolean>(false);
+  const [isError, setError] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(1);
   const [currentTime, setCurrentTime] = useState<number>(0);
 
@@ -43,11 +102,13 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
   };
 
   // Toggle open/exit full screen
-  const handleToggleFullScreen = async () => {
+  const handleToggleFullScreen = async (e: MouseEvent) => {
     try {
-      document.fullscreenElement
-        ? await document.exitFullscreen()
-        : await containerVideo.current?.requestFullscreen();
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await containerVideo.current?.requestFullscreen();
+      }
       btnFullScreen.current?.classList.toggle("full-screen");
     } catch (error) {
       console.log("Error: ", error);
@@ -72,75 +133,41 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
   };
 
   // Handle pause video
-
   const onPause = () => {
     containerVideo.current?.classList.add("show-controls");
   };
 
+  // Handle seeking video
+  const onSeek = (event: Event, newValue: number | number[]) => {
+    if (typeof newValue === "number" && video.current) {
+      const seekTime = video.current?.duration * newValue;
+      setCurrentTime(seekTime);
+      video.current.currentTime = seekTime;
+    }
+  };
+
+  // Handle error video
+  const handleVideoLoadedMetadata = () => {
+    if (isError) {
+      console.log("Having error");
+
+      video.current!.currentTime = currentTime;
+      video.current?.play();
+    }
+  };
   return (
-    <Box
-      ref={containerVideo}
-      borderRadius={2}
-      sx={{
-        height: "50vh",
-        background: "black",
-        ":hover": {
-          ".controls": {
-            display: "flex",
-          },
-        },
-
-        "&.show-controls": {
-          ".controls": {
-            display: "flex",
-          },
-        },
-
-        video: {
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          "&::-webkit-media-controls-panel": {
-            display: "none !important",
-          },
-        },
-        svg: {
-          color: "#fff",
-          transition: "0.2s ease all",
-          ":hover": {
-            transform: "scale(1.15)",
-          },
-        },
-
-        "#btn-full-screen": {
-          "&.full-screen": {
-            ".full-screen-icon": {
-              display: "block",
-            },
-            ".exit-full-screen-icon": {
-              display: "none",
-            },
-          },
-          ".full-screen-icon": {
-            display: "none",
-          },
-        },
-        ".controls": {
-          display: "none",
-          transition: "0.5s ease all",
-        },
-      }}
-      width={"100%"}
-      position={"relative"}
-    >
+    <ContainerVideo ref={containerVideo} borderRadius={2} width={"100%"} position={"relative"}>
       <video
         ref={video as any}
+        // poster={thumbnail}
         controls={false}
         muted={!volume}
         onTimeUpdate={handleTimeUpdate}
         onClick={onTogglePlay}
         onPause={onPause}
-        onError={() => console.log("Error")}
+        onEnded={() => setPlay(false)}
+        onError={() => setError(true)}
+        onLoadedMetadata={handleVideoLoadedMetadata}
       >
         <source src={uri} type="video/mp4" />
       </video>
@@ -151,32 +178,36 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
         flexDirection={"row"}
         justifyContent={"space-between"}
         position={"absolute"}
+        color={"#fff"}
+        bgcolor={"rgba(0,0,0,0.3)"}
         bottom={0}
-        left={0}
-        right={0}
+        left={10}
+        right={10}
         zIndex={2}
         p={0.5}
-        color={"#fff"}
       >
         {/* Progress bar */}
-        <Box
-          position={"absolute"}
-          top={0}
-          left={0}
-          right={0}
-          bgcolor={"rgba(255,255,255,0.3)"}
-          height={"4px"}
-          sx={{ cursor: "pointer" }}
-        >
-          <Box
-            position={"absolute"}
-            top={0}
-            left={0}
-            width={(currentTime / duration.current) * 100 + "%"}
-            bgcolor={"red"}
-            height={"100%"}
-          ></Box>
-        </Box>
+        {video.current?.duration && (
+          <Slider
+            min={0}
+            max={1}
+            step={0.01}
+            value={currentTime / video.current.duration}
+            sx={{
+              position: "absolute",
+              top: -10,
+              left: 0,
+              right: 0,
+              p: 0,
+              height: "6px",
+              ".MuiSlider-thumb": {
+                width: "12px",
+                height: "12px",
+              },
+            }}
+            onChange={onSeek}
+          />
+        )}
 
         {/* Controller */}
         <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -207,6 +238,7 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
             <Stack
               id="volume"
               sx={{
+                ml: 1,
                 width: 0,
                 transform: "scaleX(0)",
                 transformOrigin: "left",
@@ -248,7 +280,7 @@ const VideoPlayer = ({ uri }: { uri: string }) => {
           </IconButton>
         </Stack>
       </Stack>
-    </Box>
+    </ContainerVideo>
   );
 };
 

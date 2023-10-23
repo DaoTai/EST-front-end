@@ -1,47 +1,18 @@
 import { Grid, Typography } from "@mui/material";
-import React from "react";
 
-import { getServerSession } from "next-auth";
-import { options } from "@/config/next-auth";
-import { SERVER_URI } from "@/utils/constants/common";
-import CreateLesson from "../_components/CreateLesson";
+import serverAxios from "@/config/axios";
 import { redirect } from "next/navigation";
 import About from "../_components/About";
-import ListVideo from "../_components/ListVideo";
+import CreateLesson from "../_components/CreateLesson";
+import ListLessons from "../_components/ListLessons";
 
 const getCourseById = async (id: string): Promise<ICourse | undefined> => {
-  const session = await getServerSession(options);
-  const res = await fetch(SERVER_URI + "/courses/" + id, {
-    headers: {
-      Authorization: "Bearer " + session?.accessToken,
-    },
-    cache: "no-store",
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-    return data;
-  }
-};
-
-const getLessonByIdCourse = async (id: string): Promise<ICourse | undefined> => {
-  const session = await getServerSession(options);
-  const res = await fetch(SERVER_URI + "/lessons/" + id, {
-    headers: {
-      Authorization: "Bearer " + session?.accessToken,
-    },
-    cache: "no-store",
-  });
-
-  if (res.ok) {
-    const data = await res.json();
-    return data;
-  }
+  const res = await serverAxios.get("/courses/" + id);
+  return res.data;
 };
 
 const DetailCourse = async ({ params }: { params: { id: string } }) => {
   const course = await getCourseById(params.id);
-  const listLessons = await getLessonByIdCourse(params.id);
 
   if (course) {
     if (course.deleted) redirect("/");
@@ -52,7 +23,7 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
             <About course={course} />
           </Grid>
           <Grid item md={9} xs={12}>
-            <ListVideo />
+            <ListLessons />
           </Grid>
         </Grid>
         <CreateLesson />
@@ -61,7 +32,7 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
   }
   return (
     <Typography variant="h3" textAlign={"center"}>
-      Course not found
+      Loading
     </Typography>
   );
 };

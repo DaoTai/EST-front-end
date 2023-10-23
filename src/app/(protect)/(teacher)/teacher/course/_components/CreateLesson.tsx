@@ -13,20 +13,15 @@ import { useState } from "react";
 import FormLesson from "./FormLesson";
 import { toast } from "react-toastify";
 import { IFormLesson } from "@/types/ILesson";
+import { convertObjectToFormData } from "@/utils/functions";
 
 const CreateModal = () => {
   const [open, setOpen] = useState<boolean>(false);
   const params = useParams();
 
   const handleAddLesson = async (value: IFormLesson) => {
-    const formData = new FormData();
-    for (const [key, val] of Object.entries(value)) {
-      if (Array.isArray(val)) {
-        formData.append(String(key + "[]"), val as any);
-      } else {
-        formData.append(String(key), val as any);
-      }
-    }
+    const formData = convertObjectToFormData(value);
+
     const res = await fetch("/api/teacher/lessons/" + params.id, {
       method: "POST",
       body: formData,

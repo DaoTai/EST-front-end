@@ -24,7 +24,8 @@ const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeThem
 });
 
 const Actions = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [anchorElNotify, setAnchorElNotify] = useState<null | HTMLElement>(null);
 
@@ -43,6 +44,14 @@ const Actions = () => {
   const handleCloseNotify = () => {
     setAnchorElNotify(null);
   };
+
+  if (status === "loading") {
+    return (
+      <Stack flexDirection={"row"} gap={2} alignItems={"center"}>
+        <ToggleModeTheme />
+      </Stack>
+    );
+  }
 
   if (session) {
     return (

@@ -10,6 +10,36 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
       status: res.status,
     });
   } catch (error) {
-    return NextResponse.json("Get lesson failed", { status: 400 });
+    return NextResponse.error();
+  }
+};
+
+export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
+  try {
+    const id = params.id;
+    const body = await req.formData();
+    console.log("body: ", body);
+
+    const res = await serverAxios.patch("/lessons/detail/" + id, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return NextResponse.json(res.data, {
+      status: res.status,
+    });
+  } catch (error) {
+    return NextResponse.error();
+  }
+};
+
+export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
+  try {
+    const id = params.id;
+    await serverAxios.delete("/lessons/detail/" + id);
+    return NextResponse.json("OK", { status: 200 });
+  } catch (error) {
+    return NextResponse.error();
   }
 };
