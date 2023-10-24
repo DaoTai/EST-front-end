@@ -228,6 +228,19 @@ const TrashedCourses = () => {
     }
   };
 
+  if (!isLoading && !rows) {
+    <Box pt={1} pl={2} pr={2}>
+      <Stack alignItems={"center"}>
+        <Typography variant="body1" gutterBottom>
+          No trash course
+        </Typography>
+        <Button variant="text" onClick={() => router.back()}>
+          Back
+        </Button>
+      </Stack>
+    </Box>;
+  }
+
   return (
     <Box pt={1} pl={2} pr={2}>
       <Typography
@@ -242,35 +255,23 @@ const TrashedCourses = () => {
         Trash courses
       </Typography>
 
-      {rows.length > 0 ? (
-        <Box sx={{ width: "100%" }}>
-          <DataGrid
-            disableRowSelectionOnClick
-            pageSizeOptions={[5]}
-            checkboxSelection={false}
-            loading={isLoading}
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
+      <Box sx={{ width: "100%" }}>
+        <DataGrid
+          disableRowSelectionOnClick
+          pageSizeOptions={[5]}
+          checkboxSelection={false}
+          loading={isLoading}
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
               },
-            }}
-          />
-        </Box>
-      ) : (
-        <Stack alignItems={"center"}>
-          <Typography variant="body1" gutterBottom>
-            No trash course
-          </Typography>
-          <Button variant="text" onClick={() => router.back()}>
-            Back
-          </Button>
-        </Stack>
-      )}
-
+            },
+          }}
+        />
+      </Box>
       {/* Dialog confirm delete */}
       {openDialogConfirm && (
         <MyDialog

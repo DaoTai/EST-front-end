@@ -4,33 +4,39 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
+import axios from "axios";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
+import { toast } from "react-toastify";
+
 import PreviewLesson from "@/components/course-components/PreviewLesson";
 import Spinner from "@/components/custom/Spinner";
-import { IconButton, Tooltip } from "@mui/material";
 import MyDialog from "@/components/custom/Dialog";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { Button } from "@mui/material";
+
 const fetcher: Fetcher<{ listLessons: ILesson[]; maxPage: number }, string> = (url: string) =>
   fetch(url).then((res) => res.json());
 
 const ListLessons = () => {
   const params = useParams();
+  const path = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [lesson, setLesson] = useState<ILesson | null>(null);
-  const [page, setPage] = useState<number>(1);
   const maxPageRef = useRef<number>(1);
+
   const { data, isLoading, error } = useSWR(
-    `/api/teacher/lessons/${params.id}?page=${page}`,
+    `/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`,
     fetcher,
     {
       revalidateOnFocus: false,
-      revalidateIfStale: true,
+      revalidateIfStale: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
         maxPageRef.current = data.maxPage;
@@ -38,20 +44,27 @@ const ListLessons = () => {
     }
   );
 
+  // Handle moving page
+  const handlePaginate = (event: React.ChangeEvent<unknown>, value: number) => {
+    router.push(path + "?page=" + value);
+  };
+
   // Click icon trash
   const onSelectLesson = (val: ILesson) => {
     setOpenDialog(true);
     setLesson(val);
   };
 
+  // Close dialog
   const handleCloseDialog = useCallback(() => {
     setOpenDialog(false);
   }, []);
 
+  // Delete lesson
   const handleDeleteLesson = useCallback(async () => {
     try {
       await axios.delete("/api/teacher/lessons/detail/" + lesson?._id);
-      mutate(`/api/teacher/lessons/${params.id}?page=${page}`);
+      mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
       toast.success("Delete lesson " + lesson?.name + " successfully");
     } catch (error) {
       toast.error("Delete lesson " + lesson?.name + " failed");
@@ -99,16 +112,21 @@ const ListLessons = () => {
         ))}
       </Stack>
 
-      <Stack mt={2} flexDirection={"row"} justifyContent={"center"}>
-        <Pagination
-          variant="outlined"
-          color="primary"
-          page={page}
-          count={maxPageRef.current}
-          onChange={(e, val) => setPage(val)}
-        />
-      </Stack>
-
+      {data.listLessons.length > 0 ? (
+        <Stack mt={2} flexDirection={"row"} justifyContent={"center"}>
+          <Pagination
+            variant="outlined"
+            color="primary"
+            page={Number(searchParams?.get("page")) || 1}
+            count={maxPageRef.current}
+            onChange={handlePaginate}
+          />
+        </Stack>
+      ) : (
+        <Typography variant="h6" gutterBottom textAlign={"center"}>
+          You have no lesson
+        </Typography>
+      )}
       {/* Loading data */}
       {isLoading && <Spinner />}
 

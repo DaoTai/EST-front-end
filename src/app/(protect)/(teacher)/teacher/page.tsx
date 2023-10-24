@@ -1,5 +1,3 @@
-import Banner from "@/components/course-components/Banner";
-import serverAxios from "@/config/axios";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -9,11 +7,11 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import Banner from "@/components/course-components/Banner";
+import serverAxios from "@/config/axios";
 const getListCourses = async (): Promise<ICourse[] | undefined> => {
   try {
     const res = await serverAxios.get("/courses");
-
     return res.data;
   } catch (error) {
     notFound();

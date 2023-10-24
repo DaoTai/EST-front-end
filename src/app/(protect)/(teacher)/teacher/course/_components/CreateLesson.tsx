@@ -7,32 +7,39 @@ import Fab from "@mui/material/Fab";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-import { Container } from "@mui/material";
-import { useParams } from "next/navigation";
-import { useState } from "react";
-import FormLesson from "./FormLesson";
-import { toast } from "react-toastify";
 import { IFormLesson } from "@/types/ILesson";
 import { convertObjectToFormData } from "@/utils/functions";
+import { Container } from "@mui/material";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { mutate } from "swr";
+import FormLesson from "./FormLesson";
 
 const CreateModal = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
 
+  // Handle add lesson
   const handleAddLesson = async (value: IFormLesson) => {
     const formData = convertObjectToFormData(value);
 
-    const res = await fetch("/api/teacher/lessons/" + params.id, {
+    await fetch("/api/teacher/lessons/" + params.id, {
       method: "POST",
       body: formData,
-    });
-    if (res.ok) {
-      toast.success("Add lesson successfully");
-      setOpen(false);
-    }
-    {
-      toast.error("Add lesson failed");
-    }
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setOpen(false);
+        mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
+        toast.success("Create lesson successfully");
+        // Buộc phải dùng method refresh nếu muốn quay lại route /teacher dữ liệu đồng bộ vì sẽ ko
+        // sync data bởi SSR
+        router.refresh();
+      })
+      .catch((err) => toast.error("Create lesson failed"));
   };
 
   return (

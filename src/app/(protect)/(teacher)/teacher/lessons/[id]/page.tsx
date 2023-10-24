@@ -75,10 +75,9 @@ const Lesson = ({ params }: { params: { id: string } }) => {
           {data?.video && (
             <VideoPlayer uri={data?.video?.uri} thumbnail={data.course.thumbnail.uri} />
           )}
-          <Divider />
           {/* Comments */}
         </Grid>
-        <Grid item lg={6} md={12} xs={12}>
+        <Grid item lg={data?.video ? 6 : 12} md={12} xs={12}>
           <FormLesson type="edit" lesson={data} onSubmit={handleEditLesson} />
         </Grid>
       </Grid>

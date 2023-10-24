@@ -17,8 +17,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
     <Box>
       <Grid
         container
-        pt={1}
-        pb={1}
+        pt={0.5}
         columnSpacing={1}
         flexDirection={"row"}
         flexWrap={"wrap"}
@@ -34,17 +33,17 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           },
           ":hover": {
             img: {
-              filter: "opacity(0.85)",
+              filter: "contrast(110%)",
             },
           },
         }}
       >
-        <Grid item lg={3} md={3}>
+        <Grid item lg={3} md={3} xs={3}>
           <Image alt="thumbnail-course" src={course.thumbnail.uri} width={350} height={230} />
         </Grid>
 
         {/* Content  */}
-        <Grid item lg={9} md={9}>
+        <Grid item lg={9} md={9} xs={9}>
           <Typography variant="h6" gutterBottom>
             {course.name}
           </Typography>

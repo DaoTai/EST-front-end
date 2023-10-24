@@ -27,11 +27,14 @@ export const POST = async (req: NextRequest, { params }: { params: { idCourse: s
         "Content-Type": "multipart/form-data",
       },
     });
+
     return NextResponse.json(res.data, {
       status: res.status,
     });
   } catch (error) {
-    if (error instanceof AxiosError)
+    if (error instanceof AxiosError) {
+      console.log("Error: ", error.message);
       return NextResponse.json(error.message, { status: error.status });
+    }
   }
 };
