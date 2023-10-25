@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import { redirect } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import FormCourse from "../../_components/FormCourse";
+import FormCourse from "@/components/course-components/FormCourse";
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
   const [course, setCourse] = useState<ICourse>();

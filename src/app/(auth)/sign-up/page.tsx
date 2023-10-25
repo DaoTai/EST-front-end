@@ -52,7 +52,7 @@ const SignUp = () => {
   return (
     <>
       <Box component={"form"} width={"100%"} onSubmit={handleSubmit}>
-        <Typography variant="h2" textAlign={"center"} gutterBottom>
+        <Typography variant="h2" textAlign={"center"}>
           Sign up
         </Typography>
 
@@ -141,16 +141,7 @@ const SignUp = () => {
         </Stack>
 
         {/* Captcha*/}
-        <Stack flexDirection={"row"} flexWrap={"wrap"} gap={1} mt={1}>
-          <TextField
-            required
-            label="Captcha"
-            variant="filled"
-            sx={{ flex: "2 1 auto" }}
-            value={captcha}
-            onChange={(e) => setCaptcha(e.target.value.trim())}
-          />
-
+        <Stack flexDirection={"row"} alignItems={"flex-start"} flexWrap={"wrap"} gap={1} mt={1}>
           {/* Send captcha */}
           <Button
             disabled={!!errors.email || !values.email || isSending || isSubmitting}
@@ -158,8 +149,17 @@ const SignUp = () => {
             sx={{ flex: "1 1 auto" }}
             onClick={handleSendCaptcha}
           >
-            Send captcha to email
+            Confirm email
           </Button>
+          <TextField
+            required
+            label="Captcha"
+            variant="filled"
+            size="small"
+            sx={{ flex: "2 1 auto" }}
+            value={captcha}
+            onChange={(e) => setCaptcha(e.target.value.trim())}
+          />
         </Stack>
 
         {/* Submit button */}

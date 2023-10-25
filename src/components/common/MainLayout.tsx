@@ -1,12 +1,31 @@
+"use client";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import useTheme from "@mui/material/styles/useTheme";
+import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
+
 import React from "react";
 import Header from "./Header";
-import Box from "@mui/material/Box";
+import Navbar from "./Navbar";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
       <Header />
-      <Box sx={{ pt: "80px" }}>{children}</Box>
+      <Stack flexDirection={"row"} sx={{ pt: "80px" }}>
+        <Navbar />
+        <Box
+          sx={{
+            paddingBottom: isMobile ? "73px" : 0,
+            flexGrow: 2,
+          }}
+        >
+          {" "}
+          {children}
+        </Box>
+      </Stack>
     </>
   );
 };

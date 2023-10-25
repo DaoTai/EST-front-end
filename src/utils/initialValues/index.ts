@@ -29,3 +29,11 @@ export const initFormLesson = {
   theory: "",
   references: [] as string[],
 };
+
+export const initFormQuestion = {
+  content: "",
+  category: "",
+  expiredTime: "",
+  correctAnswers: [""] as string[],
+  explaination: "",
+};

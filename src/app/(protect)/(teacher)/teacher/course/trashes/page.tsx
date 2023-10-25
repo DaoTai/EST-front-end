@@ -21,7 +21,7 @@ import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import FormCourse from "../_components/FormCourse";
+import FormCourse from "@/components/course-components/FormCourse";
 
 type IRow = ICourse & { id: string; order: number };
 

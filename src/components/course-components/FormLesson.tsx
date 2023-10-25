@@ -1,5 +1,8 @@
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import HelpIcon from "@mui/icons-material/Help";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -21,6 +24,8 @@ import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
 import { IFormLesson } from "@/types/ILesson";
 import MyDialog from "@/components/custom/Dialog";
+import { Dialog } from "@mui/material";
+import FormQuestion from "../question-components/FormQuestion";
 type Props = {
   type: "create" | "edit" | "watch";
   lesson?: ILesson;
@@ -56,6 +61,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
   const [reference, setReference] = useState<string>("");
   const [video, setVideo] = useState<File | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [openFormQuestion, setOpenFormQuestion] = useState<boolean>(false);
 
   useEffect(() => {
     if (lesson) {
@@ -105,7 +111,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
         {type} lesson
       </Typography>
 
-      {/* Form */}
+      {/* Form lesson*/}
       <Grid
         container
         spacing={1}
@@ -187,7 +193,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           />
         </Grid>
         <Grid item md={6} xs={12}>
-          <Button component="label" variant="contained" startIcon={<FileUploadIcon />}>
+          <Button size="small" component="label" variant="contained" startIcon={<FileUploadIcon />}>
             {type === "create" ? "Upload" : "Change"} video
             <VisuallyHiddenInput type="file" onChange={handleUploadVideo} />
           </Button>
@@ -196,7 +202,19 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           </Typography>
         </Grid>
 
-        <Grid item xs={12} display={"flex"} justifyContent={"end"}>
+        {/* Create / edit question */}
+        <Grid item md={6} xs={12} display={"flex"} justifyContent={"end"}>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<HelpIcon />}
+            onClick={() => setOpenFormQuestion(true)}
+          >
+            {type === "create" ? "Create" : "Change"} question
+          </Button>
+        </Grid>
+
+        <Grid item xs={12} mt={1} display={"flex"} justifyContent={"end"}>
           {type === "create" && (
             <Button
               fullWidth={!!isMobile}
@@ -235,6 +253,16 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           )}
         </Grid>
       </Grid>
+
+      {/* Dialog add/edit question */}
+      <Dialog fullScreen open={openFormQuestion}>
+        <Box ml={1}>
+          <IconButton onClick={() => setOpenFormQuestion(false)}>
+            <ArrowBackIosIcon fontSize="large" />
+          </IconButton>
+          <FormQuestion />
+        </Box>
+      </Dialog>
     </Box>
   );
 };

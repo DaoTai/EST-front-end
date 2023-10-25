@@ -9,12 +9,14 @@ import Typography from "@mui/material/Typography";
 
 import serverAxios from "@/config/axios";
 import { useCallback, useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 import SearchBox from "@/components/common/SearchBox";
 import Banner from "@/components/course-components/Banner";
 import FilterSearch from "@/components/course-components/FilterSearch";
 import ListSkeletons from "@/components/course-components/ListSkeletons";
+import { SERVER_URI } from "@/utils/constants/common";
 type Response = {
   courses: ICourse[];
   maxPage: number;
@@ -33,14 +35,14 @@ const CoursePage = () => {
   const [openFilter, setOpenFilter] = useState(false);
 
   useEffect(() => {
-    handleSearch();
+    (async () => await handleSearch())();
   }, []);
 
   const handleSearch = async (page: number = 1) => {
     try {
       setLoading(true);
-      const res = await serverAxios.get<Response>(
-        "/search/courses?name=" + value.trim() + "&page=" + page
+      const res = await axios.get<Response>(
+        SERVER_URI + "/search/courses?name=" + value.trim() + "&page=" + page
       );
       setListCoures(res.data.courses);
       maxPageRef.current = res.data.maxPage;

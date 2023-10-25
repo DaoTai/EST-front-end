@@ -2,9 +2,9 @@ import { Grid, Typography } from "@mui/material";
 
 import serverAxios from "@/config/axios";
 import { redirect } from "next/navigation";
-import About from "../_components/About";
-import CreateLesson from "../_components/CreateLesson";
-import ListLessons from "../_components/ListLessons";
+import About from "@/components/course-components/About";
+import CreateLesson from "@/components/course-components/CreateLesson";
+import ListLessons from "@/components/course-components/ListLessons";
 
 const getCourseById = async (id: string): Promise<ICourse | undefined> => {
   const res = await serverAxios.get("/courses/" + id);

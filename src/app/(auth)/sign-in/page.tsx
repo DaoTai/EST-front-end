@@ -23,19 +23,14 @@ const SignIn = () => {
     },
     validationSchema: SignInSchema,
     onSubmit: async (values) => {
-      // Nếu dùng Credentials Provider thì ko hiển thị đc toast hiển thị res từ server
       // Nếu dùng axios thì ko update đc session => Chỉ update đc session khi session !== null
-
       try {
         const login = await signIn("credentials", {
           email: values.email,
           password: values.password,
           redirect: false,
         });
-
-        login?.error ? toast.error("Sign in failed") : router.push("/");
-        // const login = await signInAxios(values);
-        // console.log("Login: ", login);
+        login?.error ? toast.error(login?.error) : router.push("/");
       } catch (err) {
         console.log("Erorr: ", err);
       }
@@ -45,7 +40,7 @@ const SignIn = () => {
   return (
     <>
       <Box component={"form"} width={"100%"} onSubmit={handleSubmit}>
-        <Typography variant="h2" textAlign={"center"} gutterBottom>
+        <Typography variant="h2" textAlign={"center"}>
           Sign in
         </Typography>
         <TextField
@@ -118,11 +113,8 @@ const SignIn = () => {
         color="info"
         fullWidth
         sx={{
-          mt: 1,
-          mb: 1,
           padding: 0,
           a: {
-            padding: 1.5,
             display: "block",
             width: "100%",
           },

@@ -19,6 +19,7 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
       justifyContent="center"
       sx={{
         height: "100vh",
+        overflow: "auto",
         background: theme.palette.backgroundGradient.main,
         display: "flex",
         justifyContent: "center",
@@ -42,7 +43,9 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
         md={6}
         lg={4}
         borderRadius={2}
-        p={2}
+        p={1}
+        pl={2}
+        pr={2}
         display={"flex"}
         flexDirection={"column"}
         alignItems={"center"}
@@ -53,17 +56,9 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
           ".MuiTypography-root": {
             fontWeight: 700,
             color: "white",
-            textShadow: "1px 1px 4px rgba(0,0,0,0.3)",
           },
         }}
       >
-        <Image
-          src="/logo.svg"
-          alt="logo"
-          width={80}
-          height={80}
-          style={{ filter: "contrast(1.5)" }}
-        />
         <ToggleModeTheme
           sx={{ position: "absolute", top: 8, right: 8, transform: "translate(-8px, 0px)" }}
         />

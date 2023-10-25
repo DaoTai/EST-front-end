@@ -9,6 +9,7 @@ export enum MessageValidation {
   date = "Date is invalid",
   levelCourse = "Level course is invalid",
   typeCourse = "Type course is invalid",
+  categoryQuestion = "Category question is invalid",
 }
 
 export const minCharacterValidator = (field: string, min: number): string => {

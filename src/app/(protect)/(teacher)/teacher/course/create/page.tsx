@@ -3,7 +3,7 @@ import { IFormCourse } from "@/types/ICourse";
 import { convertObjectToFormData } from "@/utils/functions";
 import { Container } from "@mui/material";
 import { toast } from "react-toastify";
-import FormCourse from "../_components/FormCourse";
+import FormCourse from "@/components/course-components/FormCourse";
 
 const CreateCourse = () => {
   const handleCreateCourse = async (value: IFormCourse) => {

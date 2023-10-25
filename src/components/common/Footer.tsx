@@ -100,7 +100,8 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={6}
+          sm={6}
+          xs={12}
           display="flex"
           flexDirection={"column"}
           gap={2}
@@ -126,7 +127,8 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={6}
+          sm={6}
+          xs={12}
           display="flex"
           flexDirection={"column"}
           gap={2}
@@ -153,7 +155,8 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={6}
+          sm={6}
+          xs={12}
           display="flex"
           flexDirection={"column"}
           gap={2}
@@ -161,7 +164,7 @@ const Footer = () => {
           overflow={"hidden"}
         >
           <Typography variant="h4" className="underline-gradient" gutterBottom>
-            About
+            Features
           </Typography>
 
           {abouts.map(({ name, url, icon }, i) => (
@@ -185,7 +188,8 @@ const Footer = () => {
           item
           lg={3}
           md={6}
-          xs={6}
+          sm={6}
+          xs={12}
           display="flex"
           flexDirection={"column"}
           gap={2}
@@ -193,7 +197,7 @@ const Footer = () => {
           overflow={"hidden"}
         >
           <Typography variant="h4" className="underline-gradient" gutterBottom>
-            Donatation
+            Donate
           </Typography>
 
           <Image src="/qr-donate-banking.jpg" alt="qr-bank" width={100} height={100} />

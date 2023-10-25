@@ -25,7 +25,7 @@ import { useFormik } from "formik";
 import Image from "next/image";
 import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { selectFields, textFields } from "../_fields";
+import { selectFields, textFields } from "../../app/(protect)/(teacher)/teacher/course/_fields";
 import AboutCourse from "./AboutCourse";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import { useRouter } from "next/navigation";

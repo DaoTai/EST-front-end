@@ -189,6 +189,10 @@ const Actions = () => {
             vertical: "bottom",
             horizontal: "left",
           }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
           sx={{
             ".MuiPaper-root": {
               top: "80px !important",
@@ -221,7 +225,7 @@ const Actions = () => {
             {/* List action */}
             <MyList sx={{ pb: 0 }}>
               <Divider light />
-              <ListItem component={Link} href="/profile" divider>
+              <ListItem component={Link} href="/profile" divider onClick={handleClose}>
                 Profile
               </ListItem>
               <ListItem divider>

@@ -38,12 +38,12 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           },
         }}
       >
-        <Grid item lg={3} md={3} xs={3}>
+        <Grid item lg={4} md={4} xs={4}>
           <Image alt="thumbnail-course" src={course.thumbnail.uri} width={350} height={230} />
         </Grid>
 
         {/* Content  */}
-        <Grid item lg={9} md={9} xs={9}>
+        <Grid item lg={8} md={8} xs={8}>
           <Typography variant="h6" gutterBottom>
             {course.name}
           </Typography>

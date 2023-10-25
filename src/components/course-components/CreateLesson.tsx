@@ -6,17 +6,21 @@ import Dialog from "@mui/material/Dialog";
 import Fab from "@mui/material/Fab";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Container from "@mui/material/Container";
+import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
+import useTheme from "@mui/material/styles/useTheme";
 
-import { IFormLesson } from "@/types/ILesson";
-import { convertObjectToFormData } from "@/utils/functions";
-import { Container } from "@mui/material";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { mutate } from "swr";
+import { IFormLesson } from "@/types/ILesson";
+import { convertObjectToFormData } from "@/utils/functions";
 import FormLesson from "./FormLesson";
 
 const CreateModal = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams();
@@ -50,7 +54,7 @@ const CreateModal = () => {
           className="bg-gradient"
           sx={{
             position: "fixed",
-            bottom: 10,
+            bottom: !isMobile ? 10 : "80px",
             right: 10,
           }}
           onClick={() => setOpen(true)}
@@ -59,10 +63,15 @@ const CreateModal = () => {
         </Fab>
       </Tooltip>
 
-      <Dialog open={open} fullScreen onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        fullScreen
+        sx={{ zIndex: theme.zIndex.modal }}
+        onClose={() => setOpen(false)}
+      >
         <Box mb={2}>
           <IconButton onClick={() => setOpen(false)}>
-            <ArrowBackIosNewIcon fontSize="medium" />
+            <ArrowBackIosNewIcon fontSize="large" />
           </IconButton>
         </Box>
         <Container>

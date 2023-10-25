@@ -1,21 +1,21 @@
 "use client";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
-import { useCallback, useEffect, useState } from "react";
+import { convertObjectToFormData } from "@/utils/functions";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 import { toast } from "react-toastify";
-import FormLesson from "../../course/_components/FormLesson";
+import useSWR, { Fetcher } from "swr";
+
+import FormLesson from "@/components/course-components/FormLesson";
 import Spinner from "@/components/custom/Spinner";
 import VideoPlayer from "@/components/custom/VideoPlayer";
 import { IFormLesson } from "@/types/ILesson";
-import { convertObjectToFormData } from "@/utils/functions";
-import { useRouter } from "next/navigation";
-import useSWR, { Fetcher } from "swr";
-import { Button, Stack } from "@mui/material";
-
 const fetcher: Fetcher<ILesson, string> = (url: string) => fetch(url).then((res) => res.json());
 
 const Lesson = ({ params }: { params: { id: string } }) => {
@@ -69,14 +69,15 @@ const Lesson = ({ params }: { params: { id: string } }) => {
     );
 
   return (
-    <Box p={2}>
+    <Box pt={0} p={2}>
       <Grid container spacing={2}>
-        <Grid item lg={6} md={12} xs={12}>
-          {data?.video && (
-            <VideoPlayer uri={data?.video?.uri} thumbnail={data.course.thumbnail.uri} />
-          )}
-          {/* Comments */}
-        </Grid>
+        {data?.video && (
+          <Grid item lg={6} md={12} xs={12}>
+            <VideoPlayer uri={data?.video?.uri} thumbnail={data.course?.thumbnail?.uri} />
+            {/* Comments */}
+          </Grid>
+        )}
+
         <Grid item lg={data?.video ? 6 : 12} md={12} xs={12}>
           <FormLesson type="edit" lesson={data} onSubmit={handleEditLesson} />
         </Grid>
