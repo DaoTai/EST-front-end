@@ -108,12 +108,14 @@ const Navbar = () => {
           href={href}
           sx={{
             display: "flex",
+            gap: "0 !important",
             flexDirection: "column",
-            background: pathName === href ? theme.palette.gradient.main : "inherit",
+            background: pathName.startsWith(href) ? theme.palette.gradient.main : "inherit",
+            color: pathName.startsWith(href) ? "#fff !important" : "inherit",
           }}
         >
-          <Icon fontSize="large" color="action" />
-          <Typography variant="subtitle2">{title}</Typography>
+          <Icon fontSize="large" />
+          {!isMobile && <Typography variant="subtitle2">{title}</Typography>}
         </IconButton>
       ))}
     </Stack>

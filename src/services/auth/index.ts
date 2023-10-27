@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { InferType } from "yup";
 import { SERVER_URI } from "@/utils/constants/common";
+import { signOut } from "next-auth/react";
 
 type ISignUpWithProvider = {
   email: string;
@@ -136,5 +137,7 @@ export const refreshToken = async (refreshToken: string) => {
       }
     );
     return res.data;
-  } catch (error) {}
+  } catch (error) {
+    signOut();
+  }
 };

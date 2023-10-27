@@ -14,10 +14,9 @@ import { useCallback, useRef, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import { toast } from "react-toastify";
 
-import PreviewLesson from "@/components/course-components/PreviewLesson";
 import Spinner from "@/components/custom/Spinner";
 import MyDialog from "@/components/custom/Dialog";
-import { Button } from "@mui/material";
+import PreviewLesson from "../lesson-components/PreviewLesson";
 
 const fetcher: Fetcher<{ listLessons: ILesson[]; maxPage: number }, string> = (url: string) =>
   fetch(url).then((res) => res.json());

@@ -13,23 +13,22 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-
-import { IFormCourse } from "@/types/ICourse";
-import { initFormCourse } from "@/utils/initialValues";
-import { FormCourseSchema } from "@/utils/validation/course";
-
-import { getChangedValuesObject } from "@/utils/functions";
 import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
+
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { selectFields, textFields } from "../../app/(protect)/(teacher)/teacher/course/_fields";
-import AboutCourse from "./AboutCourse";
-import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import { useRouter } from "next/navigation";
 
+import { selectFields, textFields } from "./_fields";
+import AboutCourse from "./AboutCourse";
+import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
+import { IFormCourse } from "@/types/ICourse";
+import { initFormCourse } from "@/utils/initialValues";
+import { FormCourseSchema } from "@/utils/validation/course";
+import { getChangedValuesObject } from "@/utils/functions";
 interface IPropsFormCourse {
   type: "create" | "edit" | "watch";
   course?: ICourse;

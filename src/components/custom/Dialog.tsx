@@ -43,6 +43,7 @@ export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
             await onSubmit();
             onClose();
           }}
+          sx={{ pr: 2, pl: 2 }}
         >
           Agree
         </Button>

@@ -30,10 +30,11 @@ export const initFormLesson = {
   references: [] as string[],
 };
 
-export const initFormQuestion = {
+export const initFormQuestion: Omit<IQuestion, "_id" | "createdAt" | "updatedAt"> = {
   content: "",
-  category: "",
+  category: "choice",
   expiredTime: "",
-  correctAnswers: [""] as string[],
+  answers: [] as string[],
+  correctAnswers: [] as string[],
   explaination: "",
 };

@@ -24,6 +24,7 @@ export default {
   },
   ".bg-gradient": {
     background: "linear-gradient(to right, #58a9eb, #aa99ff)",
+    color: "#fff !important",
   },
   ".underline-gradient": {
     position: "relative",

@@ -1,34 +1,34 @@
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import HelpIcon from "@mui/icons-material/Help";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import useTheme from "@mui/material/styles/useTheme";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import { useFormik } from "formik";
-import { ChangeEvent, memo, useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
+import { useFormik } from "formik";
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
+
+import MyDialog from "@/components/custom/Dialog";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
+import { IFormLesson } from "@/types/ILesson";
 import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
-import { IFormLesson } from "@/types/ILesson";
-import MyDialog from "@/components/custom/Dialog";
-import { Dialog } from "@mui/material";
+import MyModal from "../custom/Modal";
 import FormQuestion from "../question-components/FormQuestion";
+
 type Props = {
   type: "create" | "edit" | "watch";
-  lesson?: ILesson;
+  lesson?: ILesson & { questions?: IQuestion[] };
   onSubmit?: (value: IFormLesson) => Promise<void>;
 };
 
@@ -61,7 +61,6 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
   const [reference, setReference] = useState<string>("");
   const [video, setVideo] = useState<File | null>(null);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [openFormQuestion, setOpenFormQuestion] = useState<boolean>(false);
 
   useEffect(() => {
     if (lesson) {
@@ -72,6 +71,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     }
   }, [lesson]);
 
+  // Upload video
   const handleUploadVideo = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file && file.type.startsWith("video")) {
@@ -79,10 +79,12 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     }
   };
 
+  // Toggle status launching
   const onToggleLanching = (event: ChangeEvent<HTMLInputElement>) => {
     setFieldValue("isLaunching", event.target.checked);
   };
 
+  // Add references
   const addReference = () => {
     if (!errors.references && reference.length >= 3) {
       if (reference.trim() && !values.references.includes(reference as never)) {
@@ -92,6 +94,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     }
   };
 
+  // Remove references
   const removeReference = (e: any, val: string) => {
     e.preventDefault();
     const newRefs = values.references.filter((ref) => ref !== val.trim());
@@ -193,25 +196,19 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           />
         </Grid>
         <Grid item md={6} xs={12}>
-          <Button size="small" component="label" variant="contained" startIcon={<FileUploadIcon />}>
+          <Button
+            size="small"
+            color="info"
+            component="label"
+            variant="contained"
+            startIcon={<FileUploadIcon />}
+          >
             {type === "create" ? "Upload" : "Change"} video
             <VisuallyHiddenInput type="file" onChange={handleUploadVideo} />
           </Button>
           <Typography variant="caption" display={"block"}>
             {video && video.name}
           </Typography>
-        </Grid>
-
-        {/* Create / edit question */}
-        <Grid item md={6} xs={12} display={"flex"} justifyContent={"end"}>
-          <Button
-            size="small"
-            variant="contained"
-            startIcon={<HelpIcon />}
-            onClick={() => setOpenFormQuestion(true)}
-          >
-            {type === "create" ? "Create" : "Change"} question
-          </Button>
         </Grid>
 
         <Grid item xs={12} mt={1} display={"flex"} justifyContent={"end"}>
@@ -253,16 +250,6 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           )}
         </Grid>
       </Grid>
-
-      {/* Dialog add/edit question */}
-      <Dialog fullScreen open={openFormQuestion}>
-        <Box ml={1}>
-          <IconButton onClick={() => setOpenFormQuestion(false)}>
-            <ArrowBackIosIcon fontSize="large" />
-          </IconButton>
-          <FormQuestion />
-        </Box>
-      </Dialog>
     </Box>
   );
 };

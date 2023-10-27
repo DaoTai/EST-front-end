@@ -1,9 +1,11 @@
-export interface IQuestion {
+interface IQuestion {
   _id: string;
   content: string;
   category: "code" | "choice" | "multiple-choice";
-  correctAnswers: string[];
-  explaination: string;
+  answers?: string[];
+  correctAnswers?: string[];
+  explaination?: string;
+  expiredTime?: string;
   createdAt: Date;
   updatedAt: Date;
 }
