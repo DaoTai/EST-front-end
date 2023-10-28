@@ -21,8 +21,8 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             paddingBottom: isMobile ? "73px" : 0,
             flexGrow: 2,
           }}
+          minHeight={"100vh"}
         >
-          {" "}
           {children}
         </Box>
       </Stack>

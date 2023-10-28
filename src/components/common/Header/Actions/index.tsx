@@ -19,6 +19,8 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import MenuAction from "./MenuAction";
+
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
 });
@@ -134,6 +136,7 @@ const Actions = () => {
                 onClick={handleClick}
               />
             </Stack>
+
             <MyList>
               <Divider />
               <ListItem divider>
@@ -200,39 +203,7 @@ const Actions = () => {
             },
           }}
         >
-          <Stack gap={1}>
-            {/* Basic info */}
-            <Stack gap={3} p={2} pb={0} flexDirection={"row"} alignItems={"center"}>
-              <Box>
-                {session?.avatar && (
-                  <Image
-                    src={session?.avatar?.uri as string}
-                    alt="avatar"
-                    width={54}
-                    height={54}
-                    style={{ borderRadius: "50%" }}
-                  />
-                )}
-              </Box>
-              <Stack>
-                <Typography variant="h6">{session?.fullName}</Typography>
-                <Typography variant="body2" color="GrayText">
-                  @{session?.username}
-                </Typography>
-              </Stack>
-            </Stack>
-
-            {/* List action */}
-            <MyList sx={{ pb: 0 }}>
-              <Divider light />
-              <ListItem component={Link} href="/profile" divider onClick={handleClose}>
-                Profile
-              </ListItem>
-              <ListItem divider>
-                <ListItemText primary="Sign out" onClick={() => signOut()} />
-              </ListItem>
-            </MyList>
-          </Stack>
+          <MenuAction onClose={handleClose} />
         </Popover>
       </>
     );

@@ -12,10 +12,10 @@ const RootLayout = async ({
   const session = await getServerSession(options);
 
   return (
-    <Container>
+    <>
       {children}
       {!session?.provider && modal}
-    </Container>
+    </>
   );
 };
 

@@ -11,7 +11,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   if (session) {
     return (
       <MainLayout>
-        <Box bgcolor="white.main" minHeight="100vh">
+        <Box bgcolor="white.main" minHeight="100vh" p={1}>
           {children}
         </Box>
       </MainLayout>

@@ -63,13 +63,13 @@ const ExplorePage = () => {
   }, [session]);
 
   return (
-    <Container sx={{ pt: 1 }}>
+    <>
       <Search ref={SearchBarRef} totalResult={totalResult.current} onSearch={onSearch} />
 
       {/* List member */}
       <Grid container sx={{ mt: 2 }} spacing={2}>
         {listMember.map((member, i) => (
-          <Grid key={i} item md={3} sm={6} xs={12}>
+          <Grid key={i} item lg={3} md={6} sm={6} xs={12}>
             <CardMember data={member} />
           </Grid>
         ))}
@@ -86,7 +86,7 @@ const ExplorePage = () => {
           onChange={handleChange}
         />
       </Stack>
-    </Container>
+    </>
   );
 };
 

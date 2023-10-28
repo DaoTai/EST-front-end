@@ -4,9 +4,10 @@ import MyModal from "@/components/custom/Modal";
 import FormQuestion from "@/components/question-components/FormQuestion";
 import TableQuestions from "@/components/question-components/TableQuestions";
 import HelpIcon from "@mui/icons-material/Help";
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";

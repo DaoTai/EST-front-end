@@ -18,17 +18,17 @@ import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
-import { selectFields, textFields } from "./_fields";
-import AboutCourse from "./AboutCourse";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import { IFormCourse } from "@/types/ICourse";
+import { getChangedValuesObject } from "@/utils/functions";
 import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
-import { getChangedValuesObject } from "@/utils/functions";
+import AboutCourse from "./AboutCourse";
+import { selectFields, textFields } from "./_fields";
 interface IPropsFormCourse {
   type: "create" | "edit" | "watch";
   course?: ICourse;
@@ -408,7 +408,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         </Grid>
 
         {type !== "watch" && (
-          <Grid item md={12} display={"flex"} justifyContent={"end"}>
+          <Grid item md={12} xs={12} display={"flex"} justifyContent={"end"}>
             <Button
               type="submit"
               variant="contained"

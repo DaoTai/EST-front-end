@@ -1,9 +1,16 @@
 "use client";
 
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import GroupsIcon from "@mui/icons-material/Groups";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
-import SchoolIcon from "@mui/icons-material/School";
 import StoreIcon from "@mui/icons-material/Store";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -12,9 +19,10 @@ import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
 
 import { SvgIconTypeMap, SxProps, Theme } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useMemo } from "react";
-import { useParams, usePathname } from "next/navigation";
 
 type NavType = {
   href: string;
@@ -26,20 +34,36 @@ const Navbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const pathName = usePathname();
+  const { data: session } = useSession();
 
   const listNavs: NavType[] = useMemo(() => {
-    return [
-      {
+    let navs: NavType[] = [];
+
+    if (session?.roles.includes("admin")) {
+      navs.push(
+        {
+          href: "/admin/dashboard",
+          Icon: DashboardIcon,
+          title: "Dashboard",
+        },
+        {
+          href: "/admin/courses",
+          Icon: MenuBookIcon,
+          title: "Courses",
+        }
+      );
+    }
+
+    if (session?.roles.includes("teacher")) {
+      navs.push({
         href: "/teacher",
         Icon: ModelTrainingIcon,
         title: "Teacher",
-      },
+      });
+    }
 
-      // {
-      //   href: "/teacher",
-      //   Icon: SchoolIcon,
-      //   title: "Mine",
-      // },
+    navs = [
+      ...navs,
       {
         href: "/search/course",
         Icon: StoreIcon,
@@ -51,7 +75,9 @@ const Navbar = () => {
         title: "Members",
       },
     ];
-  }, []);
+
+    return navs;
+  }, [session]);
 
   const styleNavBar: SxProps<Theme> = useMemo(() => {
     let style: SxProps<Theme> = {
@@ -100,7 +126,7 @@ const Navbar = () => {
   }, [isMobile]);
 
   return (
-    <Stack p={2} spacing={2} boxShadow={2} flexShrink={0} sx={styleNavBar}>
+    <Stack p={1} spacing={2} boxShadow={1} flexShrink={0} sx={styleNavBar}>
       {listNavs.map(({ href, Icon, title }, i) => (
         <IconButton
           key={i}

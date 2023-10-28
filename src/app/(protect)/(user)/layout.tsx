@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);
   if (!session) return redirect("/sign-in");
-  return <div>{children}</div>;
+  return <>{children}</>;
 };
 
 export default RootLayout;

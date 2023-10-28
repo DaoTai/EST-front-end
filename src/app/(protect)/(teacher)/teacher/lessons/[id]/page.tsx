@@ -1,26 +1,22 @@
 "use client";
 
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 import { convertObjectToFormData } from "@/utils/functions";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher } from "swr";
 
-import FormLesson from "@/components/lesson-components/FormLesson";
 import Spinner from "@/components/custom/Spinner";
 import VideoPlayer from "@/components/custom/VideoPlayer";
+import FormLesson from "@/components/lesson-components/FormLesson";
 import { IFormLesson } from "@/types/ILesson";
-import TableQuestions from "@/components/question-components/TableQuestions";
-import MyModal from "@/components/custom/Modal";
-import FormQuestion from "@/components/question-components/FormQuestion";
-import axios from "axios";
 const fetcher: Fetcher<ILesson, string> = (url: string) => fetch(url).then((res) => res.json());
 
 const Lesson = ({ params }: { params: { id: string } }) => {
@@ -34,16 +30,6 @@ const Lesson = ({ params }: { params: { id: string } }) => {
       revalidateOnReconnect: false,
     }
   );
-
-  const [listQuestions, setListQuestion] = useState<IQuestion[]>([]);
-
-  useEffect(() => {
-    if (data?._id) {
-      fetch("/api/teacher/questions/" + data._id)
-        .then((res) => res.json())
-        .then((data) => setListQuestion(data));
-    }
-  }, [data]);
 
   // Edit lesson
   const handleEditLesson = useCallback(async (value: IFormLesson & { file?: File }) => {

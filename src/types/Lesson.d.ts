@@ -1,3 +1,10 @@
+interface IReport {
+  sender: IUser;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface ILesson {
   _id: string;
   course: ICourse & string;
@@ -9,6 +16,7 @@ interface ILesson {
   video: IAttachment;
   comments: any[];
   questions: any[];
+  reports: IReport[];
   createdAt: string;
   updatedAt: string;
 }

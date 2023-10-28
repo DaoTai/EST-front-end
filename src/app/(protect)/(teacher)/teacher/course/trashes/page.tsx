@@ -228,17 +228,30 @@ const TrashedCourses = () => {
     }
   };
 
-  if (!isLoading && !rows) {
-    <Box pt={1} pl={2} pr={2}>
-      <Stack alignItems={"center"}>
-        <Typography variant="body1" gutterBottom>
-          No trash course
+  if (!isLoading && rows.length === 0) {
+    return (
+      <Box pt={1} pl={2} pr={2}>
+        <Typography
+          variant="h3"
+          className="underline-gradient"
+          textAlign={"center"}
+          ml={"auto"}
+          mr={"auto"}
+          display={"block"}
+          gutterBottom
+        >
+          Trash courses
         </Typography>
-        <Button variant="text" onClick={() => router.back()}>
-          Back
-        </Button>
-      </Stack>
-    </Box>;
+        <Stack alignItems={"center"}>
+          <Typography variant="body1" gutterBottom>
+            No trash course
+          </Typography>
+          <Button variant="text" onClick={() => router.back()}>
+            Back
+          </Button>
+        </Stack>
+      </Box>
+    );
   }
 
   return (
@@ -254,24 +267,25 @@ const TrashedCourses = () => {
       >
         Trash courses
       </Typography>
-
-      <Box sx={{ width: "100%" }}>
-        <DataGrid
-          disableRowSelectionOnClick
-          pageSizeOptions={[5]}
-          checkboxSelection={false}
-          loading={isLoading}
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
+      {rows.length > 0 && (
+        <Box>
+          <DataGrid
+            disableRowSelectionOnClick
+            pageSizeOptions={[5]}
+            checkboxSelection={false}
+            loading={isLoading}
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
+                },
               },
-            },
-          }}
-        />
-      </Box>
+            }}
+          />
+        </Box>
+      )}
       {/* Dialog confirm delete */}
       {openDialogConfirm && (
         <MyDialog
