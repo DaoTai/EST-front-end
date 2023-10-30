@@ -198,7 +198,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
   return (
     <Box pt={1} pb={2}>
       <Typography
-        variant="h2"
+        variant="h3"
         className="underline-gradient"
         margin={"0 auto"}
         textTransform="capitalize"
@@ -230,7 +230,9 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               onBlur={handleBlur}
               error={!!(touched[props.name] && errors[props.name])}
               helperText={touched[props.name] && errors[props.name]}
-              disabled={type === "watch"}
+              InputProps={{
+                readOnly: type === "watch",
+              }}
             />
           </Grid>
         ))}
@@ -251,7 +253,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={!!(touched[props.name] && errors[props.name])}
-                disabled={type === "watch"}
+                readOnly={type === "watch"}
               >
                 {menuItem.map((menu, j) => (
                   <MenuItem key={j} value={menu.value}>
@@ -268,6 +270,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <DateTimePicker
+              readOnly={type === "watch"}
               disablePast={type === "create"}
               label="Open date register"
               disabled={!!(values.type === "public") || isPastOpenDate}
@@ -296,6 +299,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <DateTimePicker
+              readOnly={type === "watch"}
               disablePast={type === "create"}
               label="Close date register"
               disabled={!!(values.type === "public")}
@@ -396,7 +400,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               placeholder="Introduce course"
               spellCheck={false}
               minRows={5}
-              disabled={type === "watch"}
+              InputProps={{ readOnly: type === "watch" }}
               value={values.intro || ""}
               error={!!(touched.intro && errors.intro)}
               helperText={touched.intro && errors.intro}

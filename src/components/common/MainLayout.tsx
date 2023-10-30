@@ -22,6 +22,8 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             flexGrow: 2,
           }}
           minHeight={"100vh"}
+          width={"100%"}
+          overflow={"hidden"}
         >
           {children}
         </Box>

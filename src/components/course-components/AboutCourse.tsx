@@ -52,7 +52,7 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
             Updated time: {dayjs(course.updatedAt).format("dddd, MMMM D, YYYY h:mm A")}
           </Typography>
           <Typography component={"li"} variant="body1" gutterBottom>
-            Lessons: {course.lessons.length}
+            Lessons: {course?.lessons?.length}
           </Typography>
           <Typography component={"li"} variant="body1" gutterBottom>
             Members: {course.members.length}

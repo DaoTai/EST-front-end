@@ -11,7 +11,7 @@ type SearchBoxProps = {
   value: string;
   onClear: () => any;
   onChange: (val: string) => void;
-  onSearch: () => any;
+  onSearch?: () => any;
   placeholder?: string;
 };
 
@@ -26,7 +26,7 @@ const SearchBox = ({
 
   const handleClear = async () => {
     await onClear();
-    inputRef.current!.focus();
+    inputRef.current?.focus();
   };
 
   return (
@@ -54,7 +54,7 @@ const SearchBox = ({
         inputRef: inputRef,
       }}
       onChange={(e) => onChange(e.target.value)}
-      onKeyDown={async (e) => e.key === "Enter" && (await onSearch())}
+      onKeyDown={async (e) => e.key === "Enter" && (await onSearch?.())}
     />
   );
 };
