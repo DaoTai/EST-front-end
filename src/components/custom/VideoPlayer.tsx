@@ -7,28 +7,11 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 
 import { Box, IconButton, Slider, Stack, Typography } from "@mui/material";
 import styled from "@mui/material/styles/styled";
-import { MouseEvent, useRef, useState } from "react";
+import { MouseEvent, memo, useEffect, useRef, useState } from "react";
 
 const ContainerVideo = styled(Box)(({ ...theme }) => ({
   height: "50vh",
   background: "black",
-  ":not(.hide-controls):hover": {
-    ".controls": {
-      display: "flex",
-    },
-  },
-
-  "&.show-controls": {
-    ".controls": {
-      display: "flex",
-    },
-  },
-
-  "&.hide-controls": {
-    ".controls": {
-      display: "none",
-    },
-  },
 
   video: {
     position: "relative",
@@ -59,10 +42,6 @@ const ContainerVideo = styled(Box)(({ ...theme }) => ({
       display: "none",
     },
   },
-  ".controls": {
-    display: "none",
-    transition: "0.5s ease all",
-  },
 }));
 
 const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) => {
@@ -75,6 +54,28 @@ const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) =>
   const video = useRef<HTMLVideoElement>(null);
   const btnFullScreen = useRef<HTMLButtonElement>(null);
   const duration = useRef<number>(0);
+
+  const [showControls, setShowControls] = useState(true);
+
+  useEffect(() => {
+    let timeoutId: any;
+
+    const handleMouseMove = () => {
+      setShowControls(true);
+      clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(() => {
+        setShowControls(false);
+      }, 3000); // Số milliseconds sau khi không di chuyển chuột, bộ control sẽ ẩn đi
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   // Toggle play / pause
   const onTogglePlay = () => {
@@ -173,115 +174,118 @@ const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) =>
       </video>
 
       {/* Control */}
-      <Stack
-        className="controls"
-        flexDirection={"row"}
-        justifyContent={"space-between"}
-        position={"absolute"}
-        color={"#fff"}
-        bgcolor={"rgba(0,0,0,0.3)"}
-        bottom={0}
-        left={10}
-        right={10}
-        zIndex={2}
-        p={0.5}
-      >
-        {/* Progress bar */}
-        {video.current?.duration && (
-          <Slider
-            min={0}
-            max={1}
-            step={0.01}
-            value={currentTime / video.current.duration}
-            sx={{
-              position: "absolute",
-              top: -10,
-              left: 0,
-              right: 0,
-              p: 0,
-              height: "6px",
-              ".MuiSlider-thumb": {
-                width: "12px",
-                height: "12px",
-              },
-            }}
-            onChange={onSeek}
-          />
-        )}
-
-        {/* Controller */}
-        <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-          {/* Play / pause */}
-          <IconButton size="small" onClick={onTogglePlay}>
-            {isPlay ? <PauseIcon /> : <PlayArrowIcon />}
-          </IconButton>
-
-          {/* Volume & Time */}
-          <Box
-            display={"flex"}
-            alignItems={"center"}
-            gap={1}
-            sx={{
-              ":hover": {
-                "#volume": {
-                  width: 80,
-                  transform: "scaleX(1)",
+      {showControls && (
+        <Stack
+          className="controls"
+          flexDirection={"row"}
+          justifyContent={"space-between"}
+          position={"absolute"}
+          color={"#fff"}
+          bottom={0}
+          left={5}
+          right={5}
+          zIndex={2}
+          p={0.5}
+        >
+          {/* Progress bar */}
+          {video.current?.duration && (
+            <Slider
+              min={0}
+              max={1}
+              step={0.01}
+              value={currentTime / video.current.duration}
+              sx={{
+                position: "absolute",
+                top: -10,
+                left: 0,
+                right: 0,
+                p: 0,
+                color: "#fff",
+                height: "6px",
+                ".MuiSlider-thumb": {
+                  width: "12px",
+                  height: "12px",
                 },
-              },
-            }}
-          >
-            <IconButton size="small" onClick={onToggleMute}>
-              {volume === 0 ? <VolumeOffIcon /> : <VolumeUpIcon />}
+              }}
+              onChange={onSeek}
+            />
+          )}
+
+          {/* Controller */}
+          <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+            {/* Play / pause */}
+            <IconButton size="small" onClick={onTogglePlay}>
+              {isPlay ? <PauseIcon /> : <PlayArrowIcon />}
             </IconButton>
 
-            {/* Change volume */}
-            <Stack
-              id="volume"
+            {/* Volume & Time */}
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              gap={1}
               sx={{
-                ml: 1,
-                width: 0,
-                transform: "scaleX(0)",
-                transformOrigin: "left",
-                transition: "all 0.3s ease-in-out",
+                ":hover": {
+                  "#volume": {
+                    width: 80,
+                    transform: "scaleX(1)",
+                  },
+                },
               }}
             >
-              <Slider
-                size="small"
-                min={0}
-                max={1}
-                step={0.01}
-                sx={{ color: "#fff" }}
-                value={volume}
-                onChange={onChangeVol}
-              />
-            </Stack>
+              <IconButton size="small" onClick={onToggleMute}>
+                {volume === 0 ? <VolumeOffIcon /> : <VolumeUpIcon />}
+              </IconButton>
 
-            {/* Time */}
-            {!!currentTime && (
-              <Box id="times" display={"flex"} gap={1} ml={2}>
-                <Typography variant="subtitle1">{formatTime(currentTime)} /</Typography>
-                <Typography variant="subtitle1">{formatTime(duration.current)}</Typography>
-              </Box>
-            )}
-          </Box>
-        </Stack>
+              {/* Change volume */}
+              <Stack
+                id="volume"
+                sx={{
+                  ml: 1,
+                  width: 0,
+                  transform: "scaleX(0)",
+                  transformOrigin: "left",
+                  transition: "all 0.3s ease-in-out",
+                }}
+              >
+                <Slider
+                  size="small"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  sx={{ color: "#fff" }}
+                  value={volume}
+                  onChange={onChangeVol}
+                />
+              </Stack>
 
-        {/* Full screen */}
-        <Stack flexDirection={"row"} gap={1}>
-          <IconButton
-            ref={btnFullScreen}
-            id="btn-full-screen"
-            className="full-screen"
-            size="small"
-            onClick={handleToggleFullScreen}
-          >
-            <FullscreenIcon className="full-screen-icon" />
-            <FullscreenExitIcon className="exit-full-screen-icon" />
-          </IconButton>
+              {/* Time */}
+              {!!currentTime && (
+                <Box id="times" display={"flex"} gap={1} ml={2}>
+                  <Typography variant="subtitle1">
+                    {formatTime(currentTime)} / {formatTime(duration.current)}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Stack>
+
+          {/* Full screen */}
+          <Stack flexDirection={"row"} gap={1}>
+            <IconButton
+              ref={btnFullScreen}
+              id="btn-full-screen"
+              className="full-screen"
+              size="small"
+              onClick={handleToggleFullScreen}
+            >
+              <FullscreenIcon className="full-screen-icon" />
+              <FullscreenExitIcon className="exit-full-screen-icon" />
+            </IconButton>
+          </Stack>
         </Stack>
-      </Stack>
+      )}
     </ContainerVideo>
   );
 };
 
-export default VideoPlayer;
+export default memo(VideoPlayer);

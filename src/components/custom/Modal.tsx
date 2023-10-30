@@ -20,7 +20,7 @@ const style: SxProps = {
   pr: 2,
   maxHeight: "100vh",
   minWidth: 400,
-  overflowY: "auto",
+  overflowY: "overlay",
 };
 
 export default function MyModal({ open, onClose, children }: ModalProps) {
@@ -35,7 +35,11 @@ export default function MyModal({ open, onClose, children }: ModalProps) {
     >
       <Box sx={style} width={isMedium ? "100vw" : "auto"} height={isMedium ? "100vh" : "auto"}>
         {children}
-        <IconButton sx={{ position: "absolute", top: 0, right: 0 }} onClick={onClose as any}>
+        <IconButton
+          size="small"
+          sx={{ position: "absolute", top: 2, right: 2 }}
+          onClick={onClose as any}
+        >
           <Close fontSize="large" />
         </IconButton>
       </Box>

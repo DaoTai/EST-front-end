@@ -1,5 +1,5 @@
-import { Grid, Typography } from "@mui/material";
-
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import serverAxios from "@/config/axios";
 import { redirect } from "next/navigation";
 import About from "@/components/course-components/About";
@@ -19,10 +19,10 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
     return (
       <>
         <Grid container p={1} spacing={1}>
-          <Grid item md={3} xs={12}>
+          <Grid item md={4} xs={12}>
             <About course={course} />
           </Grid>
-          <Grid item md={9} xs={12}>
+          <Grid item md={8} xs={12}>
             <ListLessons />
           </Grid>
         </Grid>

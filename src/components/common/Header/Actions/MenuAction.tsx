@@ -37,9 +37,7 @@ const MenuAction = ({ onClose }: { onClose: () => void }) => {
       {/* List action */}
       <MyList sx={{ pb: 0 }}>
         <Divider light />
-        {
-          // session?.roles.includes("admin") &&
-
+        {session?.roles.includes("admin") && (
           <>
             <ListItem component={Link} href="/admin/dashboard" divider onClick={onClose}>
               Dashboard
@@ -48,7 +46,10 @@ const MenuAction = ({ onClose }: { onClose: () => void }) => {
               Courses
             </ListItem>
           </>
-        }
+        )}
+        <ListItem component={Link} href="/courses" divider onClick={onClose}>
+          My courses
+        </ListItem>
         <ListItem component={Link} href="/profile" divider onClick={onClose}>
           Profile
         </ListItem>

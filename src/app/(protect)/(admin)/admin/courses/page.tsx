@@ -1,5 +1,5 @@
 "use client";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import Avatar from "@mui/material/Avatar";
@@ -32,6 +32,7 @@ import SearchBox from "@/components/common/SearchBox";
 import FormCourse from "@/components/course-components/FormCourse";
 import MyDialog from "@/components/custom/Dialog";
 import MyModal from "@/components/custom/Modal";
+import Spinner from "@/components/custom/Spinner";
 import useDebounce from "@/hooks/useDebounce";
 
 type Response = {
@@ -47,82 +48,32 @@ const Courses = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [openDetail, setOpenDetail] = useState<boolean>(false);
-  const [openConfirm, setConfirm] = useState<boolean>(false);
+  const [openConfirmApprove, setConfirmApprove] = useState<boolean>(false);
+  const [openConfirmDelete, setConfirmDelete] = useState<boolean>(false);
   const [course, setCourse] = useState<ICourse | null>(null);
   const [listIdCourse, setListIdCourse] = useState<GridRowId[]>([]);
   const [name, setName] = useState<string>("");
   const [status, setStatus] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-
   const nameSearch = useDebounce(name, 1000);
-  const { data, isLoading, error } = useSWR(
+
+  const { data, isLoading, error, isValidating } = useSWR(
     `/api/admin/courses?page=${page}&status=${status}&name=${nameSearch}`,
     fetcher,
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
   );
+
   const columns: GridColDef[] = useMemo(() => {
-    if (isMobile) {
-      return [
-        { field: "name", headerName: "Name", width: 100 },
-
-        {
-          field: "createdBy",
-          headerName: "Created by",
-          width: 100,
-          renderCell: (params) => {
-            const course: ICourse = params.row;
-            return (
-              <Typography
-                component={Link}
-                href={"/profile/" + course.createdBy._id}
-                variant="caption"
-              >
-                {course.createdBy.username}
-              </Typography>
-            );
-          },
-        },
-        {
-          field: "Actions",
-          headerName: "Actions",
-          filterable: false,
-          sortable: false,
-          flex: 1,
-          renderCell: (params) => {
-            const course: ICourse = params.row;
-            return (
-              <Box display={"flex"} gap={1}>
-                <Tooltip arrow title={course.status === "approved" ? "approving" : "pending"}>
-                  <Switch
-                    color="success"
-                    checked={course.status === "approved"}
-                    onChange={() => handleApproveCourse(course)}
-                  />
-                </Tooltip>
-                <IconButton color="info" onClick={() => handleOpenDetail(course)}>
-                  <VisibilityIcon />
-                </IconButton>
-                <IconButton color="error">
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            );
-          },
-        },
-      ];
-    }
-
     return [
-      { field: "name", headerName: "Name", width: 150, flex: 1 },
+      { field: "name", headerName: "Name", width: 100 },
       {
         field: "status",
         headerName: "Status",
         width: 100,
-        flex: 1,
         renderCell: (params) => {
           return (
             <Chip
@@ -134,22 +85,27 @@ const Courses = () => {
         },
       },
       {
-        field: "type",
-        headerName: "Type",
-        width: 100,
-        flex: 1,
+        field: "lessons",
+        headerName: "Total lessons",
+        width: 125,
         renderCell: (params) => {
-          return (
-            <Chip
-              color={params.value === "public" ? "success" : "info"}
-              label={params.value}
-              size="small"
-            />
-          );
+          return <Typography variant="body1">{params.row.lessons.length}</Typography>;
+        },
+      },
+      {
+        field: "reports",
+        headerName: "Total reports",
+        width: 125,
+        renderCell: (params) => {
+          const course: ICourse = params.row;
+          const totalReports = course.lessons.reduce((acc, lesson) => {
+            return acc + lesson.reports.length;
+          }, 0);
+
+          return <Typography variant="body1">{totalReports}</Typography>;
         },
       },
 
-      { field: "category", headerName: "Category", width: 150, flex: 1 },
       {
         field: "createdBy",
         headerName: "Created by",
@@ -181,25 +137,29 @@ const Courses = () => {
           const course: ICourse = params.row;
           return (
             <Box display={"flex"} gap={2}>
-              <Tooltip arrow title={course.status === "approved" ? "approving" : "pending"}>
+              <Tooltip arrow title={course.status === "approved" ? "Approving" : "Pending"}>
                 <Switch
                   color="success"
                   checked={course.status === "approved"}
                   onChange={() => handleApproveCourse(course)}
                 />
               </Tooltip>
-              <IconButton color="info" onClick={() => handleOpenDetail(course)}>
-                <VisibilityIcon />
-              </IconButton>
-              <IconButton color="error">
-                <DeleteIcon />
-              </IconButton>
+              <Tooltip arrow title="See">
+                <IconButton color="info" onClick={() => handleOpenDetail(course)}>
+                  <VisibilityIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip arrow title="Delete" onClick={() => handleOpenDelete(course)}>
+                <IconButton color="error">
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           );
         },
       },
     ];
-  }, [data, isMobile]);
+  }, [data]);
 
   const handleClearSearch = useCallback(() => {
     setName("");
@@ -210,6 +170,13 @@ const Courses = () => {
     setOpenDetail(true);
   };
 
+  // Handle soft-delete single course
+  const handleOpenDelete = async (course: ICourse) => {
+    setCourse(course);
+    setConfirmDelete(true);
+  };
+
+  // Approve single course
   const handleApproveCourse = async (course: ICourse) => {
     try {
       await axios.patch("/api/admin/courses/" + course?._id);
@@ -221,7 +188,7 @@ const Courses = () => {
   };
 
   // Approve list courses
-  const handleApproveCourses = async () => {
+  const handleApproveCourses = useCallback(async () => {
     try {
       await axios.patch("/api/admin/courses", {
         listIds: listIdCourse,
@@ -232,13 +199,23 @@ const Courses = () => {
     } catch (error) {
       toast.error("Edit courses failed");
     }
-  };
+  }, [course]);
 
   // Filter by status
   const handleFilterStatus = async (e: SelectChangeEvent) => {
     setStatus(e.target.value);
     setPage(1);
   };
+
+  const handleDeleteCouse = useCallback(async () => {
+    try {
+      await axios.delete("/api/admin/courses/" + course?._id);
+      mutate(`/api/admin/courses?page=${page}&status=${status}&name=${nameSearch}`);
+      toast.success("Delete course successfully");
+    } catch (error) {
+      toast.error("Delete course failed");
+    }
+  }, [course]);
 
   return (
     <Box>
@@ -254,7 +231,7 @@ const Courses = () => {
               fullWidth
               variant="outlined"
               disabled={listIdCourse.length === 0}
-              onClick={() => setConfirm(true)}
+              onClick={() => setConfirmApprove(true)}
             >
               Approve all
             </Button>
@@ -289,8 +266,10 @@ const Courses = () => {
         </Grid>
 
         {/* Table */}
-
         <Box width={"100%"} overflow={"auto"}>
+          <Typography variant="body2" gutterBottom>
+            Total courses: {data?.total}
+          </Typography>
           <DataGrid
             autoHeight
             checkboxSelection
@@ -328,19 +307,33 @@ const Courses = () => {
       {/* Open modal detail course */}
       {course && (
         <MyModal open={openDetail} onClose={() => setOpenDetail(false)}>
-          <FormCourse course={course} type="watch" />
+          <Box width={"90vw"}>
+            <FormCourse course={course} type="watch" />
+          </Box>
         </MyModal>
       )}
 
       {/* Dialog confirm approve */}
-      {openConfirm && (
+      {openConfirmApprove && (
         <MyDialog
           title="Approve course"
-          content="Do you want approve these courses?"
-          onClose={() => setConfirm(false)}
+          content="Do you want to approve these courses?"
+          onClose={() => setConfirmApprove(false)}
           onSubmit={handleApproveCourses}
         />
       )}
+
+      {/* Dialog confirm delete forever */}
+      {openConfirmDelete && (
+        <MyDialog
+          title="Delete course"
+          content={`Do you want to delete forever course: ${course?.name} by ${course?.createdBy.username}? You will be not able to restore it!`}
+          onClose={() => setConfirmDelete(false)}
+          onSubmit={handleDeleteCouse}
+        />
+      )}
+
+      {isValidating && <Spinner />}
     </Box>
   );
 };

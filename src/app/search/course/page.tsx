@@ -7,7 +7,6 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import serverAxios from "@/config/axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -31,7 +30,6 @@ const CoursePage = () => {
 
   const suggestChips = useRef<string[]>([]);
   const maxPageRef = useRef<number>(1);
-  const currentPageRef = useRef<number>(1);
   const [openFilter, setOpenFilter] = useState(false);
 
   useEffect(() => {
@@ -65,7 +63,7 @@ const CoursePage = () => {
   const onSearchByCategory = async (category: string) => {
     value.trim() && setValue("");
     setLoading(true);
-    const res = await serverAxios.get<Response>("/search/courses?category=" + category);
+    const res = await axios.get<Response>(SERVER_URI + "/search/courses?category=" + category);
     setListCoures(res.data.courses);
     setLoading(false);
   };

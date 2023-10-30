@@ -11,7 +11,7 @@ interface ICourse {
   createdAt: string;
   updatedAt: string;
   members: any[];
-  lessons: any[];
+  lessons: Lesson[];
   intro: string;
   thumbnail: IAttachment;
   openDate?: string;

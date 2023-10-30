@@ -17,7 +17,6 @@ export const PATCH = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const res = await serverAxios.patch("/admin/courses", body);
-
     return NextResponse.json(res.data, {
       status: 200,
     });
