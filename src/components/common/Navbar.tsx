@@ -140,7 +140,7 @@ const Navbar = () => {
             color: pathName.startsWith(href) ? "#fff !important" : "inherit",
           }}
         >
-          <Icon fontSize="large" />
+          <Icon fontSize="medium" />
           {!isMobile && <Typography variant="subtitle2">{title}</Typography>}
         </IconButton>
       ))}

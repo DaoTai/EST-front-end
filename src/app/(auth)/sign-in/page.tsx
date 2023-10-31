@@ -30,7 +30,7 @@ const SignIn = () => {
           password: values.password,
           redirect: false,
         });
-        login?.error ? toast.error(login?.error) : router.push("/");
+        login?.error ? toast.error(login?.error) : router.replace("/");
       } catch (err) {
         console.log("Erorr: ", err);
       }

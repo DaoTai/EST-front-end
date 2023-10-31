@@ -94,12 +94,7 @@ const ListLessons = () => {
             <Typography variant="body2" minWidth={20}>
               {i + 1}
             </Typography>
-            <Box
-              flexGrow={2}
-              component={Link}
-              href={"/teacher/lessons/" + lesson._id}
-              sx={{ textDecoration: "none", color: "text.primary" }}
-            >
+            <Box flexGrow={2} component={Link} href={"/teacher/lessons/" + lesson._id}>
               <PreviewLesson lesson={lesson} />
             </Box>
             <Tooltip arrow title="Delete lesson">

@@ -19,3 +19,14 @@ interface ICourse {
   deletedAt?: string;
   roadmap?: IAttachment;
 }
+
+interface IRegisterCourse {
+  _id: string;
+  user: IUser;
+  course: ICourse;
+  rating?: number;
+  passedLessons: ILesson[];
+  latestLesson?: ILesson;
+  createdAt: string;
+  updatedAt: string;
+}

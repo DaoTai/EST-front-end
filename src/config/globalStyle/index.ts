@@ -5,7 +5,8 @@ export default {
   },
 
   a: {
-    color: blue[700],
+    color: "inherit !important",
+    textDecoration: "none",
   },
   img: {
     objectFit: "cover",

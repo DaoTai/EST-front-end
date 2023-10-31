@@ -10,14 +10,16 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import styled from "@mui/material/styles/styled";
+import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
+import useTheme from "@mui/material/styles/useTheme";
 
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import { styled, useTheme } from "@mui/material/styles";
 import Link from "next/link";
 import { useState } from "react";
-import { Divider, useMediaQuery } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 const SearchBox = styled(Paper)(({ theme }) => ({
@@ -32,8 +34,8 @@ const SearchBox = styled(Paper)(({ theme }) => ({
 const SearchBar = () => {
   const router = useRouter();
   const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
 
   const [value, setValue] = useState<string>("");
   const [showBox, setShowBox] = useState<boolean>(false);
@@ -57,9 +59,13 @@ const SearchBar = () => {
             ".MuiInputBase-root": {
               borderRadius: 8,
             },
+            input: {
+              pt: 1.5,
+              pb: 1.5,
+            },
           }}
           InputProps={{
-            startAdornment: <SearchIcon color="action" fontSize="large" />,
+            startAdornment: <SearchIcon color="action" fontSize="medium" />,
             endAdornment: (
               <>
                 {value && (

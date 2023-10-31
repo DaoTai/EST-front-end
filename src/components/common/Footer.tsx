@@ -170,13 +170,7 @@ const Footer = () => {
           {abouts.map(({ name, url, icon }, i) => (
             <Stack key={i} flexDirection={"row"} gap={1} alignItems={"center"}>
               {icon}
-              <Typography
-                variant="h6"
-                component={Link}
-                href={url}
-                fontWeight={700}
-                sx={{ textDecoration: "none", color: "text.primary" }}
-              >
+              <Typography variant="h6" component={Link} href={url} fontWeight={700}>
                 {name}
               </Typography>
             </Stack>

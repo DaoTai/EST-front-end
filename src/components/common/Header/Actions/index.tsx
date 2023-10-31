@@ -1,5 +1,6 @@
 "use client";
 import MyList from "@/components/custom/MyList";
+import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -14,7 +15,12 @@ import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { signIn, signOut, useSession } from "next-auth/react";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import useTheme from "@mui/material/styles/useTheme";
+import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
+
+import { signIn, useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +32,8 @@ const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeThem
 });
 
 const Actions = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { data: session, status } = useSession();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -58,8 +66,15 @@ const Actions = () => {
   if (session) {
     return (
       <>
-        <Stack flexDirection={"row"} gap={2} alignItems={"center"}>
-          <ToggleModeTheme />
+        <Stack flexDirection={"row"} gap={1.5} alignItems={"center"}>
+          {!isMobile && <ToggleModeTheme />}
+
+          {/* Mine courses */}
+          <Tooltip arrow title="My courses">
+            <IconButton size="large" color="primary" LinkComponent={Link} href="/courses">
+              <LaptopChromebookIcon fontSize="medium" />
+            </IconButton>
+          </Tooltip>
 
           {/* Notifycation */}
           <Box onClick={handleClickNofity} mr={1}>
@@ -107,6 +122,7 @@ const Actions = () => {
         {/* ========================= */}
         {/* Notifications */}
         <Popover
+          disableScrollLock
           open={!!anchorElNotify}
           anchorEl={anchorElNotify}
           onClose={handleCloseNotify}
@@ -116,7 +132,7 @@ const Actions = () => {
           }}
           transformOrigin={{
             vertical: "top",
-            horizontal: "right",
+            horizontal: "center",
           }}
         >
           <Paper
@@ -127,13 +143,14 @@ const Actions = () => {
               border: "1px solid rgba(0,0,0,0.1)",
             }}
           >
-            <Stack gap={4} flexDirection={"row"} justifyContent={"space-between"}>
-              <Typography variant="h5">Notifications</Typography>
+            <Stack flexDirection={"row"} alignItems={"center"} justifyContent={"space-between"}>
+              <Typography variant="h6">Notifications</Typography>
               <Chip
                 label="Mark all as read"
                 variant="outlined"
                 color="info"
-                onClick={handleClick}
+                clickable
+                size="small"
               />
             </Stack>
 

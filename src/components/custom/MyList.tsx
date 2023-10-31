@@ -7,8 +7,8 @@ const MyList = styled(List)(({ theme }) => ({
     width: "100%",
     color: theme.palette.text.primary,
     pl: 0.5,
-    pt: 1.5,
-    pb: 1.5,
+    pr: 0.5,
+
     "&:hover": {
       backgroundColor: "rgba(0,0,0,0.1)",
     },

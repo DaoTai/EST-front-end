@@ -7,7 +7,6 @@ const Logo = () => {
       p={0.5}
       sx={{
         borderRadius: 1,
-        boxShadow: "0px 0px 2px #999",
         a: {
           height: 50,
           borderRadius: "50%",

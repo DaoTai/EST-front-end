@@ -18,7 +18,6 @@ const MenuNavigation = () => {
           pb: 1,
           borderRadius: 1,
           bgcolor: "background.default",
-          textDecoration: "none",
           border: 1,
           ":hover": {
             bgcolor: "rgba(0,0,0,0.1)",
