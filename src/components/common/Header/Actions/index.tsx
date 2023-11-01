@@ -71,8 +71,8 @@ const Actions = () => {
 
           {/* Mine courses */}
           <Tooltip arrow title="My courses">
-            <IconButton size="large" color="primary" LinkComponent={Link} href="/courses">
-              <LaptopChromebookIcon fontSize="medium" />
+            <IconButton size="large" color="primary" LinkComponent={Link} href="/my-courses">
+              <LaptopChromebookIcon fontSize="medium" color="action" />
             </IconButton>
           </Tooltip>
 

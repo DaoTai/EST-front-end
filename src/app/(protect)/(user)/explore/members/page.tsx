@@ -1,15 +1,15 @@
 "use client";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import CardMember from "./_components/CardMember";
-import Search from "./_components/Search";
-
 import { useSession } from "next-auth/react";
 import { toast } from "react-toastify";
+
+import CardMember from "./_components/CardMember";
+import Search from "./_components/Search";
+import { Container } from "@mui/material";
 
 type ISearchProfileResult = {
   users: IProfile[];
@@ -63,7 +63,7 @@ const ExplorePage = () => {
   }, [session]);
 
   return (
-    <>
+    <Container>
       <Search ref={SearchBarRef} totalResult={totalResult.current} onSearch={onSearch} />
 
       {/* List member */}
@@ -86,7 +86,7 @@ const ExplorePage = () => {
           onChange={handleChange}
         />
       </Stack>
-    </>
+    </Container>
   );
 };
 

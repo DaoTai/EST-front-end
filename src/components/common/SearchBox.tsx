@@ -9,7 +9,7 @@ import { memo, useRef } from "react";
 
 type SearchBoxProps = {
   value: string;
-  onClear: () => any;
+  onClear?: () => any;
   onChange: (val: string) => void;
   onSearch?: () => any;
   placeholder?: string;
@@ -25,7 +25,7 @@ const SearchBox = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClear = async () => {
-    await onClear();
+    await onClear?.();
     inputRef.current?.focus();
   };
 

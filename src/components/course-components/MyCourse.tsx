@@ -1,5 +1,5 @@
 import { getDistanceTimeToNow } from "@/utils/functions";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { memo } from "react";
@@ -17,6 +17,7 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
           flexDirection={direction}
           gap={1}
           alignItems={direction === "row" ? "center" : "start"}
+          textTransform={"capitalize"}
         >
           <Image
             unoptimized
@@ -34,9 +35,13 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
             <Typography variant="h6" gutterBottom>
               {data.course.name}
             </Typography>
+            <Chip
+              size="small"
+              label={data.course.type}
+              color={data.course.type === "private" ? "info" : "success"}
+            />
             {direction === "column" && (
               <>
-                {" "}
                 <Typography variant="body1">
                   Registered time: {getDistanceTimeToNow(data.createdAt)}
                 </Typography>

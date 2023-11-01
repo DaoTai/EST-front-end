@@ -18,6 +18,8 @@ interface ICourse {
   closeDate?: string;
   deletedAt?: string;
   roadmap?: IAttachment;
+  averageRating?: number;
+  totalRating?: number;
 }
 
 interface IRegisterCourse {

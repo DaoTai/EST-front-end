@@ -55,7 +55,14 @@ const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ totalResult, onSear
         />
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>role</InputLabel>
-          <Select value={role} label="role" onChange={handleChange}>
+          <Select
+            value={role}
+            label="role"
+            onChange={handleChange}
+            MenuProps={{
+              disableScrollLock: true,
+            }}
+          >
             <MenuItem value="">
               <em>None</em>
             </MenuItem>

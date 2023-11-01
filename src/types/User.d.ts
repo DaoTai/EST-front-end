@@ -39,4 +39,5 @@ interface IProfile {
   gender?: string;
   school?: string;
   city?: string;
+  createdAt: string;
 }

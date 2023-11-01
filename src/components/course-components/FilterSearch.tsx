@@ -5,17 +5,29 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Divider from "@mui/material/Divider";
-import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import Rating from "@mui/material/Rating";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { memo } from "react";
 
-const FilterSearch = () => {
+const FilterSearch = ({ onClose }: { onClose: () => void }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathName = usePathname();
+
+  const searchByLevel = (level: string) => {
+    router.push(pathName + "?level=" + level);
+    onClose();
+  };
+
+  const searchByType = (type: string) => {
+    router.push(pathName + "?type=" + type);
+    onClose();
+  };
+
   return (
-    <Stack gap={1} maxWidth={"fit-content"} pr={1.5}>
-      <Box>
+    <Stack gap={1} maxWidth={"fit-content"} p={2}>
+      {/* <Box>
         <Typography variant="h6">Ratings</Typography>
         <FormControl>
           <RadioGroup>
@@ -52,13 +64,19 @@ const FilterSearch = () => {
             />
           </RadioGroup>
         </FormControl>
-      </Box>
+      </Box> */}
       <Divider />
       <Box textTransform={"capitalize"}>
         <Typography variant="h6">Levels</Typography>
         <FormGroup>
           {["beginner", "fresher", "junior", "senior", "all"].map((level, i) => (
-            <FormControlLabel key={i} control={<Checkbox />} value={level} label={level} />
+            <FormControlLabel
+              key={i}
+              control={<Checkbox onChange={(event) => searchByLevel(event.target.value)} />}
+              checked={searchParams.get("level") === level}
+              value={level}
+              label={level}
+            />
           ))}
         </FormGroup>
       </Box>
@@ -67,8 +85,14 @@ const FilterSearch = () => {
       <Box textTransform={"capitalize"}>
         <Typography variant="h6">Type</Typography>
         <FormGroup>
-          {["public", "private"].map((level, i) => (
-            <FormControlLabel key={i} control={<Checkbox />} value={level} label={level} />
+          {["public", "private"].map((type, i) => (
+            <FormControlLabel
+              key={i}
+              control={<Checkbox onChange={(event) => searchByType(event.target.value)} />}
+              checked={searchParams.get("type") === type}
+              value={type}
+              label={type}
+            />
           ))}
         </FormGroup>
       </Box>
@@ -76,4 +100,4 @@ const FilterSearch = () => {
   );
 };
 
-export default FilterSearch;
+export default memo(FilterSearch);

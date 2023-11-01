@@ -1,16 +1,11 @@
 "use client";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
 import StoreIcon from "@mui/icons-material/Store";
 
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -70,7 +65,7 @@ const Navbar = () => {
         title: "Courses",
       },
       {
-        href: "/explore",
+        href: "/explore/members",
         Icon: GroupsIcon,
         title: "Members",
       },
@@ -126,7 +121,14 @@ const Navbar = () => {
   }, [isMobile]);
 
   return (
-    <Stack p={1} spacing={2} boxShadow={1} flexShrink={0} sx={styleNavBar}>
+    <Stack
+      p={1}
+      spacing={2}
+      boxShadow={1}
+      flexShrink={0}
+      minHeight={isMobile ? "unset" : "100vh"}
+      sx={styleNavBar}
+    >
       {listNavs.map(({ href, Icon, title }, i) => (
         <IconButton
           key={i}

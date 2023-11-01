@@ -20,10 +20,9 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
           sx={{
             paddingBottom: isMobile ? "73px" : 0,
             flexGrow: 2,
+            overflowX: "hidden",
           }}
-          minHeight={"100vh"}
           width={"100%"}
-          overflow={"hidden"}
         >
           {children}
         </Box>

@@ -1,4 +1,4 @@
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Divider, Rating, Stack } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -17,13 +17,11 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
     <Box>
       <Grid
         container
-        pt={0.5}
-        columnSpacing={1}
+        columnSpacing={2}
         flexDirection={"row"}
         flexWrap={"wrap"}
         sx={{
           color: "text.primary",
-          cursor: "pointer",
           textTransform: "capitalize",
           img: {
             width: "100%",
@@ -38,21 +36,23 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           },
         }}
       >
-        <Grid item lg={4} md={4} xs={4}>
+        <Grid item lg={3} md={3} xs={12}>
           <Image alt="thumbnail-course" src={course.thumbnail.uri} width={350} height={230} />
         </Grid>
 
         {/* Content  */}
-        <Grid item lg={8} md={8} xs={8}>
-          <Typography variant="h6" gutterBottom>
-            {course.name}
-          </Typography>
-          <Chip
-            label={course.type}
-            size="small"
-            color={course.type === "public" ? "success" : "info"}
-            sx={{ mb: 1 }}
-          />
+        <Grid item lg={9} md={9} xs={12}>
+          <Stack flexDirection={"row"} gap={1} alignItems={"center"}>
+            <Typography variant="h6" fontWeight={600}>
+              {course.name}
+            </Typography>
+            <Chip
+              label={course.type}
+              size="small"
+              color={course.type === "public" ? "success" : "info"}
+            />
+          </Stack>
+
           {mode === "manager" && (
             <>
               <Box mb={1}>
@@ -69,49 +69,64 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           )}
 
           {mode === "visitor" && (
-            <Typography variant="subtitle1" gutterBottom>
+            <Typography variant="subtitle1" gutterBottom sx={{ mt: 1, mb: 1 }}>
               Teacher: <b style={{ marginLeft: 4 }}>{course.createdBy.username}</b>
             </Typography>
           )}
 
-          <Box mb={1}>
-            Level: <Chip label={course.level} size="small" />
+          <Box display={"flex"} gap={1} mb={1}>
+            <Chip label={course.level} size="small" color="info" />
+            <Chip label={course.category} size="small" color="info" />
           </Box>
 
-          {mode === "visitor" && (
+          {mode === "visitor" && course.type === "private" && (
             <>
-              <Typography variant="subtitle2" mt={1} gutterBottom>
+              <Typography variant="subtitle2" mt={1}>
                 Open time: {dayjs(course.openDate).format("DD/MM/YYYY")}
               </Typography>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant="subtitle2">
                 Close time: {dayjs(course.closeDate).format("DD/MM/YYYY")}
               </Typography>
             </>
           )}
 
           {/* Rating */}
-          {/* <Stack flexDirection={"row"} alignItems={"center"} mb={1} gap={0.75}>
-            <Typography variant="body2" fontWeight={600}>
-              4.8
-            </Typography>
-            <Rating name="read-only" value={1} readOnly size="small" />
-            <Typography variant="body2">(190.5)</Typography>
-          </Stack> */}
-
-          {mode === "manager" && (
-            <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
-              <Chip
-                label={course.lessons?.length + " lesson" + (course.lessons.length > 1 ? "s" : "")}
-                className="bg-gradient"
-                size="small"
-              />
-              <Chip
-                label={course.members?.length + " member" + (course.members.length > 1 ? "s" : "")}
-                className="bg-gradient"
-                size="small"
-              />
-            </Stack>
+          {course?.averageRating && (
+            <>
+              <Typography
+                variant="body1"
+                fontWeight={600}
+                textTransform={"lowercase"}
+                sx={{ color: "warning.dark" }}
+              >
+                {course?.averageRating} stars
+              </Typography>
+              <Stack
+                flexDirection={"row"}
+                alignItems={"center"}
+                textTransform={"lowercase"}
+                gap={1}
+              >
+                <Rating readOnly value={course?.averageRating} precision={0.5} />
+                <Typography variant="subtitle2" fontWeight={400}>
+                  {`(${course?.totalRating} rates)`}
+                </Typography>
+              </Stack>
+            </>
           )}
+
+          <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
+            <Chip
+              label={course?.lessons?.length + " lesson" + (course.lessons?.length > 1 ? "s" : "")}
+              className="bg-gradient"
+              size="small"
+            />
+            <Chip
+              label={course?.members?.length + " member" + (course.members?.length > 1 ? "s" : "")}
+              className="bg-gradient"
+              size="small"
+            />
+          </Stack>
         </Grid>
       </Grid>
       <Divider />

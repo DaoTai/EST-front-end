@@ -4,6 +4,8 @@ import Grid from "@mui/material/Grid";
 import { getServerSession } from "next-auth";
 import { options } from "@/config/next-auth";
 import { Intro, Heading, Panel } from "./_components";
+import { Paper } from "@mui/material";
+import { Suspense } from "react";
 
 const Profile = async () => {
   const session = await getServerSession(options);
@@ -16,12 +18,18 @@ const Profile = async () => {
       {session && (
         <Grid container mt={1} spacing={2}>
           <Grid item md={3}>
-            <div>
-              <Intro user={session} />
-            </div>
+            <Paper elevation={2} sx={{ p: 1 }}>
+              <Suspense fallback={<p>Loading</p>}>
+                <Intro user={session} />
+              </Suspense>
+            </Paper>
           </Grid>
           <Grid item md={9}>
-            Haha
+            <Paper>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum tempore qui alias esse
+              vitae aut temporibus error placeat, officiis magni, corrupti vero id expedita soluta
+              voluptates, unde blanditiis sapiente numquam?
+            </Paper>
           </Grid>
         </Grid>
       )}

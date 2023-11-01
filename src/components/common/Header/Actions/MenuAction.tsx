@@ -58,7 +58,7 @@ const MenuAction = ({ onClose }: { onClose: () => void }) => {
             </ListItem>
           </>
         )}
-        <ListItem component={Link} href="/courses" divider onClick={onClose}>
+        <ListItem component={Link} href="/my-courses" divider onClick={onClose}>
           My courses
         </ListItem>
         <ListItem component={Link} href="/profile" divider onClick={onClose}>

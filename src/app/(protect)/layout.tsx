@@ -3,7 +3,7 @@ import { options } from "@/config/next-auth";
 import { Box } from "@mui/material";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);

@@ -1,23 +1,17 @@
-import { options } from "@/config/next-auth";
-import { SERVER_URI } from "@/utils/constants/common";
-import { getServerSession } from "next-auth";
+import serverAxios from "@/config/axios";
 import { notFound } from "next/navigation";
 import { Heading, Intro } from "../_components";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 
 // Check log back-end to see this page be cached
 const getData = async (id: string): Promise<IProfile | undefined> => {
-  const session = await getServerSession(options);
-  const res = await fetch(SERVER_URI + "/user/profile/" + id, {
-    headers: {
-      Authorization: "Bearer " + session?.accessToken,
-    },
-  });
-
-  if (!res.ok) {
-    return undefined;
+  try {
+    const res = await serverAxios.get("/user/profile/" + id);
+    return res.data;
+  } catch (error) {
+    notFound();
   }
-
-  return res.json();
 };
 
 const DetailProfile = async ({ params }: { params: { id: string } }) => {
@@ -30,7 +24,20 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Heading avatar={data?.avatar} roles={data?.roles} username={data?.username} />
-      {data && <Intro user={data} />}
+      {data && (
+        <Grid container mt={2}>
+          <Grid item md={3}>
+            <Paper>
+              <Intro user={data} />
+            </Paper>
+          </Grid>
+          <Grid item md={9}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, quod! Tempore asperiores
+            sint blanditiis sunt! Quod placeat fuga est dolorum rerum, recusandae velit natus
+            maiores? Sit ipsum a nesciunt ut.
+          </Grid>
+        </Grid>
+      )}
     </>
   );
 };
