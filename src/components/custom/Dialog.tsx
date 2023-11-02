@@ -38,6 +38,7 @@ export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
           Close
         </Button>
         <Button
+          color="info"
           variant="contained"
           onClick={async () => {
             await onSubmit();

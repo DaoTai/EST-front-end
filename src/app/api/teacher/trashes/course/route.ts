@@ -1,6 +1,6 @@
 import serverAxios from "@/config/axios";
 import { AxiosError } from "axios";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -15,7 +15,11 @@ export const GET = async (req: NextRequest) => {
       status: 200,
     });
   } catch (error) {
-    console.log("Error: ", error);
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
   }
 };
 
@@ -29,8 +33,9 @@ export const PATCH = async (req: NextRequest) => {
     });
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.log("Message: ", error.message);
-      return NextResponse.error();
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
     }
   }
 };
@@ -44,6 +49,10 @@ export const DELETE = async (req: NextRequest) => {
       status: 200,
     });
   } catch (error) {
-    console.log("Error: ", error);
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
   }
 };

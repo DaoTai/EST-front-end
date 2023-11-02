@@ -53,6 +53,8 @@ const CoursePage = () => {
     }
   );
 
+  console.log("data: ", data);
+
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams as any);
     params.set(name, value);

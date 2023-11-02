@@ -1,4 +1,5 @@
 import serverAxios from "@/config/axios";
+import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -8,7 +9,11 @@ export const GET = async (req: NextRequest) => {
       status: 200,
     });
   } catch (error) {
-    console.log("Error: ", error);
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
   }
 };
 
@@ -25,6 +30,10 @@ export const POST = async (req: NextRequest) => {
       status: 200,
     });
   } catch (error) {
-    console.log("Error: ", error);
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
   }
 };

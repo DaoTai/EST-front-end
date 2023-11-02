@@ -1,11 +1,9 @@
 import serverAxios from "@/config/axios";
-import { SERVER_URI } from "@/utils/constants/common";
-import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
-  const res = await serverAxios.get(SERVER_URI + "/user/profile?" + searchParams);
+  const res = await serverAxios.get("/user/profile?" + searchParams);
   return NextResponse.json(res.data, { status: res.status });
 }
 

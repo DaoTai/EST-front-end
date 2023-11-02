@@ -1,9 +1,7 @@
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -12,20 +10,20 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
+import dayjs from "dayjs";
 import Link from "next/link";
 import { Suspense } from "react";
-import dayjs from "dayjs";
 
 import { Intro } from "@/app/(protect)/(user)/profile/_components";
 import Banner from "@/components/course-components/Banner";
 import PreviewLesson from "@/components/lesson-components/PreviewLesson";
 import { SERVER_URI } from "@/utils/constants/common";
+import RegisterButton from "./_components/RegisterButton";
 
 const DetailCourse = async ({ params }: { params: { slug: string } }) => {
   const res = await fetch(SERVER_URI + "/search/courses/" + params.slug);
   if (res.ok) {
     const detail: ICourse = await res.json();
-
     return (
       <>
         <Grid container spacing={1} pt={1}>
@@ -64,11 +62,13 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
               {/* Banner */}
               <Banner course={detail} mode="visitor" />
 
+              {/* Button register */}
+              <Box p={1}>
+                <RegisterButton _id={detail._id} name={detail.name} type={detail.type} />
+              </Box>
+
               {/* Introduce */}
               <Box p={1}>
-                <Button variant="outlined" endIcon={<ExitToAppIcon />}>
-                  Register
-                </Button>
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   Created time: {dayjs(detail.createdAt).format("DD/MM/YYYY")}
                 </Typography>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Heading, Intro } from "../_components";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import { Suspense } from "react";
 
 // Check log back-end to see this page be cached
 const getData = async (id: string): Promise<IProfile | undefined> => {
@@ -28,7 +29,9 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
         <Grid container mt={2}>
           <Grid item md={3}>
             <Paper>
-              <Intro user={data} />
+              <Suspense fallback={<p>Loading...</p>}>
+                <Intro user={data} />
+              </Suspense>
             </Paper>
           </Grid>
           <Grid item md={9}>

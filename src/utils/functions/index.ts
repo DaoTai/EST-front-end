@@ -28,6 +28,7 @@ export const convertObjectToFormData = (object: any) => {
   return formData;
 };
 
+// Distance time between then and now
 export const getDistanceTimeToNow = (timestamp: string) => {
   const now = dayjs(); // Thời gian hiện tại
   const time = dayjs(timestamp); // Thời gian cần tính khoảng cách

@@ -1,4 +1,5 @@
 import serverAxios from "@/config/axios";
+import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -6,7 +7,10 @@ export const GET = async (req: NextRequest) => {
     const res = await serverAxios.get("/user/courses");
     return NextResponse.json(res.data);
   } catch (error) {
-    console.log("Error: ", error);
-    return NextResponse.json(error, { status: 500 });
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
   }
 };

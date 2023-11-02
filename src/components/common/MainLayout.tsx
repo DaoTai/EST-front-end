@@ -18,7 +18,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         <Navbar />
         <Box
           sx={{
-            paddingBottom: isMobile ? "73px" : 0,
+            paddingBottom: isMobile ? "42px" : 0,
             flexGrow: 2,
             overflowX: "hidden",
           }}

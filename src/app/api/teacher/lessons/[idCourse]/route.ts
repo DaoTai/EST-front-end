@@ -12,7 +12,9 @@ export const GET = async (req: NextRequest, { params }: { params: { idCourse: st
     });
   } catch (error) {
     if (error instanceof AxiosError) {
-      return NextResponse.error;
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
     }
   }
 };
@@ -33,8 +35,9 @@ export const POST = async (req: NextRequest, { params }: { params: { idCourse: s
     });
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.log("Error: ", error.message);
-      return NextResponse.json(error.message, { status: error.status });
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
     }
   }
 };

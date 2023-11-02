@@ -26,9 +26,10 @@ interface IRegisterCourse {
   _id: string;
   user: IUser;
   course: ICourse;
+  createdAt: string;
+  updatedAt: string;
   rating?: number;
   passedLessons: ILesson[];
   latestLesson?: ILesson;
-  createdAt: string;
-  updatedAt: string;
+  teacher: IUser;
 }
