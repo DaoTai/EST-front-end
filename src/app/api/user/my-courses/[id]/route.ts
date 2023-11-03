@@ -21,7 +21,10 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
 export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const idCourse = params.id;
-    await serverAxios.patch("/user/courses/" + idCourse);
+    const body = await req.json();
+    await serverAxios.patch("/user/courses/" + idCourse, {
+      rating: body.rating,
+    });
     return NextResponse.json("Rate course");
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -32,6 +35,7 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
   }
 };
 
+// Cancel course
 export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const idCourse = params.id;

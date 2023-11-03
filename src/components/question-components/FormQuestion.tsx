@@ -83,6 +83,8 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
       Array.isArray(values.correctAnswers) &&
       Array.isArray(values.answers)
     ) {
+      if (values.answers.length < 2) return true;
+
       let isInvalid = false;
       const { correctAnswers, answers, category } = values;
       const lengthOfCorrectAnswers = correctAnswers.length;
@@ -151,10 +153,14 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
 
   // Delete correct answer
   const handleDeleteCorrectAnswer = (value: string) => {
-    if (values?.correctAnswers) {
+    if (values?.correctAnswers && values?.answers) {
       setFieldValue(
         "correctAnswers",
         values.correctAnswers.filter((answer) => answer !== value)
+      );
+      setFieldValue(
+        "answers",
+        values.answers.filter((answer) => answer !== value)
       );
     }
   };
@@ -234,14 +240,28 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
                 margin="dense"
                 inputRef={correctAnswerInputRef}
                 value={correctAnswer}
-                disabled={values.category === "code"}
+                disabled={
+                  values.category === "code" ||
+                  (values.category === "choice" && values.correctAnswers?.length === 1)
+                }
                 onChange={(e) => {
                   setCorrectAnswer(e.target.value);
                 }}
               />
+
               <IconButton
                 className="bg-gradient"
-                disabled={values.category === "code"}
+                disabled={
+                  values.category === "code" ||
+                  (values.category === "choice" && values.correctAnswers?.length === 1)
+                }
+                sx={{
+                  background: (theme) =>
+                    values.category === "code" ||
+                    (values.category === "choice" && values.correctAnswers?.length === 1)
+                      ? theme.palette.action.disabled
+                      : theme.palette.gradient.main,
+                }}
                 onClick={handleAddCorrectAnswer}
               >
                 <Add />

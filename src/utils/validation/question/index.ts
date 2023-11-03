@@ -13,5 +13,6 @@ export const FormQuestionSchema = Yup.object().shape({
   correctAnswers: Yup.array().of(
     Yup.string().trim().min(1, minCharacterValidator("Correct answers", 1))
   ),
+  answers: Yup.array().of(Yup.string().trim().min(2, minCharacterValidator("Answers", 2))),
   explaination: Yup.string().trim(),
 });

@@ -22,6 +22,20 @@ type IProps = {
 const RegisterButton = ({ _id, name, type }: IProps) => {
   const { data: session } = useSession();
   const [confirm, setConfirm] = useState<boolean>(false);
+  // Sẽ được caching khi đã từng đc gọi từ 1 file khác => SWR sẽ dựa vào key (ở đây là url api) để thay đổi việc cache
+  const { data: listMyCourses } = useSWR(
+    session ? "/api/user/my-courses" : null,
+    fetcherMyCourses,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
+  const isRegistered = useMemo(() => {
+    return listMyCourses?.some((register) => register.course._id === _id);
+  }, [listMyCourses, _id]);
 
   const onOpenConfirm = () => {
     setConfirm(true);
@@ -33,7 +47,7 @@ const RegisterButton = ({ _id, name, type }: IProps) => {
 
   const onRegister = useCallback(async () => {
     try {
-      const res = await axios.post("/api/user/courses/" + _id);
+      await axios.post("/api/user/courses/" + _id);
       mutate("/api/user/my-courses");
       setConfirm(false);
       toast.success("Register course successfully");
@@ -53,17 +67,6 @@ const RegisterButton = ({ _id, name, type }: IProps) => {
       </Link>
     );
   }
-
-  // Sẽ được caching khi đã từng đc gọi từ 1 file khác => SWR sẽ dựa vào key (ở đây là url api) để thay đổi việc cache
-  const { data: listMyCourses } = useSWR("/api/user/my-courses", fetcherMyCourses, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
-
-  const isRegistered = useMemo(() => {
-    return listMyCourses?.some((register) => register.course._id === _id);
-  }, [listMyCourses, _id]);
 
   if (isRegistered) {
     return (

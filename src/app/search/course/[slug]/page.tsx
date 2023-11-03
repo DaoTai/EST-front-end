@@ -64,7 +64,9 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
 
               {/* Button register */}
               <Box p={1}>
-                <RegisterButton _id={detail._id} name={detail.name} type={detail.type} />
+                <Suspense fallback={<p>Loadding</p>}>
+                  <RegisterButton _id={detail._id} name={detail.name} type={detail.type} />
+                </Suspense>
               </Box>
 
               {/* Introduce */}

@@ -1,7 +1,13 @@
-import { getDistanceTimeToNow } from "@/utils/functions";
-import { Box, Chip, Paper, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+
 import Image from "next/image";
 import { memo } from "react";
+
+import { getDistanceTimeToNow } from "@/utils/functions";
 
 type IProps = {
   direction?: "column" | "row";
@@ -10,7 +16,7 @@ type IProps = {
 
 const MyCourse = ({ direction = "column", data }: IProps) => {
   return (
-    <Paper elevation={10} sx={{ height: "100%", borderRadius: 2 }}>
+    <Paper elevation={10} sx={{ height: "100%", borderRadius: 3 }}>
       <Stack
         flexDirection={direction}
         gap={1}

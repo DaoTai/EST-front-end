@@ -1,6 +1,11 @@
 "use client";
 import MyCourse from "@/components/course-components/MyCourse";
-import { Container, Divider, Grid, Typography } from "@mui/material";
+
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+
 import Link from "next/link";
 import useSWR, { Fetcher } from "swr";
 
@@ -9,7 +14,7 @@ export const fetcherMyCourses: Fetcher<IRegisterCourse[], string> = (url: string
 
 const MyCourses = () => {
   const { data: listCourses, isLoading } = useSWR("/api/user/my-courses", fetcherMyCourses, {
-    revalidateIfStale: false,
+    revalidateIfStale: true,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
