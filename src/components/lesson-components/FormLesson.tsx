@@ -2,8 +2,8 @@ import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -27,7 +27,6 @@ import { IFormLesson } from "@/types/ILesson";
 import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
 import dayjs from "dayjs";
-import { Divider } from "@mui/material";
 
 type Props = {
   type: "create" | "edit" | "watch";
@@ -52,6 +51,8 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     initialValues: initFormLesson,
     validationSchema: FormLessonSchema,
     onSubmit: async (values) => {
+      console.log("values: ", values);
+
       video
         ? await onSubmit?.({
             ...values,

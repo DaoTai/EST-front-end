@@ -38,8 +38,6 @@ const ListQuestions = ({ params }: { params: { id: string } }) => {
           delete body?.correctAnswers;
           delete body?.answers;
         }
-        console.log("body: ", body);
-
         const res = await axios.post("/api/teacher/questions/" + params.id, body);
         setListQuestion((prev) => [...prev, res.data]);
         setFormQuestion(false);

@@ -4,6 +4,7 @@ import { Box, Divider, Paper, Stack, Typography } from "@mui/material";
 import styled from "@mui/material/styles/styled";
 import Link from "next/link";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React from "react";
 import useSWR, { Fetcher } from "swr";
 
@@ -23,9 +24,10 @@ const LessonWrapper = styled(Box)(({ theme }) => ({
   padding: "8px",
   borderRadius: 4,
   borderBottom: 1,
+  cursor: "pointer",
   transition: "all linear 0.2s",
   ":is(:hover, &.active)": {
-    background: theme.palette.backgroundGradient.main,
+    background: theme.palette.gradient.main,
     color: "#fff !important",
   },
 }));
@@ -34,7 +36,7 @@ const fetcher: Fetcher<IMyLessons, string> = (url: string) => fetch(url).then((r
 
 const ListLessons = () => {
   const params = useParams();
-
+  const router = useRouter();
   const { data, isLoading } = useSWR(
     "/api/user/my-lessons?idRegisteredCourse=" + params.id,
     fetcher,
@@ -65,11 +67,13 @@ const ListLessons = () => {
 
       {/* Next lessons */}
       {data?.nextLessons.map((lesson) => (
-        <Link key={lesson._id} href={"/my-courses/" + params.id + "/" + lesson._id}>
-          <LessonWrapper className={params.idLesson === lesson._id ? "active" : ""}>
-            <Typography variant="subtitle1">{lesson.name}</Typography>
-          </LessonWrapper>
-        </Link>
+        <LessonWrapper
+          key={lesson._id}
+          className={params.idLesson === lesson._id ? "active" : ""}
+          onClick={() => router.push(`/my-courses/${params.id}/${lesson._id}`)}
+        >
+          <Typography variant="subtitle1">{lesson.name}</Typography>
+        </LessonWrapper>
       ))}
     </Stack>
   );

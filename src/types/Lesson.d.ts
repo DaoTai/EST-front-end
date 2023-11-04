@@ -1,5 +1,5 @@
 interface IReport {
-  sender: IUser;
+  user: IUser;
   message: string;
   createdAt: string;
   updatedAt: string;
@@ -15,7 +15,7 @@ interface ILesson {
   references: string[];
   video: IAttachment;
   comments: any[];
-  questions: any[];
+  questions: IQuestion[];
   reports: IReport[];
   createdAt: string;
   updatedAt: string;

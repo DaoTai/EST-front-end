@@ -18,11 +18,11 @@ export const getChangedValuesObject = (obj1: any, obj2: any) => {
 // convert object to form data
 export const convertObjectToFormData = (object: any) => {
   const formData = new FormData();
-  for (const [key, val] of Object.entries(object)) {
-    if (Array.isArray(val)) {
-      formData.append(String(key + "[]"), val as any);
+  for (const [key, value] of Object.entries(object)) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => formData.append(String(key + "[]"), item as any));
     } else {
-      formData.append(String(key), val as any);
+      formData.append(String(key), value as any);
     }
   }
   return formData;

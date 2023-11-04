@@ -34,6 +34,7 @@ const Lesson = ({ params }: { params: { id: string } }) => {
   // Edit lesson
   const handleEditLesson = useCallback(async (value: IFormLesson & { file?: File }) => {
     const formData = convertObjectToFormData(value);
+
     fetch("/api/teacher/lessons/detail/" + params.id, {
       method: "PATCH",
       body: formData,

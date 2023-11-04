@@ -179,7 +179,7 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
             alt="thumbnail"
             width={200}
             height={200}
-            style={{ borderRadius: 12 }}
+            style={{ borderRadius: 12, maxWidth: "100%" }}
           />
           <Typography variant="body2" textAlign={"justify"}>
             {registeredCourse?.course.intro}
