@@ -1,7 +1,8 @@
-import React from "react";
 import Spinner from "@/components/custom/Spinner";
-const Loading = () => {
+import React from "react";
+
+const Waiting = () => {
   return <Spinner />;
 };
 
-export default Loading;
+export default Waiting;

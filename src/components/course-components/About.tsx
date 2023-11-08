@@ -19,16 +19,16 @@ const About = ({ course }: { course: ICourse }) => {
           width={300}
           height={150}
           style={{
-            borderBottomLeftRadius: 16,
-            borderBottomRightRadius: 16,
-            width: "100%",
             minHeight: "30vh",
+            width: "unset",
           }}
         />
       )}
 
       <Stack gap={1} p={1}>
-        <Typography variant="h3">{course.name}</Typography>
+        <Typography variant="h4" fontWeight={500}>
+          {course.name}
+        </Typography>
         <Divider />
         <Chip
           label={course.status.toUpperCase()}

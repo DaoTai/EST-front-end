@@ -9,7 +9,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
     return NextResponse.json(res.data);
   } catch (error) {
     if (error instanceof AxiosError) {
-      NextResponse.json(error.response?.data, {
+      return NextResponse.json(error.response?.data, {
         status: error.response?.status,
       });
     }

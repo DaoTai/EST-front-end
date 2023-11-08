@@ -9,6 +9,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Banner from "@/components/course-components/Banner";
 import serverAxios from "@/config/axios";
+import { Divider } from "@mui/material";
 const getListCourses = async (): Promise<ICourse[] | undefined> => {
   try {
     const res = await serverAxios.get("/courses");
@@ -45,7 +46,7 @@ const Teacher = async () => {
             href="/teacher/course/create"
             className="btn-link"
             sx={{
-              color: "#fff",
+              color: "#fff !important",
               pl: 2,
               pr: 2,
               borderRadius: 1,
@@ -62,17 +63,16 @@ const Teacher = async () => {
             <IconButton
               component={Link}
               href="/teacher/course/trashes"
-              size="medium"
-              color="info"
-              sx={{ border: 1 }}
+              color="error"
+              sx={{ color: "error.main", border: 1, borderColor: "error.main" }}
             >
-              <DeleteSweepIcon />
+              <DeleteSweepIcon color="error" />
             </IconButton>
           </Tooltip>
         </Stack>
       </Box>
 
-      <Stack mt={1}>
+      <Stack mt={1} gap={1}>
         {listCourses?.map((course) => (
           <Link
             key={course._id}
@@ -80,6 +80,7 @@ const Teacher = async () => {
             style={{ textDecoration: "none" }}
           >
             <Banner course={course} mode="manager" />
+            <Divider />
           </Link>
         ))}
       </Stack>

@@ -1,3 +1,4 @@
+import MainLayout from "@/components/common/MainLayout";
 import Spinner from "@/components/custom/Spinner";
 import { options } from "@/config/next-auth";
 import { Metadata } from "next";
@@ -13,7 +14,11 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);
   if (!session) return redirect("/sign-in");
-  return <Suspense fallback={<Spinner />}>{children}</Suspense>;
+  return (
+    <MainLayout>
+      <Suspense fallback={<Spinner />}>{children}</Suspense>
+    </MainLayout>
+  );
 };
 
 export default RootLayout;

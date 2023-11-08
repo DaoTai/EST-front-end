@@ -1,13 +1,14 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Paper from "@mui/material/Paper";
+import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import Image from "next/image";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 
 import { getDistanceTimeToNow } from "@/utils/functions";
+import { Tooltip } from "@mui/material";
 
 type IProps = {
   direction?: "column" | "row";
@@ -15,49 +16,56 @@ type IProps = {
 };
 
 const MyCourse = ({ direction = "column", data }: IProps) => {
+  const progress = useMemo(() => {
+    if (data.passedLessons && data.course.lessons.length > 0) {
+      return (data.passedLessons.length / data.course.lessons.length) * 100;
+    }
+    return 0;
+  }, [data]);
+
   return (
-    <Paper elevation={10} sx={{ height: "100%", borderRadius: 3 }}>
-      <Stack
-        flexDirection={direction}
-        gap={1}
-        alignItems={direction === "row" ? "center" : "start"}
-        textTransform={"capitalize"}
-      >
-        <Image
-          unoptimized
-          src={data.course.thumbnail.uri}
-          width={100}
-          height={100}
-          alt="thumbnail"
-          style={{
-            width: direction === "row" ? "100px" : "100%",
-            height: direction === "row" ? "100px" : "200px",
-            borderRadius: 12,
-          }}
+    <Stack flexDirection={direction} gap={1} alignItems={direction === "row" ? "center" : "start"}>
+      <Image
+        unoptimized
+        src={data.course.thumbnail.uri}
+        width={100}
+        height={100}
+        alt="thumbnail"
+        style={{
+          width: direction === "row" ? "100px" : "100%",
+          height: direction === "row" ? "100px" : "200px",
+          borderRadius: 8,
+        }}
+      />
+      <Box flexGrow={2} p={1} pt={0} width={"100%"}>
+        <Typography variant="h6">{data.course.name}</Typography>
+        <Chip
+          size="small"
+          label={data.course.type}
+          color={data.course.type === "private" ? "info" : "success"}
+          sx={{ textTransform: "capitalize" }}
         />
-        <Box flexGrow={2} p={1}>
-          <Typography variant="h6" gutterBottom>
-            {data.course.name}
-          </Typography>
-          <Chip
-            size="small"
-            label={data.course.type}
-            color={data.course.type === "private" ? "info" : "success"}
-            sx={{ mb: 1 }}
+        <Tooltip arrow title={progress + "%"} placement="top-end">
+          <Slider
+            max={100}
+            value={progress}
+            sx={{
+              padding: 0,
+              ".MuiSlider-thumb": {
+                display: "none",
+              },
+              ".MuiSlider-track": {
+                background: (theme) => theme.palette.gradient.main,
+                border: "none",
+              },
+            }}
           />
-          {direction === "column" && (
-            <>
-              <Typography variant="body1">
-                Registered time: {getDistanceTimeToNow(data.createdAt)}
-              </Typography>
-              <Typography variant="body1">
-                Latest learned time: {getDistanceTimeToNow(data.updatedAt)}
-              </Typography>
-            </>
-          )}
-        </Box>
-      </Stack>
-    </Paper>
+        </Tooltip>
+        <Typography variant="subtitle2">
+          Latest learned time: {getDistanceTimeToNow(data.updatedAt)}
+        </Typography>
+      </Box>
+    </Stack>
   );
 };
 

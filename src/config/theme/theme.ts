@@ -1,6 +1,7 @@
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 import { Roboto } from "next/font/google";
 import { blue } from "@mui/material/colors";
+
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
   style: ["normal", "italic"],
@@ -29,7 +30,7 @@ const theme = extendTheme({
     dark: {
       palette: {
         text: {
-          primary: "#fff",
+          primary: "#fff !important",
         },
         gradient: {
           main: "linear-gradient(to right, #58a9eb, #aa99ff)",

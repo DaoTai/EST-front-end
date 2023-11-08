@@ -32,7 +32,6 @@ export const convertObjectToFormData = (object: any) => {
 export const getDistanceTimeToNow = (timestamp: string) => {
   const now = dayjs(); // Thời gian hiện tại
   const time = dayjs(timestamp); // Thời gian cần tính khoảng cách
-
   // Tính toán khoảng cách thời gian
   const diffInMinutes = now.diff(time, "minute");
   const diffInHours = now.diff(time, "hour");

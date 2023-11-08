@@ -157,7 +157,7 @@ const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) =>
     }
   };
   return (
-    <ContainerVideo ref={containerVideo} borderRadius={2} width={"100%"} position={"relative"}>
+    <ContainerVideo ref={containerVideo} width={"100%"} position={"relative"}>
       <video
         ref={video as any}
         // poster={thumbnail}

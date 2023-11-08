@@ -26,9 +26,9 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
     <>
       <Heading avatar={data?.avatar} roles={data?.roles} username={data?.username} />
       {data && (
-        <Grid container mt={2}>
+        <Grid container spacing={2} mt={2}>
           <Grid item md={3}>
-            <Paper>
+            <Paper sx={{ p: 1 }}>
               <Suspense fallback={<p>Loading...</p>}>
                 <Intro user={data} />
               </Suspense>

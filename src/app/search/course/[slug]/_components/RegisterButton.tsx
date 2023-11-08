@@ -1,6 +1,6 @@
 "use client";
 
-import { fetcherMyCourses } from "@/app/(protect)/(user)/my-courses/page";
+import { fetcherMyCourses } from "@/components/common/Header/Actions/MyCourses";
 import MyDialog from "@/components/custom/Dialog";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Typography } from "@mui/material";

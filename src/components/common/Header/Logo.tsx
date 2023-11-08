@@ -7,15 +7,10 @@ const Logo = () => {
       p={0.5}
       sx={{
         borderRadius: 1,
-        a: {
-          height: 50,
-          borderRadius: "50%",
-          display: "block",
-        },
       }}
     >
       <Link href="/">
-        <Image src="/logo.svg" alt="logo" width={48} height={48} />
+        <Image src="/logo.svg" alt="logo" width={42} height={42} />
       </Link>
     </Box>
   );

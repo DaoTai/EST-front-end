@@ -1,4 +1,5 @@
 interface IReport {
+  _id: string;
   user: IUser;
   message: string;
   createdAt: string;

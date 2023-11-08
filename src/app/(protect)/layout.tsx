@@ -10,9 +10,9 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
 
   if (session) {
     return (
-      <MainLayout>
-        <Box p={1}>{children}</Box>
-      </MainLayout>
+      <>
+        <Box>{children}</Box>
+      </>
     );
   } else {
     redirect("/sign-in");

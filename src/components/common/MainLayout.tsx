@@ -8,7 +8,9 @@ import React from "react";
 import Header from "./Header";
 import Navbar from "./Navbar";
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+type IProps = { children: React.ReactNode };
+
+const MainLayout = ({ children }: IProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (

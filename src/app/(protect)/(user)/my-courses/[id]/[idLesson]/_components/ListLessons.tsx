@@ -1,11 +1,10 @@
 "use client";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Box, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Box, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import styled from "@mui/material/styles/styled";
 import Link from "next/link";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
 type IRecapLesson = {
@@ -24,11 +23,18 @@ const LessonWrapper = styled(Box)(({ theme }) => ({
   padding: "8px",
   borderRadius: 4,
   borderBottom: 1,
-  cursor: "pointer",
   transition: "all linear 0.2s",
-  ":is(:hover, &.active)": {
+  ":hover": {
+    background: theme.palette.action.focus,
+    cursor: "pointer",
+  },
+  ":is(&.active):not(&.disabled)": {
     background: theme.palette.gradient.main,
     color: "#fff !important",
+  },
+  "&.disabled": {
+    background: theme.palette.action.disabled,
+    color: theme.palette.action.disabled,
   },
 }));
 
@@ -37,26 +43,26 @@ const fetcher: Fetcher<IMyLessons, string> = (url: string) => fetch(url).then((r
 const ListLessons = () => {
   const params = useParams();
   const router = useRouter();
+
   const { data, isLoading } = useSWR(
     "/api/user/my-lessons?idRegisteredCourse=" + params.id,
     fetcher,
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
   );
 
-  if (isLoading) {
-    return <Typography variant="body1">Loading ...</Typography>;
-  }
   return (
     <Stack p={1} gap={1}>
-      <Typography variant="h6" gutterBottom>
-        Content about course
-      </Typography>
+      <Divider>
+        <Typography variant="h6" textAlign={"center"} gutterBottom>
+          Lessons
+        </Typography>
+      </Divider>
       {/* Passed lessons */}
-      {data?.passedLessons.map((lesson) => (
+      {data?.passedLessons?.map((lesson) => (
         <Link key={lesson._id} href={"/my-courses/" + params.id + "/" + lesson._id}>
           <LessonWrapper className={params.idLesson === lesson._id ? "active" : ""}>
             <Typography variant="subtitle1">{lesson.name}</Typography>
@@ -66,15 +72,35 @@ const ListLessons = () => {
       ))}
 
       {/* Next lessons */}
-      {data?.nextLessons.map((lesson) => (
-        <LessonWrapper
-          key={lesson._id}
-          className={params.idLesson === lesson._id ? "active" : ""}
-          onClick={() => router.push(`/my-courses/${params.id}/${lesson._id}`)}
-        >
-          <Typography variant="subtitle1">{lesson.name}</Typography>
-        </LessonWrapper>
-      ))}
+      {data?.nextLessons?.map((lesson, index) =>
+        index === 0 ? (
+          <LessonWrapper
+            key={lesson._id}
+            className={params.idLesson === lesson._id ? "active" : ""}
+            onClick={() => router.push(`/my-courses/${params.id}/${lesson._id}`)}
+          >
+            <Typography variant="subtitle1">{lesson.name}</Typography>
+          </LessonWrapper>
+        ) : (
+          <LessonWrapper
+            key={lesson._id}
+            className={params.idLesson === lesson._id ? "active" : "disabled"}
+
+            // onClick={() => router.push(`/my-courses/${params.id}/${lesson._id}`)}
+          >
+            <Typography variant="subtitle1">{lesson.name}</Typography>
+          </LessonWrapper>
+        )
+      )}
+
+      {/* Loading */}
+      {isLoading && (
+        <Skeleton>
+          <LessonWrapper>
+            <Typography variant="subtitle1" />
+          </LessonWrapper>
+        </Skeleton>
+      )}
     </Stack>
   );
 };

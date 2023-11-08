@@ -3,8 +3,12 @@ import { Button, Chip, Stack, TextField, Typography } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
+import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
-import { memo, useMemo, useState } from "react";
+import { useParams } from "next/navigation";
+import { memo, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import { mutate } from "swr";
 
 type Props = {
   question: IQuestion;
@@ -14,10 +18,21 @@ type Props = {
 };
 
 const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
-  console.log(isCompleted);
-
+  const params = useParams();
+  const [completed, setCompleted] = useState(isCompleted);
   const [linkCode, setLinkCode] = useState<string>("");
   const [answers, setAnswers] = useState<string[]>([]);
+  const [score, setScore] = useState<number>();
+  const [correctAnswers, setCorrectAnswers] = useState<string[]>(
+    answerRecord?.question.correctAnswers ?? []
+  );
+
+  useEffect(() => {
+    if (answerRecord) {
+      String(answerRecord.score) && setScore(answerRecord.score);
+      answerRecord.question.category === "code" && setLinkCode(answerRecord.answers[0]);
+    }
+  }, [answerRecord]);
 
   const CategoryChip = useMemo(() => {
     switch (question.category) {
@@ -34,14 +49,12 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
 
   const disabledButton = useMemo(() => {
     switch (question.category) {
-      case "code":
-        return !linkCode.trim();
       case "choice":
         return answers.length === 0;
       case "multiple-choice":
         return answers.length < 2;
       default:
-        return true;
+        return false;
     }
   }, [question, linkCode, answers]);
 
@@ -65,7 +78,28 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
 
   const handleSubmit = async () => {
     try {
-    } catch (error) {}
+      const res = await axios.post<IAnswerRecord>("/api/user/questions/" + question._id, {
+        userAnswers: question.category === "code" ? [linkCode] : answers,
+      });
+      setCompleted(true);
+      res.data.question?.correctAnswers && setCorrectAnswers(res.data.question.correctAnswers);
+      res.data?.score && setScore(res.data.score);
+      // Revalidate list lessons
+      if (params.id) {
+        mutate("/api/user/my-lessons?idRegisteredCourse=" + params.id);
+      }
+      toast.success("Answer successfully", {
+        position: "bottom-right",
+        theme: "colored",
+      });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data, {
+          theme: "colored",
+          position: "bottom-right",
+        });
+      }
+    }
   };
 
   return (
@@ -75,9 +109,14 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
         <Typography variant="subtitle1">{question.content}</Typography>
         {CategoryChip}
       </Stack>
-      {isCompleted && (
+      {question.expiredTime && (
+        <Typography variant="subtitle2" gutterBottom>
+          Expired time: {dayjs(question.expiredTime).format("MMM D, YYYY h:mm A")}
+        </Typography>
+      )}
+      {completed && (
         <>
-          <Typography variant="body1">
+          <Typography variant="body1" gutterBottom>
             Your score:
             <Typography
               variant="body1"
@@ -85,60 +124,95 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
               fontWeight={600}
               sx={{ color: (theme) => theme.palette.error.light, ml: 1 }}
             >
-              {answerRecord?.score}
+              {typeof score !== "undefined" ? score : "Pending"}
             </Typography>
           </Typography>
         </>
       )}
-      {question.expiredTime && (
-        <Typography variant="subtitle2">
-          Expired time: {dayjs(question.expiredTime).format("MMM D, YYYY h:mm A")}
-        </Typography>
-      )}
+
       {question.category === "code" ? (
-        <TextField
-          fullWidth
-          label="Answer"
-          placeholder="Answer"
-          value={linkCode}
-          onChange={onChangeAnswerCode}
-          disabled={isCompleted}
-        />
+        <>
+          <TextField
+            fullWidth
+            placeholder={linkCode ? "" : "You have not submit link code"}
+            value={linkCode}
+            onChange={onChangeAnswerCode}
+            disabled={completed && question.category !== "code"}
+          />
+          <Stack mt={1} flexDirection={"row"} justifyContent={"end"}>
+            <Button variant="contained" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Stack>
+        </>
       ) : (
-        <Stack gap={1}>
-          {question.answers?.map((answer, indexAnswer) => {
-            return (
-              <FormGroup key={indexAnswer} sx={{ border: 1, pl: 1, pr: 1 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value={answer}
-                      disabled={isCompleted}
-                      checked={
-                        question.category === "choice"
-                          ? answers[0] === answer
-                          : answers.includes(answer)
-                      }
-                      onChange={onChangeAnswersChoice}
-                    />
-                  }
-                  label={answer}
+        <>
+          <Stack gap={1}>
+            {question.answers?.map((answer, indexAnswer) => {
+              return (
+                <FormGroup
+                  key={indexAnswer}
                   sx={{
-                    justifyContent: "space-between",
-                    flexDirection: "row-reverse",
-                    margin: 0,
+                    border: 1,
+                    p: "0px 8px",
+                    borderRadius: 1,
+                    background: (theme) =>
+                      answerRecord || correctAnswers.length > 0
+                        ? correctAnswers?.includes(answer)
+                          ? theme.palette.success.light
+                          : theme.palette.error.light
+                        : "",
+                    borderColor: (theme) =>
+                      answerRecord || correctAnswers.length > 0
+                        ? correctAnswers?.includes(answer)
+                          ? theme.palette.success.light
+                          : theme.palette.error.light
+                        : theme.palette.divider,
                   }}
-                />
-              </FormGroup>
-            );
-          })}
-        </Stack>
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        value={answer}
+                        disabled={completed && question.category !== "code"}
+                        checked={
+                          question.category === "choice"
+                            ? answers[0] === answer
+                            : answers.includes(answer)
+                        }
+                        sx={{ visibility: completed ? "hidden" : "visible" }}
+                        onChange={onChangeAnswersChoice}
+                      />
+                    }
+                    label={answer}
+                    sx={{
+                      justifyContent: "space-between",
+                      flexDirection: "row-reverse",
+                      margin: 0,
+                      ".MuiTypography-root": {
+                        color: correctAnswers.length > 0 ? "#fff !important" : "inherit",
+                      },
+                    }}
+                  />
+                </FormGroup>
+              );
+            })}
+          </Stack>
+          {/* Button submit */}
+          {!completed && (
+            <Stack mt={1} flexDirection={"row"} justifyContent={"end"}>
+              <Button
+                variant="contained"
+                size="small"
+                disabled={disabledButton}
+                onClick={handleSubmit}
+              >
+                Submit
+              </Button>
+            </Stack>
+          )}
+        </>
       )}
-      <Stack mt={1} flexDirection={"row"} justifyContent={"end"}>
-        <Button variant="contained" size="small" disabled={isCompleted || disabledButton}>
-          Submit
-        </Button>
-      </Stack>
     </>
   );
 };

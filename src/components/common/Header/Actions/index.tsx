@@ -26,6 +26,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import MenuAction from "./MenuAction";
+import MyCourse from "@/components/course-components/MyCourse";
+import MyCourses from "./MyCourses";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
@@ -70,11 +72,7 @@ const Actions = () => {
           {!isMobile && <ToggleModeTheme />}
 
           {/* Mine courses */}
-          <Tooltip arrow title="My courses">
-            <IconButton size="large" color="primary" LinkComponent={Link} href="/my-courses">
-              <LaptopChromebookIcon fontSize="medium" color="action" />
-            </IconButton>
-          </Tooltip>
+          <MyCourses />
 
           {/* Notifycation */}
           <Box onClick={handleClickNofity} mr={1}>
@@ -120,6 +118,7 @@ const Actions = () => {
         </Stack>
 
         {/* ========================= */}
+
         {/* Notifications */}
         <Popover
           disableScrollLock

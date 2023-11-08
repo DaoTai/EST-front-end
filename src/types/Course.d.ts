@@ -30,6 +30,5 @@ interface IRegisterCourse {
   updatedAt: string;
   rating?: number;
   passedLessons: ILesson[];
-  latestLesson?: ILesson;
   teacher: IUser;
 }

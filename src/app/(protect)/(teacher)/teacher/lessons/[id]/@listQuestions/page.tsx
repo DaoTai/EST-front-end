@@ -51,7 +51,7 @@ const ListQuestions = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <Box pt={2}>
+      <Box p={2}>
         <Button
           size="small"
           variant="contained"

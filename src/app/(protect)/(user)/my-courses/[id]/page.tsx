@@ -15,16 +15,17 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 
+import MyDialog from "@/components/custom/Dialog";
+import Spinner from "@/components/custom/Spinner";
 import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { notFound, usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
-import MyDialog from "@/components/custom/Dialog";
-import Spinner from "@/components/custom/Spinner";
+import MainLayout from "@/components/common/MainLayout";
 const myCourseFetcher: Fetcher<IRegisterCourse, string> = (url: string) =>
   fetch(url).then((res) => res.json());
 
@@ -78,129 +79,140 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
     return <Spinner />;
   }
 
+  if (!isLoading && !registeredCourse) {
+    return (
+      <MainLayout>
+        <Typography variant="h6" textAlign={"center"}>
+          Not found course
+        </Typography>
+      </MainLayout>
+    );
+  }
+
   return (
-    <Box sx={{ p: 1 }}>
-      {/* About teacher */}
-
-      <Stack
-        flexDirection={"row"}
-        flexWrap={"wrap"}
-        justifyContent={"space-between"}
-        alignItems={"start"}
-        mb={1}
-      >
-        <Box>
-          <Avatar
-            src={registeredCourse?.teacher.avatar.uri}
-            sx={{ width: 100, height: 100, mb: 1 }}
-          />
-          <Link href={"/profile/" + registeredCourse?.teacher._id}>
-            <Chip label={registeredCourse?.teacher.username} />
-          </Link>
-        </Box>
-
-        <Tooltip title="Exit course">
-          <Fab size="small" color="error" onClick={() => setOpenDialog(true)}>
-            <LogoutIcon />
-          </Fab>
-        </Tooltip>
-      </Stack>
-      <Divider />
-
-      <Grid container pt={1} spacing={1}>
-        <Grid item md={6} sm={12}>
-          <Stack gap={1} alignItems={"start"}>
-            <Typography variant="h5">{registeredCourse?.course.name}</Typography>
-            <Typography variant="body1">
-              Joined time: {dayjs(registeredCourse?.createdAt).format("DD/MM/YYYY")}
-            </Typography>
-            <Typography variant="body1">
-              Passed lessons: {registeredCourse?.passedLessons.length}
-            </Typography>
-            <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-              <Typography variant="body1">Your rating: {registeredCourse?.rating} </Typography>
-              <Rating
-                value={registeredCourse?.rating}
-                max={5}
-                precision={0.5}
-                onChange={handleRating}
+    <MainLayout>
+      <Box sx={{ p: 1, color: (theme) => theme.palette.text.primary }}>
+        {/* About teacher */}
+        <Stack
+          flexDirection={"row"}
+          flexWrap={"wrap"}
+          justifyContent={"space-between"}
+          alignItems={"start"}
+          mb={1}
+        >
+          {registeredCourse?.teacher && (
+            <Box>
+              <Avatar
+                src={registeredCourse?.teacher?.avatar?.uri}
+                sx={{ width: 100, height: 100, mb: 1 }}
               />
+              <Link href={"/profile/" + registeredCourse?.teacher._id}>
+                <Chip label={registeredCourse?.teacher.username} color="info" />
+              </Link>
+            </Box>
+          )}
+
+          <Tooltip title="Exit course">
+            <Fab size="small" color="error" onClick={() => setOpenDialog(true)}>
+              <LogoutIcon />
+            </Fab>
+          </Tooltip>
+        </Stack>
+        <Divider />
+
+        <Grid container pt={1} spacing={1}>
+          <Grid item md={6} sm={12}>
+            <Stack gap={1} alignItems={"start"}>
+              <Typography variant="h5">{registeredCourse?.course.name}</Typography>
+              <Typography variant="body1">
+                Joined time: {dayjs(registeredCourse?.createdAt).format("DD/MM/YYYY")}
+              </Typography>
+              <Typography variant="body1">
+                Passed lessons: {registeredCourse?.passedLessons.length}
+              </Typography>
+              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
+                <Typography variant="body1">Your rating: {registeredCourse?.rating} </Typography>
+                <Rating
+                  value={registeredCourse?.rating}
+                  max={5}
+                  precision={0.5}
+                  onChange={handleRating}
+                />
+              </Stack>
+
+              <Stack flexDirection={"row"} alignItems={"center"} flexWrap={"wrap"} gap={1}>
+                <Tooltip arrow title="Level" sx={{ textTransform: "capitalize" }}>
+                  <Box>
+                    <Chip label={registeredCourse?.course.level} />
+                  </Box>
+                </Tooltip>
+                <Tooltip arrow title="Type" sx={{ textTransform: "capitalize" }}>
+                  <Box>
+                    <Chip label={registeredCourse?.course.type} />
+                  </Box>
+                </Tooltip>
+                <Tooltip arrow title="Category">
+                  <Box>
+                    <Chip label={registeredCourse?.course.category} />
+                  </Box>
+                </Tooltip>
+                <Chip
+                  label={registeredCourse?.course.members.length + " members"}
+                  className="bg-gradient"
+                />
+                <Chip
+                  label={registeredCourse?.course.lessons.length + " lessons"}
+                  className="bg-gradient"
+                />
+              </Stack>
+
+              {/* About lesson */}
+              <Button
+                variant="outlined"
+                component={Link}
+                href={
+                  pathName +
+                  "/" +
+                  (registeredCourse!.passedLessons!.length > 0
+                    ? registeredCourse!.passedLessons.pop()
+                    : registeredCourse!.course.lessons[0])
+                }
+                endIcon={<ForwardIcon />}
+              >
+                Learn
+              </Button>
             </Stack>
-
-            <Stack flexDirection={"row"} alignItems={"center"} flexWrap={"wrap"} gap={1}>
-              <Tooltip arrow title="Level" sx={{ textTransform: "capitalize" }}>
-                <Box>
-                  <Chip label={registeredCourse?.course.level} />
-                </Box>
-              </Tooltip>
-              <Tooltip arrow title="Type" sx={{ textTransform: "capitalize" }}>
-                <Box>
-                  <Chip label={registeredCourse?.course.type} />
-                </Box>
-              </Tooltip>
-              <Tooltip arrow title="Category">
-                <Box>
-                  <Chip label={registeredCourse?.course.category} />
-                </Box>
-              </Tooltip>
-              <Chip
-                label={registeredCourse?.course.members.length + " members"}
-                className="bg-gradient"
-              />
-              <Chip
-                label={registeredCourse?.course.lessons.length + " lessons"}
-                className="bg-gradient"
-              />
-            </Stack>
-
-            {/* About lesson */}
-            <Typography variant="body1">
-              Lastest lesson:
-              {registeredCourse?.latestLesson?._id ? (
-                <Link href={"/123"}>{registeredCourse?.latestLesson.name}</Link>
-              ) : (
-                " No lesson"
-              )}
+          </Grid>
+          <Grid item md={6} sm={12}>
+            <Image
+              unoptimized
+              src={registeredCourse?.course.thumbnail.uri as string}
+              alt="thumbnail"
+              width={200}
+              height={200}
+              style={{ borderRadius: 12, maxWidth: "100%" }}
+            />
+            <Typography variant="body2" textAlign={"justify"}>
+              {registeredCourse?.course.intro}
             </Typography>
-            <Button
-              variant="outlined"
-              component={Link}
-              href={pathName + "/" + registeredCourse?.course.lessons[0]}
-              endIcon={<ForwardIcon />}
-            >
-              Learn
-            </Button>
-          </Stack>
+          </Grid>
         </Grid>
-        <Grid item md={6} sm={12}>
-          <Image
-            unoptimized
-            src={registeredCourse?.course.thumbnail.uri as string}
-            alt="thumbnail"
-            width={200}
-            height={200}
-            style={{ borderRadius: 12, maxWidth: "100%" }}
-          />
-          <Typography variant="body2" textAlign={"justify"}>
-            {registeredCourse?.course.intro}
-          </Typography>
-        </Grid>
-      </Grid>
 
-      {/* Dialog confirm */}
-      {openDialog && (
-        <MyDialog
-          title="Course"
-          content={
-            "Do you want to cancel course: " +
-            registeredCourse?.course.name +
-            ". Your data about course will be deleted! You should think again."
-          }
-          onClose={() => setOpenDialog(false)}
-          onSubmit={handleCancel}
-        />
-      )}
-    </Box>
+        {/* Dialog confirm */}
+        {openDialog && (
+          <MyDialog
+            title="Course"
+            content={
+              "Do you want to cancel course: " +
+              registeredCourse?.course.name +
+              ". Your data about course will be deleted! You should think again."
+            }
+            onClose={() => setOpenDialog(false)}
+            onSubmit={handleCancel}
+          />
+        )}
+      </Box>
+    </MainLayout>
   );
 };
 

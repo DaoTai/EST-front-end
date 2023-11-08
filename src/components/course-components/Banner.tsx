@@ -1,4 +1,7 @@
-import { Box, Divider, Rating, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
+
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -14,7 +17,14 @@ type Props = {
 
 const Banner = ({ course, mode = "visitor" }: Props) => {
   return (
-    <Box>
+    <Box
+      sx={{
+        transition: "0.2s ease all",
+        ":hover": {
+          backgroundColor: "action.focus",
+        },
+      }}
+    >
       <Grid
         container
         columnSpacing={2}
@@ -129,7 +139,6 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           </Stack>
         </Grid>
       </Grid>
-      <Divider />
     </Box>
   );
 };
