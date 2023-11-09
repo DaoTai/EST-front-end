@@ -1,5 +1,10 @@
 import React from "react";
-import ListLessons from "../_components/ListLessons";
+import dynamic from "next/dynamic";
+
+const ListLessons = dynamic(() => import("../_components/ListLessons"), {
+  ssr: false,
+});
+
 const ListLessonsWrapper = () => {
   return <ListLessons />;
 };

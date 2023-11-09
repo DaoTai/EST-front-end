@@ -1,7 +1,10 @@
 "use client";
 import FlagIcon from "@mui/icons-material/Flag";
 import SendIcon from "@mui/icons-material/Send";
-import { Chip, Stack } from "@mui/material";
+
+import Badge from "@mui/material/Badge";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -9,23 +12,52 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
-const ReportBox = ({ reports }: { reports: IReport[] | null | undefined }) => {
-  const [listReport, setListReports] = useState<IReport[]>(reports ?? []);
+type IProps = {
+  idLesson: string;
+  reports: IReport[] | null | undefined;
+};
+
+const ReportBox = ({ reports, idLesson }: IProps) => {
+  const { data: session } = useSession();
+  const [listReports, setListReports] = useState<IReport[]>(reports ?? []);
   const [newReport, setNewReport] = useState<string>("");
 
-  const handleReport = () => {
-    if (newReport.trim()) {
+  const handleReport = async () => {
+    const value = newReport.trim();
+    if (value && value.length > 5) {
+      try {
+        const res = await axios.post<IReport[]>("/api/user/my-lessons/" + idLesson + "/reports", {
+          content: value,
+        });
+        const myReports = res.data.filter((report) => report.user === session?._id);
+        setListReports(myReports);
+        setNewReport("");
+        toast.success("Report lesson success");
+      } catch (error) {
+        toast.warning("Report lesson failed");
+      }
     }
   };
+
+  const deleteReport = async (idReport: string) => {
+    try {
+      await axios.delete("/api/user/my-lessons/" + idLesson + "/reports/" + idReport);
+      setListReports((prev) => prev.filter((report) => report._id !== idReport));
+    } catch (error) {
+      toast.warning("Delete report failed");
+    }
+  };
+
   return (
     <Accordion
       sx={{
         border: "none",
-        ".MuiAccordionSummary-content": {
-          margin: "0 !important",
-        },
         ".MuiButtonBase-root": {
           minHeight: "unset",
         },
@@ -37,18 +69,24 @@ const ReportBox = ({ reports }: { reports: IReport[] | null | undefined }) => {
       <AccordionSummary>
         <Tooltip arrow title="Report" placement="right-start">
           <IconButton size="small">
-            <FlagIcon />
+            <Badge badgeContent={listReports.length} color="secondary">
+              <FlagIcon color="info" />
+            </Badge>
           </IconButton>
         </Tooltip>
       </AccordionSummary>
       <AccordionDetails>
-        {listReport?.map((report) => (
-          <Chip key={report._id} label={report.message} />
-        ))}
+        {/* List my reports */}
+        <Stack flexDirection={"row"} flexWrap={"wrap"} gap={2} mb={1}>
+          {listReports?.map((report) => (
+            <Tooltip key={report._id} title={dayjs(report.createdAt).format("DD/MM/YYYY")}>
+              <Chip label={report.content} onDelete={() => deleteReport(report._id)} />
+            </Tooltip>
+          ))}
+        </Stack>
         <TextField
           fullWidth
-          size="small"
-          placeholder="What do you want to report?"
+          placeholder="Content at least 5 characters"
           margin="dense"
           value={newReport}
           onChange={(e) => setNewReport(e.target.value)}
@@ -58,7 +96,7 @@ const ReportBox = ({ reports }: { reports: IReport[] | null | undefined }) => {
             variant="contained"
             endIcon={<SendIcon />}
             onClick={handleReport}
-            disabled={!newReport.trim()}
+            disabled={newReport.trim().length <= 5}
           >
             Send
           </Button>

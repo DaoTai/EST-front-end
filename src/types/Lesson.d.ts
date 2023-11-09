@@ -1,7 +1,7 @@
 interface IReport {
   _id: string;
-  user: IUser;
-  message: string;
+  user: IUser | string;
+  content: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -18,6 +18,16 @@ interface ILesson {
   comments: any[];
   questions: IQuestion[];
   reports: IReport[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ILessonComment {
+  _id: string;
+  user: IUser;
+  lesson: string;
+  content: string;
+  pin: boolean;
   createdAt: string;
   updatedAt: string;
 }

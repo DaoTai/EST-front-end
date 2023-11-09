@@ -4,7 +4,6 @@ import { Box, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import styled from "@mui/material/styles/styled";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
 import useSWR, { Fetcher } from "swr";
 
 type IRecapLesson = {

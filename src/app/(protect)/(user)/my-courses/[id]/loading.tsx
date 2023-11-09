@@ -1,7 +1,7 @@
-import React from "react";
+import Spinner from "@/components/custom/Spinner";
 
 const LoadingDetailCourse = () => {
-  return <div>LoadingDetailCourse</div>;
+  return <Spinner />;
 };
 
 export default LoadingDetailCourse;

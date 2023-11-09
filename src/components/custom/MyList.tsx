@@ -14,6 +14,10 @@ const MyList = styled(List)(({ theme }) => ({
     },
     borderRadius: 1,
   },
+
+  ".MuiListItemIcon-root": {
+    minWidth: "unset",
+  },
 }));
 
 export default MyList;

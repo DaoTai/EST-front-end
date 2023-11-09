@@ -53,8 +53,6 @@ const CoursePage = () => {
     }
   );
 
-  console.log("data: ", data);
-
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams as any);
     params.set(name, value);
@@ -125,7 +123,7 @@ const CoursePage = () => {
 
       <Stack gap={1} mt={2} flexDirection={"row"} flexWrap={"wrap"}>
         {/* Filter */}
-        <Drawer open={openFilter} anchor="left" onClose={onCloseFilter}>
+        <Drawer open={openFilter} anchor="right" onClose={onCloseFilter}>
           <FilterSearch onClose={onCloseFilter} />
         </Drawer>
 
