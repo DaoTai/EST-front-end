@@ -1,6 +1,5 @@
 "use client";
 import VideoPlayer from "@/components/custom/VideoPlayer";
-import CommentIcon from "@mui/icons-material/Comment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import HelpIcon from "@mui/icons-material/Help";

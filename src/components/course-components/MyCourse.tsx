@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 
 import Image from "next/image";
 import { memo, useMemo } from "react";
-
 import { getDistanceTimeToNow } from "@/utils/functions";
 import { Tooltip } from "@mui/material";
 

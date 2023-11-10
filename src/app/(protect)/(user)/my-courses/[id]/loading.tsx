@@ -1,3 +1,4 @@
+"use client";
 import Spinner from "@/components/custom/Spinner";
 
 const LoadingDetailCourse = () => {

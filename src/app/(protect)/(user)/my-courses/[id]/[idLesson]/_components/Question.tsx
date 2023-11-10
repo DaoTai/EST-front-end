@@ -19,6 +19,7 @@ type Props = {
 
 const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
   const params = useParams();
+
   const [completed, setCompleted] = useState(isCompleted);
   const [linkCode, setLinkCode] = useState<string>("");
   const [answers, setAnswers] = useState<string[]>([]);
@@ -80,6 +81,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
     try {
       const res = await axios.post<IAnswerRecord>("/api/user/questions/" + question._id, {
         userAnswers: question.category === "code" ? [linkCode] : answers,
+        idRegisteredCourse: params.id,
       });
       setCompleted(true);
       res.data.question?.correctAnswers && setCorrectAnswers(res.data.question.correctAnswers);
