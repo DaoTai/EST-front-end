@@ -24,6 +24,10 @@ const theme = extendTheme({
         },
         white: {
           main: "#fff",
+          light: "#fff",
+        },
+        mainBlue: {
+          main: "#58a9eb",
         },
       },
     },
@@ -40,6 +44,10 @@ const theme = extendTheme({
         },
         white: {
           main: "rgb(32,35,42)",
+          light: "#fff",
+        },
+        mainBlue: {
+          main: "#58a9eb",
         },
       },
     },

@@ -2,11 +2,13 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Link from "next/link";
-const MenuNavigation = () => {
+import { getServerSession } from "next-auth";
+import { options } from "@/config/next-auth";
+const MenuNavigation = async () => {
+  const session = await getServerSession(options);
   return (
     <Stack
       flexDirection={"row"}
-      gap={2}
       mt={2}
       pb={1}
       pt={1}
@@ -18,8 +20,10 @@ const MenuNavigation = () => {
           pb: 1,
           borderRadius: 1,
           border: 1,
+          borderColor: "white.main",
+          bgcolor: "rgba(0,0,0,0.1)",
           ":hover": {
-            bgcolor: "rgba(0,0,0,0.1)",
+            bgcolor: "mainBlue.main",
           },
         },
       }}
@@ -27,9 +31,11 @@ const MenuNavigation = () => {
       <Box component={Link} href="/profile/edit">
         Edit
       </Box>
-      <Box component={Link} href="/profile/change-password">
-        Password
-      </Box>
+      {!session?.provider && (
+        <Box component={Link} href="/profile/change-password">
+          Password
+        </Box>
+      )}
       <Box component={Link} href="/profile">
         Blog
       </Box>

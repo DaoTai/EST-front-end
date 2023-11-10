@@ -23,7 +23,7 @@ const LessonWrapper = styled(Box)(({ theme }) => ({
   borderRadius: 4,
   borderBottom: 1,
   transition: "all linear 0.2s",
-  ":hover": {
+  ":hover:not(&.disabled)": {
     background: theme.palette.action.focus,
     cursor: "pointer",
   },
@@ -34,6 +34,7 @@ const LessonWrapper = styled(Box)(({ theme }) => ({
   "&.disabled": {
     background: theme.palette.action.disabled,
     color: theme.palette.action.disabled,
+    cursor: "not-allowed",
   },
 }));
 
@@ -56,7 +57,7 @@ const ListLessons = () => {
   return (
     <Stack p={1} gap={1}>
       <Divider>
-        <Typography variant="h6" textAlign={"center"} gutterBottom>
+        <Typography variant="h5" textAlign={"center"} gutterBottom>
           Lessons
         </Typography>
       </Divider>

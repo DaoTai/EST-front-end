@@ -9,6 +9,10 @@ declare module "@mui/material/styles" {
     };
     white: {
       main: string;
+      light: string;
+    };
+    mainBlue: {
+      main: string;
     };
   }
   interface PaletteOptions {
@@ -19,6 +23,10 @@ declare module "@mui/material/styles" {
       main: string;
     };
     white: {
+      main: string;
+      light: string;
+    };
+    mainBlue: {
       main: string;
     };
   }

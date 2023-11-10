@@ -2,21 +2,30 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import PushPinIcon from "@mui/icons-material/PushPin";
 
 import MyList from "@/components/custom/MyList";
 import { getDistanceTimeToNow } from "@/utils/functions";
-import { Button, ListItem, ListItemIcon, ListItemText, Paper, TextField } from "@mui/material";
+import { Button, ListItem, ListItemIcon, ListItemText, TextField, Tooltip } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { MouseEvent, useState } from "react";
-import { useSession } from "next-auth/react";
+import { KeyedMutator } from "swr";
+import { IResponseFetchComments } from "./ListComments";
+import axios from "axios";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
-const Comment = ({ comment }: { comment: ILessonComment }) => {
+interface IProps {
+  idLesson: string;
+  comment: ILessonComment;
+  mutate: KeyedMutator<IResponseFetchComments[]>;
+}
+const Comment = ({ idLesson, comment, mutate }: IProps) => {
   const { data: session } = useSession();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [enableEdit, setEnableEdit] = useState<boolean>(false);
@@ -35,9 +44,32 @@ const Comment = ({ comment }: { comment: ILessonComment }) => {
     setAnchorEl(null);
   };
 
-  const handleEdit = () => {};
+  const handleEdit = async () => {
+    const value = content.trim();
+    const idComment = comment._id;
+    if (value) {
+      try {
+        await axios.patch(`/api/user/my-lessons/${idLesson}/comments/${idComment}`, {
+          content: value,
+        });
+        mutate();
+        toggleEnableEdit();
+      } catch (error) {
+        toast.error("Edit comment failed");
+      }
+    }
+  };
 
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    const idComment = comment._id;
+    try {
+      await axios.delete(`/api/user/my-lessons/${idLesson}/comments/${idComment}`);
+      mutate();
+      setAnchorEl(null);
+    } catch (error) {
+      toast.error("Delete comment failed");
+    }
+  };
 
   return (
     <>
@@ -66,19 +98,19 @@ const Comment = ({ comment }: { comment: ILessonComment }) => {
               justifyContent={"end"}
               sx={{
                 button: {
-                  pt: 0.5,
-                  pb: 0.5,
-                  pr: 2,
-                  pl: 2,
+                  padding: "4px 16px",
                   fontWeight: 400,
                   borderRadius: 12,
+                  fontSize: (theme) => theme.typography.fontSize,
                 },
               }}
             >
               <Button variant="text" onClick={toggleEnableEdit}>
                 Cancel
               </Button>
-              <Button variant="contained">Edit</Button>
+              <Button variant="contained" disabled={!content.trim()} onClick={handleEdit}>
+                Edit
+              </Button>
             </Stack>
           </Box>
         ) : (
@@ -93,27 +125,39 @@ const Comment = ({ comment }: { comment: ILessonComment }) => {
               >
                 {comment.user.username}
               </Typography>
-              <Typography variant="body1" gutterBottom>
+              <Typography gutterBottom variant="body1" component={"pre"}>
                 {comment.content}
               </Typography>
-              <Typography variant="subtitle2" gutterBottom color={"GrayText"}>
-                {getDistanceTimeToNow(comment.createdAt)}
+              <Typography gutterBottom variant="subtitle2" color={"GrayText"}>
+                {comment.createdAt === comment.updatedAt ? (
+                  getDistanceTimeToNow(comment.createdAt)
+                ) : (
+                  <Tooltip
+                    arrow
+                    placement="right-end"
+                    title={"Updated at " + dayjs(comment.updatedAt).format("MMM D, YYYY h:mm A")}
+                  >
+                    <span>{getDistanceTimeToNow(comment.createdAt)}</span>
+                  </Tooltip>
+                )}
               </Typography>
             </Box>
             {/* Options */}
-            <Box
-              component={"span"}
-              sx={{
-                height: "fit-content",
-                cursor: "pointer",
-                ":hover": {
-                  opacity: 0.8,
-                },
-              }}
-              onClick={handleShowOptions}
-            >
-              <MoreHorizIcon />
-            </Box>
+            {comment.user._id === session?._id && (
+              <Box
+                component={"span"}
+                sx={{
+                  height: "fit-content",
+                  cursor: "pointer",
+                  ":hover": {
+                    opacity: 0.8,
+                  },
+                }}
+                onClick={handleShowOptions}
+              >
+                <MoreHorizIcon />
+              </Box>
+            )}
           </>
         )}
       </Stack>
@@ -141,22 +185,20 @@ const Comment = ({ comment }: { comment: ILessonComment }) => {
             },
           }}
         >
-          {comment.user._id === session?._id && (
-            <>
-              <ListItem>
-                <ListItemIcon>
-                  <DeleteIcon />
-                </ListItemIcon>
-                <ListItemText>Delete</ListItemText>
-              </ListItem>
-              <ListItem onClick={toggleEnableEdit}>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                <ListItemText>Edit</ListItemText>
-              </ListItem>
-            </>
-          )}
+          <>
+            <ListItem onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText>Delete</ListItemText>
+            </ListItem>
+            <ListItem onClick={toggleEnableEdit}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText>Edit</ListItemText>
+            </ListItem>
+          </>
         </MyList>
       </Popover>
     </>

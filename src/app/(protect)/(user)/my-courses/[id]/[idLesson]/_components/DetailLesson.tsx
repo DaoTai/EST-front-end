@@ -57,9 +57,9 @@ const DetailLesson = ({ idLesson }: { idLesson: string }) => {
     return (
       <>
         {response?.lesson?.video && <VideoPlayer uri={response?.lesson?.video.uri} />}
-        <Box sx={{ mt: 1 }}>
+        <Box sx={{ mt: 1, p: 1 }}>
           {/* Name lesson */}
-          <Typography gutterBottom variant="h6" fontWeight={600} marginLeft={1} marginTop={1}>
+          <Typography gutterBottom variant="h6" fontWeight={600}>
             {response?.lesson.name}
           </Typography>
 

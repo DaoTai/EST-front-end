@@ -5,13 +5,13 @@ import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
+import Divider from "@mui/material/Divider";
 import Popover from "@mui/material/Popover";
 
 import useSWR, { Fetcher } from "swr";
 import { useState } from "react";
+import Link from "next/link";
 import MyCourse from "@/components/course-components/MyCourse";
-import { Divider } from "@mui/material";
 
 export const fetcherMyCourses: Fetcher<IRegisterCourse[], string> = (url: string) =>
   fetch(url).then((res) => res.json());
@@ -61,22 +61,38 @@ const MyCourses = () => {
           <Typography variant="subtitle1">Loading...</Typography>
         ) : (
           <Stack gap={1} p={1} minWidth={300}>
-            {listCourses?.map((course) => {
-              return (
-                <Link
-                  key={course._id}
-                  href={
-                    "/my-courses/" +
-                    (course.passedLessons.length > 0
-                      ? course._id + "/" + course.passedLessons[course.passedLessons.length - 1]
-                      : course._id)
-                  }
-                >
-                  <MyCourse data={course} direction="row" />
-                  <Divider />
-                </Link>
-              );
-            })}
+            {listCourses && listCourses.length > 0 ? (
+              listCourses?.map((course) => {
+                return (
+                  <Link
+                    key={course._id}
+                    href={
+                      "/my-courses/" +
+                      (course.passedLessons.length > 0
+                        ? course._id + "/" + course.passedLessons[course.passedLessons.length - 1]
+                        : course._id)
+                    }
+                  >
+                    <MyCourse data={course} direction="row" />
+                    <Divider />
+                  </Link>
+                );
+              })
+            ) : (
+              <Stack
+                alignItems={"center"}
+                sx={{
+                  a: {
+                    color: (theme) => theme.palette.info.dark + "!important",
+                  },
+                }}
+              >
+                <Typography variant="body1" textAlign={"center"} gutterBottom>
+                  No course
+                </Typography>
+                <Link href={"/search/course"}>Let's explore</Link>
+              </Stack>
+            )}
           </Stack>
         )}
       </Popover>

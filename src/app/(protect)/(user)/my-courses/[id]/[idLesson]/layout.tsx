@@ -13,7 +13,7 @@ const RootLayout = ({ children, listLessons, listComments }: IProps) => {
     <>
       <NormalHeader />
       <Grid container spacing={1}>
-        <Grid item md={9} xs={12}>
+        <Grid item md={9} xs={12} pb={2}>
           <Suspense fallback={<p>Loading detail lesson</p>}>{children}</Suspense>
           <Suspense fallback={<p>Loading comments</p>}>{listComments}</Suspense>
         </Grid>

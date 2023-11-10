@@ -1,73 +1,34 @@
 "use client";
 import Close from "@mui/icons-material/Close";
 import CommentIcon from "@mui/icons-material/Comment";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
+import useTheme from "@mui/material/styles/useTheme";
 
-import { getDistanceTimeToNow } from "@/utils/functions";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
-import { Fetcher } from "swr";
-import useSWRInfinite from "swr/infinite";
-import Comment from "./_component/Comment";
+import { useCallback, useRef, useState } from "react";
+import ListComments, { IListCommentsRef } from "./_component/ListComments";
+import CreateComment from "./_component/CreateComment";
 
-type Response = {
-  listComments: ILessonComment[];
-  total: number;
-  maxPage: number;
-};
-
-const fetcher: Fetcher<Response, string> = (url: string) => fetch(url).then((res) => res.json());
-
-const ListComments = () => {
-  const params = useParams();
-  const { data: session } = useSession();
+const BoxComments = () => {
+  const theme = useTheme();
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
-  const { data, mutate, size, setSize, isValidating, isLoading } = useSWRInfinite(
-    (page: number) => {
-      return `/api/user/my-lessons/${params.idLesson}/comments?page=${page + 1}`;
-    },
-    fetcher
-  );
+  const listCommentsRef = useRef<Partial<IListCommentsRef>>(null);
 
-  const res = useMemo(() => {
-    if (data) {
-      const values = data.reduce(
-        (acc, item) => {
-          return {
-            maxPage: item.maxPage,
-            total: item.total,
-            listComments: [...acc.listComments, ...item.listComments],
-          };
-        },
-        {
-          listComments: [],
-          maxPage: 0,
-          total: 0,
-        }
-      );
-      return values;
-    }
-    return null;
-  }, [data]);
-
+  // Toggle drawer
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  if (!res && !isLoading) return <Typography variant="body1">No comment</Typography>;
+  const handleAddComment = useCallback(() => {
+    listCommentsRef.current?.mutate && listCommentsRef.current?.mutate();
+  }, []);
 
   return (
     <Box mt={2}>
@@ -80,12 +41,14 @@ const ListComments = () => {
           borderRadius={12}
           gap={1}
           boxShadow={2}
-          sx={{ cursor: "pointer" }}
+          sx={{
+            cursor: "pointer",
+            bgcolor: (theme) => theme.palette.mainBlue.main,
+            color: theme.palette.white.light,
+          }}
           onClick={toggleDrawer}
         >
-          <Typography variant="body1" marginRight={2}>
-            Comment ({res?.total || 0})
-          </Typography>
+          <Typography variant="body1">Comment</Typography>
           <CommentIcon />
         </Box>
       </Stack>
@@ -97,7 +60,7 @@ const ListComments = () => {
           sx={{
             p: 4,
             minHeight: "100vh",
-            minWidth: "50vw",
+            minWidth: isMediumScreen ? "100vw" : "50vw",
             overflowY: "scroll",
           }}
         >
@@ -106,61 +69,12 @@ const ListComments = () => {
           </IconButton>
 
           {/* Create comment  */}
-          <Stack flexDirection={"row"} gap={1} mt={2} mb={1}>
-            <Avatar src={session?.avatar.uri} alt="avatar" />
-            <Box flexGrow={2}>
-              <TextField
-                multiline
-                fullWidth
-                spellCheck={false}
-                placeholder="What do you need to comment?"
-                variant="filled"
-                sx={{ pt: 1 }}
-              />
-              <Stack
-                mt={2}
-                gap={2}
-                flexDirection={"row"}
-                justifyContent={"end"}
-                sx={{
-                  button: {
-                    borderRadius: 99,
-                    padding: "4px 16px",
-                    fontWeight: 400,
-                  },
-                }}
-              >
-                <Button variant="text">Clear</Button>
-                <Button variant="contained" color="info">
-                  Comment
-                </Button>
-              </Stack>
-            </Box>
-          </Stack>
-
+          <CreateComment handleAddComment={handleAddComment} />
           <Divider />
 
           {/* List comments */}
-          <Box mt={1}>
-            <Stack gap={2}>
-              {res?.listComments.map((comment) => {
-                return <Comment key={comment._id} comment={comment} />;
-              })}
-            </Stack>
-            {size < (res?.maxPage ?? 0) && (
-              <Stack mt={2} flexDirection={"row"} justifyContent={"center"}>
-                <Chip
-                  label="More"
-                  disabled={isLoading || isValidating}
-                  sx={{
-                    bgcolor: (theme) => theme.palette.action.focus,
-                    pl: 2,
-                    pr: 2,
-                  }}
-                  onClick={() => setSize(size + 1)}
-                />
-              </Stack>
-            )}
+          <Box mt={2}>
+            <ListComments ref={listCommentsRef} />
           </Box>
         </Paper>
       </Drawer>
@@ -168,4 +82,4 @@ const ListComments = () => {
   );
 };
 
-export default ListComments;
+export default BoxComments;

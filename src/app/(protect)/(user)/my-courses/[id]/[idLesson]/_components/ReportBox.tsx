@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { Box, Typography } from "@mui/material";
 
 type IProps = {
   idLesson: string;
@@ -58,6 +59,7 @@ const ReportBox = ({ reports, idLesson }: IProps) => {
     <Accordion
       sx={{
         border: "none",
+
         ".MuiButtonBase-root": {
           minHeight: "unset",
         },
@@ -68,11 +70,12 @@ const ReportBox = ({ reports, idLesson }: IProps) => {
     >
       <AccordionSummary>
         <Tooltip arrow title="Report" placement="right-start">
-          <IconButton size="small">
-            <Badge badgeContent={listReports.length} color="secondary">
-              <FlagIcon color="info" />
-            </Badge>
-          </IconButton>
+          <Box display={"flex"}>
+            <FlagIcon />
+            <Typography variant="body2" marginLeft={1}>
+              ({listReports.length})
+            </Typography>
+          </Box>
         </Tooltip>
       </AccordionSummary>
       <AccordionDetails>
