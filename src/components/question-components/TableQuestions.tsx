@@ -1,6 +1,7 @@
 "use client";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
 
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -23,6 +24,7 @@ import axios from "axios";
 import FormQuestion from "./FormQuestion";
 import MyModal from "../custom/Modal";
 import MyDialog from "../custom/Dialog";
+import { Stack } from "@mui/material";
 
 type Props = {
   questions: IQuestion[];
@@ -56,7 +58,6 @@ const TableQuestions = ({ questions = [], setListQuestion }: Props) => {
         try {
           const res = await axios.patch("/api/teacher/questions/detail/" + question?._id, data);
           const newQuestion = res.data;
-          console.log("New: ", newQuestion);
 
           setListQuestion((listQuestion) => {
             return [...listQuestion].map((question) => {
@@ -161,15 +162,12 @@ const TableQuestions = ({ questions = [], setListQuestion }: Props) => {
                     </TableCell>
                     <TableCell>
                       {question.correctAnswers?.map((ans, i) => (
-                        <Typography
-                          key={i}
-                          className="cell"
-                          variant="subtitle2"
-                          gutterBottom
-                          fontWeight={400}
-                        >
-                          - {ans}
-                        </Typography>
+                        <Stack key={i} flexDirection={"row"} alignItems={"center"} gap={1}>
+                          <CheckIcon color="success" />
+                          <Typography className="cell" variant="subtitle2" fontWeight={400}>
+                            {ans}
+                          </Typography>
+                        </Stack>
                       ))}
                     </TableCell>
                     <TableCell>

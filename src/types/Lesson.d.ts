@@ -27,7 +27,6 @@ interface ILessonComment {
   user: IUser;
   lesson: string;
   content: string;
-  pin: boolean;
   createdAt: string;
   updatedAt: string;
 }

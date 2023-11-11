@@ -1,9 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
@@ -26,7 +23,6 @@ import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import { IFormLesson } from "@/types/ILesson";
 import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
-import dayjs from "dayjs";
 
 type Props = {
   type: "create" | "edit" | "watch";
@@ -254,26 +250,6 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           )}
         </Grid>
       </Grid>
-
-      {lesson && lesson?.reports?.length > 0 && (
-        <Box mt={2}>
-          <Accordion>
-            <AccordionSummary>
-              <Typography variant="subtitle1">Reports</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {lesson?.reports.map((report, i) => (
-                <Stack key={i} flexDirection={"row"} justifyContent={"space-between"}>
-                  <Typography variant="subtitle1">{report.message}</Typography>
-                  <Typography variant="subtitle2">
-                    {dayjs(report.createdAt).format("DD/MM/YYYY")}
-                  </Typography>
-                </Stack>
-              ))}
-            </AccordionDetails>
-          </Accordion>
-        </Box>
-      )}
     </Box>
   );
 };

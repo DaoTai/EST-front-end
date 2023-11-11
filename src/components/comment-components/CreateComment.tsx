@@ -10,8 +10,13 @@ import { useParams } from "next/navigation";
 import { memo, useState } from "react";
 import { toast } from "react-toastify";
 
-const CreateComment = ({ handleAddComment }: { handleAddComment: () => void }) => {
-  const params = useParams();
+const CreateComment = ({
+  idLesson,
+  handleAddComment,
+}: {
+  idLesson: string;
+  handleAddComment: () => void;
+}) => {
   const { data: session } = useSession();
   const [comment, setComment] = useState<string>("");
 
@@ -23,7 +28,7 @@ const CreateComment = ({ handleAddComment }: { handleAddComment: () => void }) =
     const value = comment.trim();
     if (value) {
       try {
-        await axios.post<ILessonComment>(`/api/user/my-lessons/${params.idLesson}/comments`, {
+        await axios.post<ILessonComment>(`/api/user/my-lessons/${idLesson}/comments`, {
           content: value,
         });
         handleAddComment();

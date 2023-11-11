@@ -33,7 +33,7 @@ const RegisteredCourses = () => {
           <Grid container spacing={3}>
             {listCourses.map((course) => (
               <Grid item key={course._id} md={4} xs={6}>
-                <Paper elevation={4}>
+                <Paper elevation={4} sx={{ borderRadius: 4 }}>
                   <MyCourse data={course} />
                 </Paper>
               </Grid>

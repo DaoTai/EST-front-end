@@ -1,12 +1,11 @@
 import serverAxios from "@/config/axios";
+import { Box, Chip, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Heading, Intro } from "../_components";
-import MyCourse from "@/components/course-components/MyCourse";
-import Image from "next/image";
-import { Box, Chip, Stack, Typography } from "@mui/material";
 
 // Check log back-end to see this page be cached
 const getData = async (
@@ -35,7 +34,12 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
           <Grid item md={3} xs={12}>
             <Paper sx={{ p: 1 }}>
               <Suspense fallback={<p>Loading...</p>}>
-                <Intro user={profile} />
+                <>
+                  <Typography variant="h6" fontWeight={500} textAlign={"center"}>
+                    Intro
+                  </Typography>
+                  <Intro user={profile} />
+                </>
               </Suspense>
             </Paper>
           </Grid>
@@ -43,7 +47,7 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
             <Grid container spacing={2}>
               {listCourses?.map((register) => (
                 <Grid item md={4} key={register._id} gap={1}>
-                  <Paper elevation={4} sx={{ pb: 2 }}>
+                  <Paper elevation={4} sx={{ pb: 2, borderRadius: 3 }}>
                     <Image
                       unoptimized
                       src={register.course.thumbnail.uri}

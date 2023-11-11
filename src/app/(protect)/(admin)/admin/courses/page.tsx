@@ -86,16 +86,16 @@ const Courses = () => {
       },
       {
         field: "lessons",
-        headerName: "Total lessons",
-        width: 125,
+        headerName: "Lessons",
+        width: 80,
         renderCell: (params) => {
           return <Typography variant="body1">{params.row.lessons.length}</Typography>;
         },
       },
       {
         field: "reports",
-        headerName: "Total reports",
-        width: 125,
+        headerName: "Reports",
+        width: 80,
         renderCell: (params) => {
           const course: ICourse = params.row;
           const totalReports = course.lessons.reduce((acc, lesson) => {
@@ -108,9 +108,8 @@ const Courses = () => {
 
       {
         field: "createdBy",
-        headerName: "Created by",
-        width: 150,
-        flex: 1,
+        headerName: "Teacher",
+        width: 200,
         renderCell: (params) => {
           const course: ICourse = params.row;
           return (
@@ -307,7 +306,7 @@ const Courses = () => {
       {/* Open modal detail course */}
       {course && (
         <MyModal open={openDetail} onClose={() => setOpenDetail(false)}>
-          <Box width={"90vw"}>
+          <Box width={"100vw"} p={2}>
             <FormCourse course={course} type="watch" />
           </Box>
         </MyModal>

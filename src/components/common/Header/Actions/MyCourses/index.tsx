@@ -54,13 +54,13 @@ const MyCourses = () => {
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "right",
+          horizontal: "center",
         }}
       >
         {isLoading ? (
           <Typography variant="subtitle1">Loading...</Typography>
         ) : (
-          <Stack gap={1} p={1} minWidth={300}>
+          <Stack gap={1} p={1} minWidth={350}>
             {listCourses && listCourses.length > 0 ? (
               listCourses?.map((course) => {
                 return (

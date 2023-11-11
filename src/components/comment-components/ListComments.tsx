@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import { useParams } from "next/navigation";
-import { ForwardRefRenderFunction, forwardRef, useImperativeHandle, useMemo } from "react";
+import { ForwardRefRenderFunction, forwardRef, memo, useImperativeHandle, useMemo } from "react";
 import { Fetcher, KeyedMutator } from "swr";
 import useSWRInfinite from "swr/infinite";
 import Comment from "./Comment";
@@ -16,16 +16,20 @@ export type IResponseFetchComments = {
 };
 
 export type IListCommentsRef = { mutate: KeyedMutator<IResponseFetchComments[]> };
-type IProps = {};
+type IProps = {
+  idLesson: string;
+};
 
 const fetcher: Fetcher<IResponseFetchComments, string> = (url: string) =>
   fetch(url).then((res) => res.json());
 
-const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> = ({}, ref) => {
-  const params = useParams();
-  const { data, size, setSize, mutate, isValidating, isLoading } = useSWRInfinite(
+const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> = (
+  { idLesson },
+  ref
+) => {
+  const { data, size, setSize, mutate, isValidating, isLoading, error } = useSWRInfinite(
     (page: number) => {
-      return `/api/user/my-lessons/${params.idLesson}/comments?page=${page + 1}`;
+      return `/api/user/my-lessons/${idLesson}/comments?page=${page + 1}`;
     },
     fetcher,
     {
@@ -70,6 +74,14 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
     [mutate, data]
   );
 
+  if (error) {
+    return (
+      <Typography variant="body1" textAlign={"center"}>
+        Having error
+      </Typography>
+    );
+  }
+
   if (isLoading) {
     return (
       <Typography variant="body1" textAlign={"center"}>
@@ -95,7 +107,7 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
           return (
             <Comment
               key={comment._id}
-              idLesson={params.idLesson as string}
+              idLesson={idLesson as string}
               comment={comment}
               mutate={mutate}
             />
@@ -120,4 +132,4 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
   );
 };
 
-export default forwardRef(ListComments);
+export default memo(forwardRef(ListComments));

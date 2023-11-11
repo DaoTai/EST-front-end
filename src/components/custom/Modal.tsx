@@ -37,7 +37,7 @@ export default function MyModal({ open, onClose, children }: ModalProps) {
         {children}
         <IconButton
           size="small"
-          sx={{ position: "absolute", top: 2, right: 2 }}
+          sx={{ position: "absolute", top: 5, right: 10 }}
           onClick={onClose as any}
         >
           <Close fontSize="large" />

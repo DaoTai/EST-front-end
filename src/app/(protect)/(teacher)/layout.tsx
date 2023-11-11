@@ -14,11 +14,15 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);
   if (!session) return redirect("/sign-in");
-  return (
-    <MainLayout>
-      <Suspense fallback={<Spinner />}>{children}</Suspense>
-    </MainLayout>
-  );
+  if (session.roles.includes("teacher") || session.roles.includes("admin")) {
+    return (
+      <MainLayout>
+        <Suspense fallback={<Spinner />}>{children}</Suspense>
+      </MainLayout>
+    );
+  } else {
+    return redirect("/");
+  }
 };
 
 export default RootLayout;
