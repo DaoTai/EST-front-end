@@ -40,9 +40,9 @@ const MyCourses = () => {
         </Typography>
         <Grid container spacing={2}>
           {listCourses?.map((registerCourse) => (
-            <Grid key={registerCourse._id} item lg={3} md={4} sm={6} xs={12}>
+            <Grid key={registerCourse._id} item md={4} sm={6} xs={12}>
               <Link href={"/my-courses/" + registerCourse._id}>
-                <Paper elevation={10} sx={{ height: "100%", borderRadius: 3 }}>
+                <Paper elevation={5} sx={{ height: "100%", borderRadius: 3 }}>
                   <MyCourse data={registerCourse} />
                 </Paper>
               </Link>

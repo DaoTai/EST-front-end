@@ -8,6 +8,9 @@ import Tooltip from "@mui/material/Tooltip";
 import { getDistanceTimeToNow } from "@/utils/functions";
 import Image from "next/image";
 import { memo, useMemo } from "react";
+import MyList from "../custom/MyList";
+import { ListItem, ListItemText, Stack } from "@mui/material";
+import dayjs from "dayjs";
 
 type IProps = {
   direction?: "column" | "row";
@@ -48,6 +51,17 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
             color={data.course.type === "private" ? "info" : "success"}
             sx={{ textTransform: "capitalize" }}
           />
+          {direction === "column" && (
+            <Stack mt={1}>
+              <Typography variant="body1">Category: {data.course.category}</Typography>
+              <Typography variant="body1">
+                Started from: {dayjs(data.createdAt).format("DD/MM/YYYY")}
+              </Typography>
+              <Typography variant="body1">Total lessons: {data.course.lessons.length}</Typography>
+              <Typography variant="body1">Pass lessons: {data.passedLessons.length}</Typography>
+              <Typography variant="body1">Completed progress: {progress}%</Typography>
+            </Stack>
+          )}
           <Tooltip arrow title={progress + "%"} placement="top-end">
             <Slider
               max={100}

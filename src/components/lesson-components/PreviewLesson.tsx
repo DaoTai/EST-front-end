@@ -12,15 +12,10 @@ const PreviewLesson = ({ lesson }: { lesson: ILesson }) => {
         bgcolor: "background.paper",
         textDecoration: "none",
         color: "text.primary",
-        boxShadow: "0px 0px 4px rgba(0,0,0,.3)",
         transition: "all ease-in 0.2s",
-        ":hover": {
-          bgcolor: "rgba(0,0,0,0.1)",
-        },
-        img: {
-          borderRadius: 1,
-          objectFit: "none",
-        },
+        // ":hover": {
+        //   bgcolor: "rgba(0,0,0,0.1)",
+        // },
       }}
     >
       <Typography variant="h6">{lesson.name}</Typography>

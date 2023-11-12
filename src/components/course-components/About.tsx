@@ -12,18 +12,17 @@ import Link from "next/link";
 const About = ({ course }: { course: ICourse }) => {
   return (
     <Paper>
-      {course.thumbnail && (
-        <Image
-          src={course.thumbnail.uri}
-          alt="coure-thumbnail"
-          width={300}
-          height={150}
-          style={{
-            minHeight: "30vh",
-            width: "unset",
-          }}
-        />
-      )}
+      <Image
+        src={course.thumbnail.uri}
+        alt="coure-thumbnail"
+        width={300}
+        height={150}
+        style={{
+          minHeight: "30vh",
+          height: "100%",
+          width: "100%",
+        }}
+      />
 
       <Stack gap={1} p={1}>
         <Typography variant="h4" fontWeight={500}>

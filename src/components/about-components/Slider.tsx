@@ -23,7 +23,7 @@ const quotes: Quote[] = [
   },
   {
     title: "Self-learning",
-    content: "Education is the kindling of a flame, not the filling of a vessel",
+    content: "Education is always the best way to success",
   },
   {
     title: "Together",
@@ -96,8 +96,8 @@ const Slider = () => {
           left: "3%",
           width: "100%",
           transform: "translate(-3%, -50%)",
-          ".MuiTypography-root.MuiTypography-h1": {
-            fontSize: "5.2rem",
+          ".MuiTypography-root.MuiTypography-h2": {
+            fontSize: "4.2rem",
             letterSpacing: 2,
             textShadow: "6px 3px 12px #333",
             color: "#fff",
@@ -118,7 +118,7 @@ const Slider = () => {
         <Grid container spacing={2} rowSpacing={3} justifyContent={"center"}>
           <Grid item lg={5} md={12}>
             {quotes.map(({ title }, i) => (
-              <Typography key={i} variant="h1" textAlign="right">
+              <Typography key={i} variant="h2" textAlign="right">
                 {title}
               </Typography>
             ))}
@@ -136,11 +136,10 @@ const Slider = () => {
                     pr: 2,
                     pt: 1,
                     pb: 1,
-                    color: "#333",
-                    bgcolor: "rgba(255,255,255,0.8)",
+                    color: "#292929",
+                    bgcolor: "rgba(255,255,255,0.5)",
                     height: "fit-content",
                     borderRadius: 12,
-                    lineHeight: 1.5,
                     boxShadow: 4,
                     display: "none",
                     "&.show": {
@@ -163,9 +162,10 @@ const Slider = () => {
           sx={{
             position: "absolute",
             top: "50%",
-            left: 4,
+            left: 10,
             transform: "translateY(-50%)",
             bgcolor: "rgba(255,255,255,0.4)",
+            color: (theme) => theme.palette.white.light,
             "&:hover": {
               bgcolor: "unset",
             },
@@ -179,9 +179,10 @@ const Slider = () => {
           sx={{
             position: "absolute",
             top: "50%",
-            right: 4,
+            right: 10,
             transform: "translateY(-50%)",
             bgcolor: "rgba(255,255,255,0.4)",
+            color: (theme) => theme.palette.white.light,
             "&:hover": {
               bgcolor: "unset",
             },

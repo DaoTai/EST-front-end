@@ -77,11 +77,10 @@ export const socials: { name: string; url: string; icon: any }[] = [
 const Footer = () => {
   return (
     <>
-      <Divider />
       <Grid
         container
         boxShadow={6}
-        rowSpacing={2}
+        rowSpacing={3}
         pt={1}
         pb={4}
         sx={{
@@ -98,22 +97,22 @@ const Footer = () => {
         {/* Infomation business */}
         <Grid
           item
-          lg={3}
+          lg={4}
           md={6}
           sm={6}
           xs={12}
           display="flex"
           flexDirection={"column"}
-          gap={2}
+          gap={1}
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="underline-gradient" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             EST Edu
           </Typography>
 
           {business.map(({ name, value, icon }, i) => (
-            <Stack key={i} flexDirection={"row"} alignItems={"center"} gap={1}>
+            <Stack key={i} flexDirection={"row"} alignItems={"center"} gap={1.5}>
               {icon}
               <Typography variant="body1">
                 <b>{name} </b> {value}
@@ -125,22 +124,22 @@ const Footer = () => {
         {/* Social */}
         <Grid
           item
-          lg={3}
+          lg={4}
           md={6}
           sm={6}
           xs={12}
           display="flex"
           flexDirection={"column"}
-          gap={2}
+          gap={1}
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="underline-gradient" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             Social Media
           </Typography>
 
           {socials.map(({ name, url, icon }, i) => (
-            <Stack key={i} flexDirection={"row"} gap={1} alignItems="center">
+            <Stack key={i} flexDirection={"row"} gap={1.5} alignItems="center">
               {icon}
               <Typography variant="body1" gutterBottom>
                 <b>{name}: </b>
@@ -150,51 +149,31 @@ const Footer = () => {
           ))}
         </Grid>
 
-        {/* About */}
-        <Grid
-          item
-          lg={3}
-          md={6}
-          sm={6}
-          xs={12}
-          display="flex"
-          flexDirection={"column"}
-          gap={2}
-          p={1}
-          overflow={"hidden"}
-        >
-          <Typography variant="h4" className="underline-gradient" gutterBottom>
-            Features
-          </Typography>
-
-          {abouts.map(({ name, url, icon }, i) => (
-            <Stack key={i} flexDirection={"row"} gap={1} alignItems={"center"}>
-              {icon}
-              <Typography variant="h6" component={Link} href={url} fontWeight={700}>
-                {name}
-              </Typography>
-            </Stack>
-          ))}
-        </Grid>
-
         {/* Donate */}
         <Grid
           item
-          lg={3}
+          lg={4}
           md={6}
           sm={6}
           xs={12}
           display="flex"
           flexDirection={"column"}
-          gap={2}
+          gap={1}
           p={1}
           overflow={"hidden"}
         >
-          <Typography variant="h4" className="underline-gradient" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             Donate
           </Typography>
 
-          <Image src="/qr-donate-banking.jpg" alt="qr-bank" width={100} height={100} />
+          <Image
+            unoptimized
+            src="/qr-donate-banking.jpg"
+            alt="qr-bank"
+            width={100}
+            height={100}
+            style={{ width: "100%", height: 200, objectPosition: "left", objectFit: "contain" }}
+          />
         </Grid>
       </Grid>
     </>

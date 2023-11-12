@@ -308,6 +308,14 @@ const Courses = () => {
         <MyModal open={openDetail} onClose={() => setOpenDetail(false)}>
           <Box width={"100vw"} p={2}>
             <FormCourse course={course} type="watch" />
+            <Button
+              LinkComponent={Link}
+              href={"/teacher/course/" + course._id}
+              color="info"
+              variant="text"
+            >
+              More
+            </Button>
           </Box>
         </MyModal>
       )}

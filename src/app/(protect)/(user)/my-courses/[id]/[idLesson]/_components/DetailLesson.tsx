@@ -1,10 +1,12 @@
 "use client";
 import VideoPlayer from "@/components/custom/VideoPlayer";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import FlagIcon from "@mui/icons-material/Flag";
 import HelpIcon from "@mui/icons-material/Help";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-
+import LinkIcon from "@mui/icons-material/Link";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -16,7 +18,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import { useSession } from "next-auth/react";
-import { useMemo } from "react";
+import { SyntheticEvent, useMemo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import Question from "./Question";
 import ReportBox from "./ReportBox";
@@ -32,6 +34,7 @@ const DetailLesson = ({ idLesson }: { idLesson: string }) => {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+  const [tab, setTab] = useState<"Theory" | "References" | "Report" | "Questions">("Theory");
 
   const myReports = useMemo(() => {
     if (response?.lesson && session?._id) {
@@ -48,6 +51,13 @@ const DetailLesson = ({ idLesson }: { idLesson: string }) => {
     );
   }
 
+  const handleChangeTab = (
+    event: SyntheticEvent,
+    newValue: "Theory" | "References" | "Report" | "Questions"
+  ) => {
+    setTab(newValue);
+  };
+
   const getAnswerRecordByIdQuestion = (idQuestion: string) => {
     return response?.listAnswerRecords.find((record) => record.question._id === idQuestion);
   };
@@ -56,62 +66,69 @@ const DetailLesson = ({ idLesson }: { idLesson: string }) => {
     return (
       <>
         {response?.lesson?.video && <VideoPlayer uri={response?.lesson?.video.uri} />}
-        <Box sx={{ mt: 1, p: 1 }}>
-          {/* Name lesson */}
-          <Typography gutterBottom variant="h6" fontWeight={600}>
-            {response?.lesson.name}
-          </Typography>
-
-          {/* About theory and refs */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography
-                variant="body1"
-                fontWeight={600}
-                display={"flex"}
-                alignItems={"start"}
-                gap={2}
-              >
-                <LibraryBooksIcon /> Theory & References
+        <Box pr={1} pl={1}>
+          <Box mb={1} sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Tabs
+              value={tab}
+              onChange={handleChangeTab}
+              variant="scrollable"
+              scrollButtons
+              allowScrollButtonsMobile
+            >
+              <Tab
+                value="Theory"
+                label={"Theory"}
+                icon={<LibraryBooksIcon />}
+                iconPosition="start"
+              />
+              <Tab value="References" label="References" icon={<LinkIcon />} iconPosition="start" />
+              <Tab value="Questions" label="Questions" icon={<HelpIcon />} iconPosition="start" />
+              <Tab value="Report" label="Report" icon={<FlagIcon />} iconPosition="start" />
+            </Tabs>
+          </Box>
+          {/* Theory */}
+          {tab === "Theory" && (
+            <Box>
+              <Typography gutterBottom variant="h6" fontWeight={600}>
+                {response?.lesson.name}
               </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box p={1}>
-                <Typography variant="h6" gutterBottom>
-                  Theory
-                </Typography>
-                <Typography variant="body1" textAlign={"justify"}>
-                  {response?.lesson?.theory}
-                </Typography>
-                <Divider />
-                <Typography variant="h6">References</Typography>
-                <Stack gap={1}>
-                  {response?.lesson?.references.map((ref, i) => (
-                    <Typography key={i} href={ref} component={Link} target="_blank" variant="body1">
+              <Typography variant="body1" textAlign={"justify"}>
+                {response?.lesson?.theory}
+              </Typography>
+            </Box>
+          )}
+
+          {/* References */}
+          {tab === "References" && (
+            <Stack component={"ul"} gap={2} pl={0}>
+              {response?.lesson?.references.length > 0 ? (
+                response?.lesson?.references.map((ref, i) => (
+                  <Typography
+                    key={i}
+                    component={"span"}
+                    variant="body1"
+                    width={"fit-content"}
+                    display={"flex"}
+                    gap={1}
+                  >
+                    {i + 1}.
+                    <Link href={ref} target="_blank">
                       {ref}
-                    </Typography>
-                  ))}
-                </Stack>
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+                    </Link>
+                  </Typography>
+                ))
+              ) : (
+                <Typography variant="body1" textAlign={"center"}>
+                  No reference
+                </Typography>
+              )}
+            </Stack>
+          )}
 
-          {/* About questions */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography
-                variant="body1"
-                fontWeight={600}
-                display={"flex"}
-                alignItems={"start"}
-                gap={2}
-              >
-                <HelpIcon /> Questions
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack gap={1}>
-                {response?.lesson?.questions.map((question, index) => {
+          {tab === "Questions" && (
+            <Stack gap={1}>
+              {response?.lesson?.questions.length > 0 ? (
+                response?.lesson?.questions.map((question, index) => {
                   const isCompleted = response.listAnswerRecords.some(
                     (record) => record.question._id === question._id
                   );
@@ -134,13 +151,16 @@ const DetailLesson = ({ idLesson }: { idLesson: string }) => {
                       </Paper>
                     );
                   }
-                })}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
+                })
+              ) : (
+                <Typography variant="body1" textAlign={"center"}>
+                  No question
+                </Typography>
+              )}
+            </Stack>
+          )}
 
-          {/* Report */}
-          <ReportBox idLesson={response.lesson._id} reports={myReports} />
+          {tab === "Report" && <ReportBox idLesson={response.lesson._id} reports={myReports} />}
         </Box>
       </>
     );

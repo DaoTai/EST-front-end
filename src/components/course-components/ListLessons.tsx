@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import Spinner from "@/components/custom/Spinner";
 import MyDialog from "@/components/custom/Dialog";
 import PreviewLesson from "../lesson-components/PreviewLesson";
+import { Chip } from "@mui/material";
 
 const fetcher: Fetcher<{ listLessons: ILesson[]; maxPage: number }, string> = (url: string) =>
   fetch(url).then((res) => res.json());
@@ -38,6 +39,8 @@ const ListLessons = () => {
       revalidateIfStale: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
+        console.log("data: ", data);
+
         maxPageRef.current = data.maxPage;
       },
     }
@@ -90,13 +93,41 @@ const ListLessons = () => {
     <>
       <Stack gap={2}>
         {data.listLessons.map((lesson, i) => (
-          <Stack key={lesson._id} flexDirection={"row"} alignItems={"center"} width={"100%"}>
+          <Stack
+            key={lesson._id}
+            borderBottom={1}
+            flexDirection={"row"}
+            alignItems={"center"}
+            width={"100%"}
+            sx={{ borderColor: "divider" }}
+          >
             <Typography variant="body2" minWidth={20}>
               {i + 1}
             </Typography>
-            <Box flexGrow={2} component={Link} href={"/teacher/lessons/" + lesson._id}>
-              <PreviewLesson lesson={lesson} />
-            </Box>
+            <Stack
+              flexDirection={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              flexWrap={"wrap"}
+              component={Link}
+              flexGrow={2}
+              pb={1}
+              href={"/teacher/lessons/" + lesson._id}
+            >
+              <Box flexGrow={2}>
+                <PreviewLesson lesson={lesson} />
+              </Box>
+              <Stack flexDirection={"row"} gap={1}>
+                {lesson.reports.length > 0 && (
+                  <Chip size="small" label={lesson.reports.length + " reports"} />
+                )}
+                <Chip
+                  size="small"
+                  label={lesson.isLaunching ? "Launched" : "Unlaunched"}
+                  color={lesson.isLaunching ? "success" : "warning"}
+                />
+              </Stack>
+            </Stack>
             <Tooltip arrow title="Delete lesson">
               <IconButton color="error" sx={{ ml: 1 }} onClick={() => onSelectLesson(lesson)}>
                 <DeleteForeverIcon color="error" />

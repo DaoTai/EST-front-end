@@ -60,8 +60,7 @@ const theme = extendTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          fontSize: 17,
-          padding: 8,
+          fontSize: 16,
           textTransform: "initial",
         },
       },
