@@ -34,6 +34,7 @@ import MyDialog from "@/components/custom/Dialog";
 import MyModal from "@/components/custom/Modal";
 import Spinner from "@/components/custom/Spinner";
 import useDebounce from "@/hooks/useDebounce";
+import { Divider } from "@mui/material";
 
 type Response = {
   courses: ICourse[];
@@ -61,7 +62,7 @@ const Courses = () => {
     `/api/admin/courses?page=${page}&status=${status}&name=${nameSearch}`,
     fetcher,
     {
-      revalidateIfStale: true,
+      revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
@@ -88,8 +89,23 @@ const Courses = () => {
         field: "lessons",
         headerName: "Lessons",
         width: 80,
+        textAlign: "center",
         renderCell: (params) => {
-          return <Typography variant="body1">{params.row.lessons.length}</Typography>;
+          return (
+            <Typography
+              component={Link}
+              href={"/admin/lessons/" + params.row._id}
+              variant="body1"
+              textAlign={"center"}
+              width={"100%"}
+              sx={{
+                color: (theme) => theme.palette.info.main + "!important",
+                textDecoration: "underline",
+              }}
+            >
+              {params.row.lessons.length}
+            </Typography>
+          );
         },
       },
       {
@@ -131,7 +147,7 @@ const Courses = () => {
         headerName: "Actions",
         filterable: false,
         sortable: false,
-        flex: 1,
+        width: 200,
         renderCell: (params) => {
           const course: ICourse = params.row;
           return (
@@ -265,22 +281,24 @@ const Courses = () => {
         </Grid>
 
         {/* Table */}
-        <Box width={"100%"} overflow={"auto"}>
+        <Box>
           <Typography variant="body2" gutterBottom>
             Total courses: {data?.total}
           </Typography>
-          <DataGrid
-            autoHeight
-            checkboxSelection
-            disableRowSelectionOnClick
-            hideFooter
-            getRowId={(row) => row._id}
-            loading={isLoading}
-            rows={data?.courses ?? []}
-            columns={columns}
-            rowCount={data?.total}
-            onRowSelectionModelChange={(newSelectionModel) => setListIdCourse(newSelectionModel)}
-          />
+          <div style={{ width: "100%", overflowX: "auto" }}>
+            <DataGrid
+              autoHeight
+              checkboxSelection
+              disableRowSelectionOnClick
+              hideFooter
+              getRowId={(row) => row._id}
+              loading={isLoading}
+              rows={data?.courses ?? []}
+              columns={columns}
+              rowCount={data?.total}
+              onRowSelectionModelChange={(newSelectionModel) => setListIdCourse(newSelectionModel)}
+            />
+          </div>
         </Box>
         {/* Controls */}
         <Stack mt={2} flexDirection={"row"} alignItems={"center"} justifyContent={"center"}>
@@ -308,14 +326,7 @@ const Courses = () => {
         <MyModal open={openDetail} onClose={() => setOpenDetail(false)}>
           <Box width={"100vw"} p={2}>
             <FormCourse course={course} type="watch" />
-            <Button
-              LinkComponent={Link}
-              href={"/teacher/course/" + course._id}
-              color="info"
-              variant="text"
-            >
-              More
-            </Button>
+            <Divider />
           </Box>
         </MyModal>
       )}

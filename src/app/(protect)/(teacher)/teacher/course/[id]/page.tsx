@@ -5,7 +5,7 @@ import serverAxios from "@/config/axios";
 import { redirect } from "next/navigation";
 import About from "@/components/course-components/About";
 import CreateLesson from "@/components/lesson-components/CreateLesson";
-import ListLessons from "@/components/course-components/ListLessons";
+import ListLessons from "@/components/lesson-components/ListLessons";
 import { Suspense } from "react";
 
 const getCourseById = async (id: string): Promise<ICourse | undefined> => {
@@ -33,7 +33,7 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
               </Typography>
             </Divider>
             <Suspense fallback="Loading lessons ...">
-              <ListLessons />
+              <ListLessons idCourse={params.id} />
             </Suspense>
           </Grid>
         </Grid>

@@ -29,9 +29,10 @@ import { Stack } from "@mui/material";
 type Props = {
   questions: IQuestion[];
   setListQuestion: Dispatch<SetStateAction<IQuestion[]>>;
+  readOnly?: boolean;
 };
 
-const TableQuestions = ({ questions = [], setListQuestion }: Props) => {
+const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: Props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [question, setQuestion] = useState<IQuestion | null>(null);
@@ -110,14 +111,10 @@ const TableQuestions = ({ questions = [], setListQuestion }: Props) => {
               <TableCell>Order</TableCell>
               <TableCell>Content</TableCell>
               <TableCell>Category</TableCell>
-              {!isMobile && (
-                <>
-                  <TableCell>Answers</TableCell>
-                  <TableCell>Correct answers</TableCell>
-                  <TableCell>Expired time</TableCell>
-                </>
-              )}
-              <TableCell>Actions</TableCell>
+              <TableCell>Answers</TableCell>
+              <TableCell>Correct answers</TableCell>
+              <TableCell>Expired time</TableCell>
+              {!readOnly && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -145,50 +142,53 @@ const TableQuestions = ({ questions = [], setListQuestion }: Props) => {
                   </Typography>
                 </TableCell>
                 <TableCell>{question.category}</TableCell>
-                {!isMobile && (
-                  <>
-                    <TableCell>
-                      {question.answers?.map((ans, i) => (
-                        <Typography
-                          key={i}
-                          className="cell"
-                          variant="subtitle2"
-                          gutterBottom
-                          fontWeight={400}
-                        >
-                          - {ans}
+
+                <>
+                  <TableCell>
+                    {question.answers?.map((ans, i) => (
+                      <Typography
+                        key={i}
+                        className="cell"
+                        variant="subtitle2"
+                        gutterBottom
+                        fontWeight={400}
+                      >
+                        - {ans}
+                      </Typography>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {question.correctAnswers?.map((ans, i) => (
+                      <Stack key={i} flexDirection={"row"} alignItems={"center"} gap={1}>
+                        <CheckIcon color="success" />
+                        <Typography className="cell" variant="subtitle2" fontWeight={400}>
+                          {ans}
                         </Typography>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {question.correctAnswers?.map((ans, i) => (
-                        <Stack key={i} flexDirection={"row"} alignItems={"center"} gap={1}>
-                          <CheckIcon color="success" />
-                          <Typography className="cell" variant="subtitle2" fontWeight={400}>
-                            {ans}
-                          </Typography>
-                        </Stack>
-                      ))}
-                    </TableCell>
-                    <TableCell>
-                      {question?.expiredTime
-                        ? dayjs(question.expiredTime).format("MM/DD/YYYY h:mm A")
-                        : "No date"}
-                    </TableCell>
-                  </>
+                      </Stack>
+                    ))}
+                  </TableCell>
+                  <TableCell>
+                    {question?.expiredTime
+                      ? dayjs(question.expiredTime).format("MM/DD/YYYY h:mm A")
+                      : "No date"}
+                  </TableCell>
+                </>
+
+                {/* Actions */}
+                {!readOnly && (
+                  <TableCell>
+                    <Tooltip arrow title="Edit">
+                      <IconButton color="info" onClick={() => onOpenForm(question)}>
+                        <EditIcon color="info" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip arrow title="Delete">
+                      <IconButton color="error" onClick={() => onOpenDialog(question)}>
+                        <DeleteIcon color="error" />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
                 )}
-                <TableCell>
-                  <Tooltip arrow title="Edit">
-                    <IconButton color="info" onClick={() => onOpenForm(question)}>
-                      <EditIcon color="info" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip arrow title="Delete">
-                    <IconButton color="error" onClick={() => onOpenDialog(question)}>
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>

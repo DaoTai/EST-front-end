@@ -1,8 +1,7 @@
-import React from "react";
+import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Link from "next/link";
 import { getServerSession } from "next-auth";
+import Link from "next/link";
 import { options } from "@/config/next-auth";
 const MenuNavigation = async () => {
   const session = await getServerSession(options);
@@ -11,16 +10,13 @@ const MenuNavigation = async () => {
       flexDirection={"row"}
       mt={2}
       pb={1}
-      pt={1}
+      gap={1}
+      justifyContent={"end"}
       sx={{
         a: {
           display: "block",
-          p: 2,
-          pt: 1,
-          pb: 1,
-          borderRadius: 1,
-          border: 1,
-          borderColor: "white.main",
+          pl: 2,
+          pr: 2,
           bgcolor: "rgba(0,0,0,0.1)",
           ":hover": {
             bgcolor: "mainBlue.main",
@@ -28,17 +24,17 @@ const MenuNavigation = async () => {
         },
       }}
     >
-      <Box component={Link} href="/profile/edit">
+      <Button variant="text" LinkComponent={Link} href="/profile/edit">
         Edit
-      </Box>
+      </Button>
       {!session?.provider && (
-        <Box component={Link} href="/profile/change-password">
+        <Button variant="text" LinkComponent={Link} href="/profile/change-password">
           Password
-        </Box>
+        </Button>
       )}
-      <Box component={Link} href="/profile">
-        Blog
-      </Box>
+      <Button variant="text" LinkComponent={Link} href="/profile/cv">
+        CV
+      </Button>
     </Stack>
   );
 };

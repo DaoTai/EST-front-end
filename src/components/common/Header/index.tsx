@@ -21,7 +21,7 @@ const Header = () => {
           <Logo />
           <Title />
         </Stack>
-        <SearchBar />
+        {/* <SearchBar /> */}
 
         <Actions />
       </Toolbar>

@@ -29,6 +29,7 @@ import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
 import AboutCourse from "./AboutCourse";
 import { selectFields, textFields } from "./_fields";
+import TextEditor from "../custom/TextEditor";
 interface IPropsFormCourse {
   type: "create" | "edit" | "watch";
   course?: ICourse;
@@ -43,6 +44,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
     touched,
     isSubmitting,
     setValues,
+    setFieldValue,
     handleBlur,
     handleChange,
     handleSubmit,
@@ -136,8 +138,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
     thumbnailInputRef.current!.value = "";
   };
 
-  // On change fiel roadmap
-
+  // On change field roadmap
   const onChangeRoadmap = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) setRoadmap(file);
@@ -161,6 +162,10 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
     }
   };
 
+  // On change intro
+  const handleChangeIntro = (value: string) => {
+    setFieldValue("intro", value);
+  };
   // Message for open date
   const errorOpenDateMessage = useMemo(() => {
     switch (errorOpenDate) {
@@ -390,25 +395,24 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
 
         {/* Intro */}
         <Grid item md={12} xs={12}>
-          <FormControl fullWidth>
-            <TextField
-              multiline
-              fullWidth
-              name="intro"
-              margin="dense"
-              variant="outlined"
-              placeholder="Introduce course"
-              spellCheck={false}
-              minRows={5}
-              InputProps={{ readOnly: type === "watch" }}
-              value={values.intro || ""}
-              error={!!(touched.intro && errors.intro)}
-              helperText={touched.intro && errors.intro}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              onKeyDown={(e) => e.stopPropagation()}
-            />
-          </FormControl>
+          {type === "watch" ? (
+            <Typography
+              variant="body1"
+              dangerouslySetInnerHTML={{ __html: values.intro }}
+            ></Typography>
+          ) : (
+            <FormControl fullWidth>
+              <TextEditor
+                placeholder="Introduce about course"
+                value={values.intro || ""}
+                onChange={handleChangeIntro}
+              />
+
+              <FormHelperText sx={{ color: "error.main" }}>
+                {touched.intro && errors.intro}
+              </FormHelperText>
+            </FormControl>
+          )}
         </Grid>
 
         {type !== "watch" && (

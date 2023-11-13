@@ -74,9 +74,10 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   Created time: {dayjs(detail.createdAt).format("DD/MM/YYYY")}
                 </Typography>
-                <Typography variant="body1" gutterBottom textAlign={"justify"}>
-                  {detail.intro}
-                </Typography>
+                <Typography
+                  variant="body1"
+                  dangerouslySetInnerHTML={{ __html: detail.intro }}
+                ></Typography>
                 <Divider />
                 <Typography variant="subtitle1" gutterBottom>
                   <b>{detail.lessons.length}</b> lessons

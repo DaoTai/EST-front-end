@@ -2,7 +2,7 @@
 import { IFormCourse } from "@/types/ICourse";
 import { convertObjectToFormData } from "@/utils/functions";
 import Container from "@mui/material/Container";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
@@ -19,11 +19,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
   // Chưa revalidate
   const getCourseById = async (id: string) => {
     try {
-      const res = await fetch("/api/teacher/courses/" + id, {
-        next: {
-          tags: ["item"],
-        },
-      });
+      const res = await fetch("/api/teacher/courses/" + id);
 
       if (res.ok) return await res.json();
 
@@ -38,10 +34,9 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
         method: "PATCH",
         body: formData,
       });
+
       toast.success("Edited course successfully");
     } catch (error) {
-      console.log("error: ", error);
-
       toast.error("Edit course failed");
     }
   }, []);

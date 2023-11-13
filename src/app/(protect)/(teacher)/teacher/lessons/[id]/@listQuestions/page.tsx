@@ -1,17 +1,17 @@
 "use client";
 
-import MyModal from "@/components/custom/Modal";
-import FormQuestion from "@/components/question-components/FormQuestion";
-import TableQuestions from "@/components/question-components/TableQuestions";
 import HelpIcon from "@mui/icons-material/Help";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import MyModal from "@/components/custom/Modal";
+import FormQuestion from "@/components/question-components/FormQuestion";
+import TableQuestions from "@/components/question-components/TableQuestions";
 const ListQuestions = ({ params }: { params: { id: string } }) => {
   const [openFormQuestion, setFormQuestion] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,7 +43,12 @@ const ListQuestions = ({ params }: { params: { id: string } }) => {
         setFormQuestion(false);
         toast.success("Create question successfully");
       } catch (error) {
-        toast.error("Create question failed");
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 403) {
+            toast.error(error.response.data);
+          }
+          toast.error("Create question failed");
+        }
       }
     },
     []

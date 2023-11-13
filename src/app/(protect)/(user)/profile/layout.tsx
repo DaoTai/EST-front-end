@@ -1,3 +1,4 @@
+"use client";
 import MainLayout from "@/components/common/MainLayout";
 import Box from "@mui/material/Box";
 import React, { Suspense } from "react";

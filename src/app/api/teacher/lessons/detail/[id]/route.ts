@@ -23,8 +23,6 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
   try {
     const id = params.id;
     const body = await req.formData();
-    console.log("body: ", body);
-
     const res = await serverAxios.patch("/lessons/detail/" + id, body, {
       headers: {
         "Content-Type": "multipart/form-data",

@@ -16,13 +16,15 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 
 import SendIcon from "@mui/icons-material/Send";
 import { useFormik } from "formik";
-import { ChangeEvent, memo, useEffect, useState } from "react";
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 
 import MyDialog from "@/components/custom/Dialog";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import { IFormLesson } from "@/types/ILesson";
 import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
+import { FormControl, FormHelperText } from "@mui/material";
+import TextEditor from "../custom/TextEditor";
 
 type Props = {
   type: "create" | "edit" | "watch";
@@ -47,8 +49,6 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     initialValues: initFormLesson,
     validationSchema: FormLessonSchema,
     onSubmit: async (values) => {
-      console.log("values: ", values);
-
       video
         ? await onSubmit?.({
             ...values,
@@ -83,6 +83,14 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
   const onToggleLanching = (event: ChangeEvent<HTMLInputElement>) => {
     setFieldValue("isLaunching", event.target.checked);
   };
+
+  // On change theory
+  const onChangeTheory = useCallback(
+    (value: string) => {
+      setFieldValue("theory", value);
+    },
+    [values.theory]
+  );
 
   // Add references
   const addReference = () => {
@@ -125,7 +133,12 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
         <Grid item xs={12}>
           <FormControlLabel
             control={
-              <Switch name="isLaunching" checked={values.isLaunching} onChange={onToggleLanching} />
+              <Switch
+                name="isLaunching"
+                disabled={type === "watch"}
+                checked={values.isLaunching}
+                onChange={onToggleLanching}
+              />
             }
             label="Launch"
           />
@@ -136,11 +149,14 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
             fullWidth
             name="name"
             label="Name"
+            InputProps={{
+              readOnly: type === "watch",
+            }}
             value={values.name}
-            onChange={handleChange}
-            onBlur={handleBlur}
             error={!!(touched.name && errors.name)}
             helperText={touched.name && errors.name}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
         </Grid>
 
@@ -150,11 +166,14 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
               fullWidth
               label="Reference links"
               name="references"
+              InputProps={{
+                readOnly: type === "watch",
+              }}
               value={reference}
-              onChange={(e) => setReference(e.target.value.trim())}
-              onBlur={handleBlur}
               error={!!(touched.references && errors.references)}
               helperText={touched.references && errors.references}
+              onChange={(e) => setReference(e.target.value.trim())}
+              onBlur={handleBlur}
             />
             <IconButton size="small" className="bg-gradient" onClick={addReference}>
               <AddIcon />
@@ -171,6 +190,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
                   component="a"
                   href={ref}
                   target="_blank"
+                  disabled={type === "watch"}
                   onDelete={(e) => removeReference(e, ref)}
                 />
               ))}
@@ -179,37 +199,42 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
         </Grid>
 
         <Grid item md={12} xs={12}>
-          <TextField
-            required
-            fullWidth
-            multiline
-            minRows={5}
-            spellCheck={false}
-            placeholder="Enter theory about lesson"
-            name="theory"
-            label="Theory"
-            value={values.theory}
-            error={!!(touched.theory && errors.theory)}
-            helperText={touched.theory && errors.theory}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
+          {type === "watch" ? (
+            <Typography
+              variant="body1"
+              dangerouslySetInnerHTML={{ __html: values.theory }}
+            ></Typography>
+          ) : (
+            <FormControl
+              fullWidth
+              sx={{
+                ".ql-editor": {
+                  minHeight: "30vh",
+                },
+              }}
+            >
+              <TextEditor value={values.theory} onChange={onChangeTheory} />
+              <FormHelperText>{touched.theory && errors.theory}</FormHelperText>
+            </FormControl>
+          )}
         </Grid>
-        <Grid item md={6} xs={12}>
-          <Button
-            size="small"
-            color="info"
-            component="label"
-            variant="contained"
-            startIcon={<FileUploadIcon />}
-          >
-            {type === "create" ? "Upload" : "Change"} video
-            <VisuallyHiddenInput type="file" onChange={handleUploadVideo} />
-          </Button>
-          <Typography variant="caption" display={"block"}>
-            {video && video.name}
-          </Typography>
-        </Grid>
+        {type !== "watch" && (
+          <Grid item md={6} xs={12}>
+            <Button
+              size="small"
+              color="info"
+              component="label"
+              variant="contained"
+              startIcon={<FileUploadIcon />}
+            >
+              Upload video
+              <VisuallyHiddenInput type="file" onChange={handleUploadVideo} />
+            </Button>
+            <Typography variant="caption" display={"block"}>
+              {video && video.name}
+            </Typography>
+          </Grid>
+        )}
 
         <Grid item xs={12} mt={1} display={"flex"} justifyContent={"end"}>
           {type === "create" && (

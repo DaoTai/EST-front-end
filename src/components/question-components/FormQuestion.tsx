@@ -46,7 +46,7 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
       if (values.expiredTime) {
         values.expiredTime = dayjs(values.expiredTime).format();
       }
-      onSubmit(values);
+      await onSubmit(values);
       if (type === "create") {
         resetForm();
       }
@@ -62,6 +62,8 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
     if (values.category === "code") {
       setFieldValue("correctAnswers", []);
       setFieldValue("answers", []);
+    } else {
+      setFieldValue("expiredTime", null);
     }
   }, [values.category]);
 
@@ -200,10 +202,12 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
             <DateTimePicker
               label="Expire time"
               value={values.expiredTime || null}
+              disabled={values.category !== "code"}
               slotProps={{
                 textField: {
                   InputProps: {
                     name: "expiredTime",
+                    disabled: values.category !== "code",
                   },
                 },
               }}
@@ -384,13 +388,13 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
 
         <Grid item md={12} xs={12}>
           <Stack>
-            <Typography variant="caption">
-              * Catgory is <b>code</b>, no answer
+            <Typography variant="subtitle2" fontWeight={400}>
+              * Catgory is <b>code</b>, no answer and won't be created if course is <b>public</b>
             </Typography>
-            <Typography variant="caption">
+            <Typography variant="subtitle2" fontWeight={400}>
               * Catgory is <b>choice</b>, you only have one correct anwer
             </Typography>
-            <Typography variant="caption">
+            <Typography variant="subtitle2" fontWeight={400}>
               * Catgory is <b>multiple choice</b>, you must have at least two correct anwers
             </Typography>
           </Stack>

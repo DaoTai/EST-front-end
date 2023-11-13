@@ -27,9 +27,6 @@ const RegisteredCourses = () => {
     if (listCourses.length > 0) {
       return (
         <>
-          <Typography variant="h4" textAlign={"center"} gutterBottom>
-            Registered courses
-          </Typography>
           <Grid container spacing={3}>
             {listCourses.map((course) => (
               <Grid item key={course._id} md={4} xs={6}>

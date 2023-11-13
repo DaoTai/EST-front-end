@@ -92,9 +92,14 @@ const DetailLesson = ({ idLesson }: { idLesson: string }) => {
               <Typography gutterBottom variant="h6" fontWeight={600}>
                 {response?.lesson.name}
               </Typography>
-              <Typography variant="body1" textAlign={"justify"}>
-                {response?.lesson?.theory}
-              </Typography>
+              <Divider />
+              <Typography
+                variant="body1"
+                textAlign={"justify"}
+                dangerouslySetInnerHTML={{
+                  __html: response?.lesson.theory,
+                }}
+              ></Typography>
             </Box>
           )}
 

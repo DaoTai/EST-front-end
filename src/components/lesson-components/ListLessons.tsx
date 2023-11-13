@@ -1,29 +1,30 @@
 "use client";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
 
 import axios from "axios";
 import Link from "next/link";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useRef, useState } from "react";
-import useSWR, { Fetcher, mutate } from "swr";
 import { toast } from "react-toastify";
+import useSWR, { Fetcher, mutate } from "swr";
 
-import Spinner from "@/components/custom/Spinner";
 import MyDialog from "@/components/custom/Dialog";
-import PreviewLesson from "../lesson-components/PreviewLesson";
-import { Chip } from "@mui/material";
+import Spinner from "@/components/custom/Spinner";
+import PreviewLesson from "./PreviewLesson";
+
+type IProps = { idCourse: string; preHrefLesson?: string };
 
 const fetcher: Fetcher<{ listLessons: ILesson[]; maxPage: number }, string> = (url: string) =>
   fetch(url).then((res) => res.json());
 
-const ListLessons = () => {
-  const params = useParams();
+const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) => {
   const path = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -32,15 +33,13 @@ const ListLessons = () => {
   const maxPageRef = useRef<number>(1);
 
   const { data, isLoading, error } = useSWR(
-    `/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`,
+    `/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`,
     fetcher,
     {
       revalidateOnFocus: false,
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        console.log("data: ", data);
-
         maxPageRef.current = data.maxPage;
       },
     }
@@ -66,7 +65,7 @@ const ListLessons = () => {
   const handleDeleteLesson = useCallback(async () => {
     try {
       await axios.delete("/api/teacher/lessons/detail/" + lesson?._id);
-      mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
+      mutate(`/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`);
       toast.success("Delete lesson " + lesson?.name + " successfully");
     } catch (error) {
       toast.error("Delete lesson " + lesson?.name + " failed");
@@ -112,7 +111,7 @@ const ListLessons = () => {
               component={Link}
               flexGrow={2}
               pb={1}
-              href={"/teacher/lessons/" + lesson._id}
+              href={preHrefLesson + lesson._id}
             >
               <Box flexGrow={2}>
                 <PreviewLesson lesson={lesson} />
