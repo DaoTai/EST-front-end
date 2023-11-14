@@ -21,6 +21,7 @@ export const initFormCourse = {
   intro: "",
   level: "all",
   type: "public",
+  programmingLanguages: [] as string[],
 };
 
 export const initFormLesson = {

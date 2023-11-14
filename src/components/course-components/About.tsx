@@ -18,8 +18,8 @@ const About = ({ course }: { course: ICourse }) => {
         width={300}
         height={150}
         style={{
-          minHeight: "30vh",
           height: "100%",
+          maxHeight: "40vh",
           width: "100%",
         }}
       />

@@ -1,9 +1,10 @@
 "use client";
-import { fetcherLessons } from "@/app/(protect)/(teacher)/teacher/lessons/[id]/page";
+
 import BoxComments from "@/components/comment-components/BoxComment";
 import Spinner from "@/components/custom/Spinner";
 import VideoPlayer from "@/components/custom/VideoPlayer";
 import FormLesson from "@/components/lesson-components/FormLesson";
+import { fetcherLessons } from "@/utils/functions";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";

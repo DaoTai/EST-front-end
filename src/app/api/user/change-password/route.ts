@@ -1,10 +1,19 @@
 import axios from "@/config/axios";
-import { NextRequest } from "next/server";
+import { AxiosError } from "axios";
+import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = async (req: NextRequest) => {
-  const body = await req.json();
-  const res = await axios.patch("/user/change-password", body);
-  return Response.json(res.data, {
-    status: res.status,
-  });
+  try {
+    const body = await req.json();
+    const res = await axios.patch("/user/change-password", body);
+    return NextResponse.json(res.data, {
+      status: res.status,
+    });
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
+  }
 };

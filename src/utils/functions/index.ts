@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { Fetcher } from "swr";
 
 // Cài đặt plugin relativeTime
 dayjs.extend(relativeTime);
@@ -49,3 +50,5 @@ export const getDistanceTimeToNow = (timestamp: string) => {
     return time.format("DD/MM/YYYY"); // Hiển thị ngày tháng năm
   }
 };
+export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
+  fetch(url).then((res) => res.json());

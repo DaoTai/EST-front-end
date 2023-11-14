@@ -10,11 +10,11 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { convertObjectToFormData } from "@/utils/functions";
+import { convertObjectToFormData, fetcherLessons } from "@/utils/functions";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
-import useSWR, { Fetcher, mutate as mutateSWR } from "swr";
+import useSWR, { mutate as mutateSWR } from "swr";
 
 import BoxComments from "@/components/comment-components/BoxComment";
 import Spinner from "@/components/custom/Spinner";
@@ -22,9 +22,6 @@ import VideoPlayer from "@/components/custom/VideoPlayer";
 import FormLesson from "@/components/lesson-components/FormLesson";
 import { IFormLesson } from "@/types/ILesson";
 import dayjs from "dayjs";
-
-export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
-  fetch(url).then((res) => res.json());
 
 const Lesson = ({ params }: { params: { id: string } }) => {
   const router = useRouter();

@@ -41,7 +41,7 @@ const ListFavProgrammingLanguages = ({
 
   return (
     <FormControl fullWidth>
-      <FormLabel>Love programming value</FormLabel>
+      <FormLabel>Love programming languages</FormLabel>
       {value.length > 0 && (
         <Stack flexDirection="row" mt={1} gap={2} flexWrap={"wrap"}>
           {value?.map((lang, i) => (
@@ -56,9 +56,7 @@ const ListFavProgrammingLanguages = ({
       )}
 
       <Accordion sx={{ ml: "auto", mt: 2 }}>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="body2">Options</Typography>
-        </AccordionSummary>
+        <AccordionSummary expandIcon={<AddIcon />}></AccordionSummary>
         <AccordionDetails>
           <Stack flexDirection="row" alignItems="center" gap={1}>
             <TextField

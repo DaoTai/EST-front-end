@@ -1,6 +1,6 @@
 "use client";
 import MyList from "@/components/custom/MyList";
-import LaptopChromebookIcon from "@mui/icons-material/LaptopChromebook";
+import FlareIcon from "@mui/icons-material/Flare";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -70,6 +70,13 @@ const Actions = () => {
       <>
         <Stack flexDirection={"row"} gap={1.5} alignItems={"center"}>
           {!isMobile && <ToggleModeTheme />}
+
+          {/* Self-training */}
+          <Link href="/self-training">
+            <IconButton>
+              <FlareIcon color="success" />
+            </IconButton>
+          </Link>
 
           {/* Mine courses */}
           <MyCourses />

@@ -18,4 +18,7 @@ export const FormCourseSchema = Yup.object().shape({
     .default("all"),
   intro: Yup.string().default("").trim(),
   type: Yup.string().oneOf(["public", "private"], MessageValidation.typeCourse).default("public"),
+  programmingLanguages: Yup.array().of(
+    Yup.string().trim().min(1, minCharacterValidator("programming language", 1))
+  ),
 });

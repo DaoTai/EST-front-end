@@ -13,7 +13,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ProviderButtons from "../_components/ProviderAuthButtons";
-import { signIn as signInAxios } from "@/services/auth";
 const SignIn = () => {
   const router = useRouter();
   const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({

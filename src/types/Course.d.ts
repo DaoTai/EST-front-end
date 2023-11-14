@@ -12,6 +12,7 @@ interface ICourse {
   updatedAt: string;
   members: any[];
   lessons: Lesson[];
+  programmingLanguages: string[];
   intro: string;
   thumbnail: IAttachment;
   openDate?: string;

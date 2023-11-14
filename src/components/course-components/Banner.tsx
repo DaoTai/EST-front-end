@@ -79,14 +79,17 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           )}
 
           {mode === "visitor" && (
-            <Typography variant="subtitle1" gutterBottom sx={{ mt: 1, mb: 1 }}>
-              Teacher: <b style={{ marginLeft: 4 }}>{course.createdBy.username}</b>
-            </Typography>
+            <Typography variant="subtitle1">Teacher: {course.createdBy.username}</Typography>
           )}
+          <Typography variant="body1" gutterBottom>
+            Level: {course.level}
+          </Typography>
 
           <Box display={"flex"} gap={1} mb={1}>
-            <Chip label={course.level} size="small" color="info" />
             <Chip label={course.category} size="small" color="info" />
+            {course.programmingLanguages.map((lang, i) => (
+              <Chip key={i} label={lang} size="small" color="info" />
+            ))}
           </Box>
 
           {mode === "visitor" && course.type === "private" && (

@@ -68,8 +68,16 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
                 <Chip label={register?.course.category} />
               </Box>
             </Tooltip>
+
             <Chip label={register?.course.members.length + " members"} className="bg-gradient" />
             <Chip label={register?.course.lessons.length + " lessons"} className="bg-gradient" />
+          </Stack>
+
+          <Stack mt={1} flexDirection={"row"} alignItems={"end"} gap={1}>
+            <Typography variant="body1">Programming languages: </Typography>
+            {register?.course.programmingLanguages.map((lang, i) => (
+              <Chip key={i} label={lang} />
+            ))}
           </Stack>
 
           {/* About lesson */}
@@ -84,7 +92,7 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
                 : register!.course.lessons[0])
             }
             endIcon={<ForwardIcon />}
-            sx={{ bgcolor: (theme) => theme.palette.mainBlue.main }}
+            sx={{ mt: 1, bgcolor: (theme) => theme.palette.mainBlue.main }}
           >
             Learn
           </Button>
@@ -97,7 +105,7 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
           alt="thumbnail"
           width={200}
           height={200}
-          style={{ borderRadius: 12, maxWidth: "100%" }}
+          style={{ borderRadius: 12, width: "100%", objectFit: "contain" }}
         />
         <Typography
           variant="body1"

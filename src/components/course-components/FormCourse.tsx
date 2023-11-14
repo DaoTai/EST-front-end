@@ -30,6 +30,8 @@ import { FormCourseSchema } from "@/utils/validation/course";
 import AboutCourse from "./AboutCourse";
 import { selectFields, textFields } from "./_fields";
 import TextEditor from "../custom/TextEditor";
+import Add from "@mui/icons-material/Add";
+import { Chip, Stack } from "@mui/material";
 interface IPropsFormCourse {
   type: "create" | "edit" | "watch";
   course?: ICourse;
@@ -91,7 +93,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
       }
     },
   });
-
+  const [programmingLang, setProgramingLang] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<{ file: File | null; preview: string }>();
   const [roadmap, setRoadmap] = useState<File | null>();
   const [openDate, setOpenDate] = useState<string | null | dayjs.Dayjs>(null);
@@ -162,6 +164,22 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
     }
   };
 
+  // Handle add programming lang
+  const handleAddProgrammingLangs = () => {
+    if (programmingLang.trim() && !values.programmingLanguages.includes(programmingLang.trim())) {
+      setFieldValue("programmingLanguages", [
+        ...values.programmingLanguages,
+        programmingLang.trim(),
+      ]);
+      setProgramingLang("");
+    }
+  };
+
+  // Handle delete programming lang
+  const handleDeleteProgrammingLangs = (deletedLang: string) => {
+    const updateLangs = values.programmingLanguages.filter((lang) => lang !== deletedLang);
+    setFieldValue("programmingLanguages", updateLangs);
+  };
   // On change intro
   const handleChangeIntro = (value: string) => {
     setFieldValue("intro", value);
@@ -356,10 +374,11 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
                       alt="thumb-nail"
                       width={300}
                       height={300}
-                      style={{ borderRadius: 12, margin: "0 auto" }}
+                      style={{ borderRadius: 12, width: "100%" }}
                     />
                     <IconButton
-                      sx={{ position: "absolute", top: 0, right: 5 }}
+                      size="small"
+                      sx={{ position: "absolute", top: 5, right: 5, bgcolor: "rgba(0,0,0,.3)" }}
                       onClick={() =>
                         setThumbnail({
                           file: null,
@@ -367,7 +386,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
                         })
                       }
                     >
-                      <CloseIcon fontSize="large" />
+                      <CloseIcon />
                     </IconButton>
                   </Box>
                 )}
@@ -393,13 +412,61 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           </>
         )}
 
-        {/* Intro */}
-        <Grid item md={12} xs={12}>
+        {/* Box programming languages */}
+        <Grid item md={6} xs={12}>
           {type === "watch" ? (
-            <Typography
-              variant="body1"
-              dangerouslySetInnerHTML={{ __html: values.intro }}
-            ></Typography>
+            <>
+              <Typography variant="h6" gutterBottom>
+                Programming languages
+              </Typography>
+              <Stack flexDirection={"row"} mt={2} gap={1}>
+                {values.programmingLanguages.map((lang, index) => (
+                  <Chip key={index} label={lang} className="bg-gradient" />
+                ))}
+              </Stack>
+            </>
+          ) : (
+            <>
+              <Stack flexDirection={"row"} flexWrap={"nowrap"} alignItems={"center"} gap={1}>
+                <TextField
+                  fullWidth
+                  placeholder="Add programming languages"
+                  value={programmingLang}
+                  onChange={(e) => setProgramingLang(e.target.value)}
+                />
+                <IconButton onClick={handleAddProgrammingLangs}>
+                  <Add />
+                </IconButton>
+              </Stack>
+
+              {
+                <Stack flexDirection={"row"} mt={2} gap={1}>
+                  {values.programmingLanguages.map((lang, index) => (
+                    <Chip
+                      key={index}
+                      label={lang}
+                      className="bg-gradient"
+                      onDelete={() => handleDeleteProgrammingLangs(lang)}
+                    />
+                  ))}
+                </Stack>
+              }
+            </>
+          )}
+        </Grid>
+
+        {/* Intro */}
+        <Grid item md={6} xs={12}>
+          {type === "watch" ? (
+            <>
+              <Typography variant="h6" gutterBottom>
+                Intro
+              </Typography>
+              <Typography
+                variant="body1"
+                dangerouslySetInnerHTML={{ __html: values.intro }}
+              ></Typography>
+            </>
           ) : (
             <FormControl fullWidth>
               <TextEditor
