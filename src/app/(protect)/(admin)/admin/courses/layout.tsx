@@ -1,9 +1,8 @@
-"use client";
 import Spinner from "@/components/custom/Spinner";
 import React, { Suspense } from "react";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
-  title: "EST Edu | Admin",
+  title: "Admin | Courses",
   description: "Admin manage courses",
 };
 

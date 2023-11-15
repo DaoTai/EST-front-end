@@ -19,6 +19,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
+import Divider from "@mui/material/Divider";
 
 import { DataGrid, GridColDef, GridRowId } from "@mui/x-data-grid";
 import { useCallback, useMemo, useState } from "react";
@@ -34,7 +35,6 @@ import MyDialog from "@/components/custom/Dialog";
 import MyModal from "@/components/custom/Modal";
 import Spinner from "@/components/custom/Spinner";
 import useDebounce from "@/hooks/useDebounce";
-import { Divider } from "@mui/material";
 
 type Response = {
   courses: ICourse[];

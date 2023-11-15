@@ -5,6 +5,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import ModelTrainingIcon from "@mui/icons-material/ModelTraining";
 import StoreIcon from "@mui/icons-material/Store";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -45,6 +46,11 @@ const Navbar = () => {
           href: "/admin/courses",
           Icon: MenuBookIcon,
           title: "Courses",
+        },
+        {
+          href: "/admin/members",
+          Icon: PeopleAltIcon,
+          title: "Members",
         }
       );
     }

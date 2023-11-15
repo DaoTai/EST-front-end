@@ -1,6 +1,6 @@
 "use client";
 import MyList from "@/components/custom/MyList";
-import FlareIcon from "@mui/icons-material/Flare";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
@@ -8,15 +8,15 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
 
@@ -26,7 +26,6 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import MenuAction from "./MenuAction";
-import MyCourse from "@/components/course-components/MyCourse";
 import MyCourses from "./MyCourses";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
@@ -72,11 +71,13 @@ const Actions = () => {
           {!isMobile && <ToggleModeTheme />}
 
           {/* Self-training */}
-          <Link href="/self-training">
-            <IconButton>
-              <FlareIcon color="success" />
-            </IconButton>
-          </Link>
+          <Tooltip arrow title="Training">
+            <Link href="/self-training">
+              <IconButton>
+                <EmojiEventsIcon color="warning" />
+              </IconButton>
+            </Link>
+          </Tooltip>
 
           {/* Mine courses */}
           <MyCourses />
