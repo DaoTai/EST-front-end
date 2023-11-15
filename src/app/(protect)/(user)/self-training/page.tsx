@@ -3,29 +3,18 @@ import NormalHeader from "@/components/common/NormalHeader";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import StartIcon from "@mui/icons-material/Start";
 
-import {
-  Button,
-  Chip,
-  FormControlLabel,
-  FormGroup,
-  IconButton,
-  Paper,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Button, Chip, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import axios from "axios";
-import { useCallback, useRef, useState } from "react";
+import { useState } from "react";
 
 import { toast } from "react-toastify";
 import ChoiceQuestion from "./_components/ChoiceQuestion";
 import MultilChoiceQuestion from "./_components/MultilChoiceQuestion";
-import MyModal from "@/components/custom/Modal";
 
 const SelfTraining = () => {
   const [type, setType] = useState<string>("byFavouriteProgrammingLanguages");

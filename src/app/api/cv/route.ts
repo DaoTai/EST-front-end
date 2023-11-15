@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (req: NextRequest) => {
   try {
     const searchParams = req.nextUrl.searchParams;
-    const res = await serverAxios.get("/admin/courses?" + searchParams);
+    const res = await serverAxios.get("/cv" + searchParams);
     return NextResponse.json(res.data, {
       status: 200,
     });
@@ -18,10 +18,10 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
-export const PATCH = async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const res = await serverAxios.patch("/admin/courses", body);
+    const res = await serverAxios.post("/cv", body);
     return NextResponse.json(res.data, {
       status: 200,
     });

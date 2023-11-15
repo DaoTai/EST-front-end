@@ -1,33 +1,31 @@
-"use client";
-import TextEditor from "@/components/custom/TextEditor";
-import { Container, Divider, Typography } from "@mui/material";
-import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import Content from "@/components/cv-components/Content";
+import Rules from "@/components/cv-components/Rules";
+export const metadata: Metadata = {
+  title: "Profile | CV",
+  description: "Entroll roles with CV",
+};
 
 const CreateCV = () => {
-  const { data: session } = useSession();
-  const [value, setValue] = useState("");
-
   return (
     <Container>
       <Divider>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h4" letterSpacing={2} fontWeight={600} gutterBottom>
           CV
         </Typography>
       </Divider>
-      <Typography variant="body1" gutterBottom>
-        Hi <b>{session?.fullName}</b>, if you want to become teacher of EST Edu, please send text or
-        file CV for us.
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        Good luck!
-      </Typography>
-      <TextEditor
-        value={value}
-        onChange={setValue}
-        theme="snow"
-        placeholder="Introduce about yourself and note message to admin"
-      />
+      <Suspense fallback="Loading ...">
+        <Rules />
+      </Suspense>
+
+      <Suspense fallback="Loading...">
+        <Content />
+      </Suspense>
     </Container>
   );
 };

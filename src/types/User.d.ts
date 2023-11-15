@@ -40,4 +40,14 @@ interface IProfile {
   school?: string;
   city?: string;
   createdAt: string;
+  updatedAt: string;
+}
+
+interface ICv {
+  _id: string;
+  user: IProfile;
+  role: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
 }

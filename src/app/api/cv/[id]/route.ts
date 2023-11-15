@@ -2,10 +2,10 @@ import serverAxios from "@/config/axios";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
-    const searchParams = req.nextUrl.searchParams;
-    const res = await serverAxios.get("/admin/courses?" + searchParams);
+    const body = await req.json();
+    const res = await serverAxios.put("/cv/" + params.id, body);
     return NextResponse.json(res.data, {
       status: 200,
     });
@@ -18,10 +18,9 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
-export const PATCH = async (req: NextRequest) => {
+export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
-    const body = await req.json();
-    const res = await serverAxios.patch("/admin/courses", body);
+    const res = await serverAxios.delete("/cv/" + params.id);
     return NextResponse.json(res.data, {
       status: 200,
     });
