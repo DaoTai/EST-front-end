@@ -5,17 +5,23 @@ import { Paper } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { getServerSession } from "next-auth";
 import { Suspense } from "react";
-import { Heading, Intro, Panel } from "./_components";
 
-import RegisteredCourses from "./_components/RegisteredCourses";
+import RegisteredCourses from "../../../../components/profile-components/RegisteredCourses";
+import HeadingProfile from "@/components/profile-components/Heading";
+import Intro from "@/components/profile-components/Intro";
+import PanelNavigation from "@/components/profile-components/PanelNavigation";
 
 const Profile = async () => {
   const session = await getServerSession(options);
 
   return (
     <>
-      <Heading avatar={session?.avatar} username={session?.username} roles={session?.roles} />
-      <Panel />
+      <HeadingProfile
+        avatar={session?.avatar}
+        username={session?.username}
+        roles={session?.roles}
+      />
+      <PanelNavigation />
       <Divider />
       {session && (
         <Grid container mt={1} spacing={2}>

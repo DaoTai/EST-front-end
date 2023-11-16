@@ -117,6 +117,12 @@ const Content = () => {
         </Typography>
       )}
 
+      {/* Note */}
+      <Typography variant="caption">
+        <b style={{ color: "red" }}>Note*</b> If you sent your CV but be removed and be
+        unauthorized, EST Edu could reject it{" "}
+      </Typography>
+
       {isLoading ? (
         <Typography variant="body1" textAlign={"center"}>
           Loading...

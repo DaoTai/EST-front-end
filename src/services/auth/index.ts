@@ -17,25 +17,9 @@ type ISignInWithProvider = { email: string; provider: string };
 type ISignUp = InferType<typeof SignUpSchema> | ISignUpWithProvider;
 type ISignIn = InferType<typeof SignInSchema> | ISignInWithProvider;
 
-const authRouteAxios = axios.create({
+export const authRouteAxios = axios.create({
   baseURL: SERVER_URI + "/auth",
 });
-
-authRouteAxios.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  function (error) {
-    if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError;
-      const message = axiosError.response?.data as string;
-      console.log("Error: ", axiosError);
-
-      toast.error(message);
-    }
-    return Promise.reject(error);
-  }
-);
 
 export const verifyEmail = async (email: string) => {
   try {
@@ -90,8 +74,13 @@ export const signUpWithFetch = async ({
 export const signIn = async (values: ISignIn) => {
   try {
     const res = await authRouteAxios.post<IUser>("/sign-in", values);
+
     return res.data;
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw Error(error.response?.data);
+    }
+  }
 };
 
 export const signInByFetch = async ({ email, password }: { email: string; password: string }) => {

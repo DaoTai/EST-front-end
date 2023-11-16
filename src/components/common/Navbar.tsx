@@ -50,7 +50,7 @@ const Navbar = () => {
         {
           href: "/admin/members",
           Icon: PeopleAltIcon,
-          title: "Members",
+          title: "Accounts",
         }
       );
     }

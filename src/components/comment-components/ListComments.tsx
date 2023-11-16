@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ForwardRefRenderFunction, forwardRef, memo, useImperativeHandle, useMemo } from "react";
 import { Fetcher, KeyedMutator } from "swr";
 import useSWRInfinite from "swr/infinite";
@@ -21,12 +21,19 @@ type IProps = {
 };
 
 const fetcher: Fetcher<IResponseFetchComments, string> = (url: string) =>
-  fetch(url).then((res) => res.json());
+  fetch(url).then((res) => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error("Fetch comments failed");
+    }
+  });
 
 const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> = (
   { idLesson },
   ref
 ) => {
+  const router = useRouter();
   const { data, size, setSize, mutate, isValidating, isLoading, error } = useSWRInfinite(
     (page: number) => {
       return `/api/user/my-lessons/${idLesson}/comments?page=${page + 1}`;
@@ -39,6 +46,9 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
       revalidateOnMount: true,
       onSuccess(data, key, config) {
         // console.log("data: ", data);
+      },
+      onError(err, key, config) {
+        router.replace("/");
       },
     }
   );

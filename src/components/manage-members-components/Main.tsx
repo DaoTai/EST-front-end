@@ -6,18 +6,19 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
+import { GridRowSelectionModel } from "@mui/x-data-grid";
+import axios, { AxiosError } from "axios";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 import Table from "./Table";
-import { GridRowSelectionModel } from "@mui/x-data-grid";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { error } from "console";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type IResponse = {
   listUsers: IProfile[];
@@ -28,6 +29,7 @@ type IResponse = {
 const fetcher: Fetcher<IResponse, string> = (url: string) => fetch(url).then((res) => res.json());
 
 const Main = () => {
+  const pathName = usePathname();
   const [page, setPage] = useState(1);
   const [role, setRole] = useState<"user" | "teacher" | "admin">("user");
   const [status, setStatus] = useState<"block" | "normal">("normal");
@@ -79,7 +81,12 @@ const Main = () => {
       mutate(`/api/admin/users?page=${page}&role=${role}&status=${status}`);
       toast.success("Handle action successfully");
     } catch (error) {
-      toast.error("Handle action failed");
+      const { response } = error as AxiosError;
+      if (typeof response?.data === "string") {
+        toast.error(response?.data);
+      } else {
+        toast.error("Handle action failed");
+      }
     }
   };
 
@@ -100,6 +107,21 @@ const Main = () => {
 
   return (
     <Box p={2}>
+      {/* Navigate to CVs */}
+      <Stack
+        flexDirection={"row"}
+        mb={2}
+        justifyContent={"end"}
+        sx={{
+          a: {
+            textDecoration: "underline !important",
+            color: (theme) => theme.palette.info.main + "!important",
+          },
+        }}
+      >
+        <Link href={pathName + "/cv"}>Pending CV</Link>
+      </Stack>
+
       {/* Filter */}
       <Stack flexDirection={"row"} gap={2} mb={2}>
         {/* Role */}

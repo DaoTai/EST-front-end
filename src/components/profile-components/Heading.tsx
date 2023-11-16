@@ -41,7 +41,7 @@ const HeadingProfile = async (data: Partial<Pick<IUser, "avatar" | "username" | 
         <Typography variant="h4" fontWeight={500}>
           {data?.username}
         </Typography>
-        <Stack flexDirection="row" mt={1} gap={1}>
+        <Stack flexDirection="row" flexWrap={"wrap"} mt={1} gap={1}>
           {data?.roles?.map((role, i) => (
             <Chip
               key={i}

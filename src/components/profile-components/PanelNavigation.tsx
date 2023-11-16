@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { options } from "@/config/next-auth";
-const MenuNavigation = async () => {
+const PanelNavigation = async () => {
   const session = await getServerSession(options);
   return (
     <Stack
@@ -12,12 +12,14 @@ const MenuNavigation = async () => {
       pb={1}
       gap={1}
       justifyContent={"end"}
+      flexWrap={"wrap"}
       sx={{
         a: {
           display: "block",
           pl: 2,
           pr: 2,
-          bgcolor: "rgba(0,0,0,0.1)",
+          border: 1,
+          borderColor: "mainBlue.main",
           ":hover": {
             bgcolor: "mainBlue.main",
           },
@@ -39,4 +41,4 @@ const MenuNavigation = async () => {
   );
 };
 
-export default MenuNavigation;
+export default PanelNavigation;

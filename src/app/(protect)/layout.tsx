@@ -8,7 +8,7 @@ import React from "react";
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(options);
 
-  if (session) {
+  if (session?.accessToken) {
     return (
       <>
         <Box>{children}</Box>

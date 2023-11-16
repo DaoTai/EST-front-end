@@ -31,7 +31,7 @@ const SignIn = () => {
         });
         login?.error ? toast.error(login?.error) : router.replace("/");
       } catch (err) {
-        console.log("Erorr: ", err);
+        console.log("Error: ", err);
       }
     },
   });

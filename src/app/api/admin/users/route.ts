@@ -21,7 +21,8 @@ export const GET = async (req: NextRequest) => {
 export const PATCH = async (req: NextRequest) => {
   try {
     const body = await req.json();
-    serverAxios.patch("/admin/users", body);
+    const res = await serverAxios.patch("/admin/users", body);
+
     return NextResponse.json("OK", {
       status: 200,
     });

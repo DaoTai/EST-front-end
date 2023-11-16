@@ -2,7 +2,6 @@ import CakeIcon from "@mui/icons-material/Cake";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import SchoolIcon from "@mui/icons-material/School";
 
-import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
@@ -21,7 +20,7 @@ const Intro = async ({ user }: { user: IProfile }) => {
       {user?.bio && (
         <>
           <Typography variant="h6">Bio</Typography>
-          <Typography variant="body1" component="article" gutterBottom>
+          <Typography variant="body1" component="article" textAlign={"center"} gutterBottom>
             {user?.bio}
           </Typography>
         </>
@@ -30,9 +29,9 @@ const Intro = async ({ user }: { user: IProfile }) => {
       {/* List basic information */}
       <List
         sx={{
+          p: 0,
           ".MuiListItem-root": {
             p: 0,
-            pb: 0.5,
             alignItems: "flex-start",
           },
           ".MuiListItemIcon-root": {

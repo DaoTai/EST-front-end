@@ -16,3 +16,21 @@ export const GET = async (req: NextRequest) => {
     }
   }
 };
+
+export const DELETE = async (req: NextRequest) => {
+  try {
+    const body = await req.json();
+    await serverAxios.delete("/admin/cvs", {
+      data: body,
+    });
+    return NextResponse.json("OK", {
+      status: 200,
+    });
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
+  }
+};

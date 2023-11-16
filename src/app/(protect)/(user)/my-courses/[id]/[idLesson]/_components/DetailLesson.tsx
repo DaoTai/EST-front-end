@@ -14,6 +14,7 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { SyntheticEvent, useMemo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import Question from "./Question";
@@ -21,15 +22,33 @@ import ReportBox from "./ReportBox";
 
 const lessonFetcher: Fetcher<{ lesson: ILesson; listAnswerRecords: IAnswerRecord[] }, string> = (
   url: string
-) => fetch(url).then((res) => res.json());
+) =>
+  fetch(url).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
 
-const DetailLesson = ({ idLesson }: { idLesson: string }) => {
-  const { data: session } = useSession();
-  const { data: response, isLoading } = useSWR("/api/user/my-lessons/" + idLesson, lessonFetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
+    throw Error("Fetch data failed ");
   });
+
+const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: string }) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const { data: response, isLoading } = useSWR(
+    "/api/user/my-lessons/" + idLesson + "?idRegisterCourse=" + idCourse,
+    lessonFetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      onSuccess(data, key, config) {
+        console.log("data: ", data);
+      },
+      onError(err, key, config) {
+        router.replace("/");
+      },
+    }
+  );
   const [tab, setTab] = useState<"Theory" | "References" | "Report" | "Questions">("Theory");
 
   const myReports = useMemo(() => {

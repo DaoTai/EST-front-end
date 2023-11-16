@@ -55,10 +55,10 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
             <Stack mt={1}>
               <Typography variant="body1">Category: {data.course.category}</Typography>
               <Typography variant="body1">
-                Started from: {dayjs(data.createdAt).format("DD/MM/YYYY")}
+                Joined from: {dayjs(data.createdAt).format("DD/MM/YYYY")}
               </Typography>
               <Typography variant="body1">Total lessons: {data.course.lessons.length}</Typography>
-              <Typography variant="body1">Pass lessons: {data.passedLessons.length}</Typography>
+              <Typography variant="body1">Passed lessons: {data.passedLessons.length}</Typography>
               <Typography variant="body1">Completed progress: {progress}%</Typography>
             </Stack>
           )}

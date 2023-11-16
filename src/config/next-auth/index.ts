@@ -4,11 +4,13 @@ import {
   signInByFetch,
   signUpWithFetch,
 } from "@/services/auth";
+import { AxiosError } from "axios";
 import { AuthOptions } from "next-auth";
 
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { redirect } from "next/navigation";
 
 export const options: AuthOptions = {
   providers: [
@@ -80,7 +82,7 @@ export const options: AuthOptions = {
             }
           }
         } catch (error) {
-          Promise.reject(error);
+          redirect("/sign-in");
         }
       }
 

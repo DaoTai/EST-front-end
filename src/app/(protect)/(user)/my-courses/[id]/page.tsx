@@ -9,11 +9,19 @@ import Spinner from "@/components/custom/Spinner";
 import useSWR, { Fetcher } from "swr";
 import Content from "./_components/Content";
 import Heading from "./_components/Heading";
+import { notFound, useRouter } from "next/navigation";
 
 const myCourseFetcher: Fetcher<IRegisterCourse, string> = (url: string) =>
-  fetch(url).then((res) => res.json());
+  fetch(url).then((res) => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error("Fetch course failed");
+    }
+  });
 
 const DetailCourse = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
   const { data: registeredCourse, isLoading } = useSWR(
     "/api/user/my-courses/" + params.id,
     myCourseFetcher,
@@ -21,6 +29,9 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      onError(err, key, config) {
+        router.replace("/");
+      },
     }
   );
 
