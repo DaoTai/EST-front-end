@@ -10,10 +10,12 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import ProviderButtons from "../_components/ProviderAuthButtons";
+import { useEffect } from "react";
 const SignIn = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
     initialValues: {
@@ -35,6 +37,12 @@ const SignIn = () => {
       }
     },
   });
+
+  // Trong case: đăng nhập bằng next-provider(google, github) nhưng thất bại (có thể do bị khoá account) thì clear searchParams
+  // tránh gây bug khi đăng nhập account khác bị lỗi
+  if (searchParams.get("error")) {
+    return redirect("/sign-in");
+  }
 
   return (
     <>

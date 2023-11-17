@@ -74,7 +74,6 @@ export const signUpWithFetch = async ({
 export const signIn = async (values: ISignIn) => {
   try {
     const res = await authRouteAxios.post<IUser>("/sign-in", values);
-
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) {

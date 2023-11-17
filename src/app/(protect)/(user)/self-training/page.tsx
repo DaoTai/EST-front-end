@@ -3,7 +3,14 @@ import NormalHeader from "@/components/common/NormalHeader";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import StartIcon from "@mui/icons-material/Start";
 
-import { Button, Chip, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -19,7 +26,7 @@ import MultilChoiceQuestion from "./_components/MultilChoiceQuestion";
 const SelfTraining = () => {
   const [type, setType] = useState<string>("byFavouriteProgrammingLanguages");
   const [isLoading, setLoading] = useState<boolean>(false);
-
+  const [isStarted, setStarted] = useState<boolean>(false);
   const [score, setScore] = useState<null | number>(null);
   const [listQuestions, setListQuestions] = useState<IQuestion[]>([]);
   const [myAnswers, setMyAnswers] = useState<{ idQuestion: string; answers: string[] }[]>([]);
@@ -37,6 +44,7 @@ const SelfTraining = () => {
       setListQuestions(res.data);
       setLoading(false);
       setMyAnswers([]);
+      setStarted(true);
       score && setScore(null);
     } catch (error) {
       toast.error("Fetch questions failed", {
@@ -146,14 +154,16 @@ const SelfTraining = () => {
               <MenuItem value={"byCourseCategories"}>Your registered categories</MenuItem>
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            disabled={isLoading}
-            endIcon={<StartIcon />}
-            onClick={fetchQuestions}
-          >
-            {isLoading ? "Loading" : "Start"}
-          </Button>
+          {(!isStarted || score) && (
+            <Button
+              variant="contained"
+              disabled={isLoading}
+              endIcon={<StartIcon />}
+              onClick={fetchQuestions}
+            >
+              {isLoading ? "Loading" : "Start"}
+            </Button>
+          )}
         </Stack>
 
         {isLoading && (
@@ -215,6 +225,14 @@ const SelfTraining = () => {
               Submit
             </Button>
           </Stack>
+        )}
+
+        {/* No question */}
+        {listQuestions.length === 0 && isStarted && (
+          <Typography variant="body1" textAlign={"center"}>
+            No question for you. Let's register any course or submit your favourite programming
+            languages
+          </Typography>
         )}
 
         {/* Correct answers */}
