@@ -41,9 +41,7 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onSuccess(data, key, config) {
-        console.log("data: ", data);
-      },
+      onSuccess(data, key, config) {},
       onError(err, key, config) {
         router.replace("/");
       },

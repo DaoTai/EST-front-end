@@ -13,12 +13,17 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 import { GridRowSelectionModel } from "@mui/x-data-grid";
 import axios, { AxiosError } from "axios";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 import Table from "./Table";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const ExportListUserToCSV = dynamic(() => import("./ExportListUserToCSV"), {
+  ssr: false,
+});
 
 type IResponse = {
   listUsers: IProfile[];
@@ -111,7 +116,7 @@ const Main = () => {
       <Stack
         flexDirection={"row"}
         mb={2}
-        justifyContent={"end"}
+        justifyContent={"space-between"}
         sx={{
           a: {
             textDecoration: "underline !important",
@@ -119,6 +124,8 @@ const Main = () => {
           },
         }}
       >
+        <ExportListUserToCSV role={role} status={status} />
+
         <Link href={pathName + "/cv"}>Pending CV</Link>
       </Stack>
 

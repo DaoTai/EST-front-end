@@ -69,9 +69,9 @@ const CreateModal = () => {
         sx={{ zIndex: theme.zIndex.modal }}
         onClose={() => setOpen(false)}
       >
-        <Box mb={2}>
+        <Box>
           <IconButton onClick={() => setOpen(false)}>
-            <ArrowBackIosNewIcon fontSize="large" />
+            <ArrowBackIosNewIcon />
           </IconButton>
         </Box>
         <Container>

@@ -1,11 +1,10 @@
 import { refreshToken } from "@/services/auth";
 import { SERVER_URI } from "@/utils/constants/common";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { getServerSession } from "next-auth";
 import { signOut } from "next-auth/react";
-import { toast } from "react-toastify";
-import { options } from "../next-auth";
+import { options } from "../next-auth"; // Chứa Auth Options config
 
 interface DecodedToken {
   exp: number;
@@ -54,9 +53,9 @@ serverAxios.interceptors.response.use(
     return config;
   },
   function (error) {
-    if (error instanceof AxiosError) {
-      // error.status === 500 ? toast.error("Error server") : toast.error(error.response?.data);
-    }
+    // if (error instanceof AxiosError) {
+    // error.status === 500 ? toast.error("Error server") : toast.error(error.response?.data);
+    // }
     return Promise.reject(error);
   }
 );

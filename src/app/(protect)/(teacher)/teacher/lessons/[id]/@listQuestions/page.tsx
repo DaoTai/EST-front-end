@@ -12,19 +12,18 @@ import { toast } from "react-toastify";
 import MyModal from "@/components/custom/Modal";
 import FormQuestion from "@/components/question-components/FormQuestion";
 import TableQuestions from "@/components/question-components/TableQuestions";
+
 const ListQuestions = ({ params }: { params: { id: string } }) => {
   const [openFormQuestion, setFormQuestion] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [listQuestions, setListQuestion] = useState<IQuestion[]>([]);
 
   useEffect(() => {
-    if (params.id) {
-      setLoading(true);
-      fetch("/api/teacher/questions/" + params.id)
-        .then((res) => res.json())
-        .then((data) => setListQuestion(data));
-      setLoading(false);
-    }
+    setLoading(true);
+    fetch("/api/teacher/questions/" + params.id)
+      .then((res) => res.json())
+      .then((data) => setListQuestion(data));
+    setLoading(false);
   }, [params]);
 
   const onCloseFormQuestion = useCallback(() => {

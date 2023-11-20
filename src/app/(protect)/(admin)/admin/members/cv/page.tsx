@@ -58,23 +58,33 @@ const CvPage = () => {
     setPage(value);
   };
 
+  // Authorize role for user
+  const handleAuthorizeRole = async () => {
+    await axios.patch("/api/admin/users", {
+      listIdUsers: listIds.map((id) => id.idUser),
+      option: action,
+    });
+
+    mutate(`/api/admin/cvs?page=${page}`);
+    toast.success("Authorize to teacher successfully");
+  };
+
+  // Delete list cv
+  const handleDeleteCvs = async () => {
+    await axios.delete("/api/admin/cvs", {
+      data: { listIdCvs: listIds.map((id) => id.idCv) },
+    });
+    mutate(`/api/admin/cvs?page=${page}`);
+    toast.success("Reject request teacher successfully");
+  };
+
   //   Handle action
   const handleAction = async () => {
     try {
       if (action === "authorize") {
-        await axios.patch("/api/admin/users", {
-          listIdUsers: listIds.map((id) => id.idUser),
-          option: action,
-        });
-
-        mutate(`/api/admin/cvs?page=${page}`);
-        toast.success("Authorize to teacher successfully");
+        await handleAuthorizeRole();
       } else {
-        await axios.delete("/api/admin/cvs", {
-          data: { listIdCvs: listIds.map((id) => id.idCv) },
-        });
-        mutate(`/api/admin/cvs?page=${page}`);
-        toast.success("Reject request teacher successfully");
+        await handleDeleteCvs();
       }
     } catch (error) {
       toast.error("Handle action failed");

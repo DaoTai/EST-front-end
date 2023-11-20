@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import React, { Suspense } from "react";
 import Main from "@/components/manage-members-components/Main";
-import type { Metadata } from "next";
 import Spinner from "@/components/custom/Spinner";
 export const metadata: Metadata = {
   title: "Admin | Members",

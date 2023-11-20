@@ -75,6 +75,10 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
   const handleUploadVideo = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file && file.type.startsWith("video")) {
+      const fileSizeInBytes = file.size;
+      const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+      console.log("File size:", fileSizeInMegabytes, "MB");
+
       setVideo(file);
     }
   };
@@ -121,6 +125,22 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
       >
         {type} lesson
       </Typography>
+
+      <Typography variant="subtitle1">Lesson should be followed by these rules:</Typography>
+      <Box component={"ul"}>
+        <Typography variant="subtitle1" component={"li"}>
+          Fulfill required information{" "}
+        </Typography>
+        <Typography variant="subtitle1" component={"li"}>
+          Length of video should range of 20-25 minutes{" "}
+        </Typography>
+        <Typography variant="subtitle1" component={"li"}>
+          Offer questions involve lesson which should be uploaded full before launching lesson
+        </Typography>
+        <Typography variant="subtitle1" component={"li"}>
+          You need ussually give score for member in each code question
+        </Typography>
+      </Box>
 
       {/* Form lesson*/}
       <Grid

@@ -1,5 +1,11 @@
 "use client";
-import { Button, Chip, Stack, TextField, Typography } from "@mui/material";
+
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
@@ -19,7 +25,6 @@ type Props = {
 
 const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
   const params = useParams();
-
   const [completed, setCompleted] = useState(isCompleted);
   const [linkCode, setLinkCode] = useState<string>("");
   const [answers, setAnswers] = useState<string[]>([]);
@@ -87,9 +92,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
       res.data.question?.correctAnswers && setCorrectAnswers(res.data.question.correctAnswers);
       res.data?.score && setScore(res.data.score);
       // Revalidate list lessons
-      if (params.id) {
-        mutate("/api/user/my-lessons?idRegisteredCourse=" + params.id);
-      }
+      mutate("/api/user/my-lessons?idRegisteredCourse=" + params.id);
       toast.success("Answer successfully", {
         position: "bottom-right",
         theme: "colored",
@@ -118,7 +121,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
       )}
       {completed && (
         <>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1">
             Your score:
             <Typography
               variant="body1"
@@ -129,6 +132,11 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
               {typeof score !== "undefined" ? score : "Pending"}
             </Typography>
           </Typography>
+          {answerRecord?.comment && (
+            <Typography variant="body1" gutterBottom>
+              Message from teacher: {answerRecord?.comment}
+            </Typography>
+          )}
         </>
       )}
 
@@ -141,6 +149,9 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
             onChange={onChangeAnswerCode}
             disabled={completed && question.category !== "code"}
           />
+          <Typography variant="caption">
+            Link code is like github public, codesandbox, ...
+          </Typography>
           <Stack mt={1} flexDirection={"row"} justifyContent={"end"}>
             <Button variant="contained" onClick={handleSubmit}>
               Submit

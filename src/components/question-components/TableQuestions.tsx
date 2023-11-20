@@ -1,12 +1,11 @@
 "use client";
+import CheckIcon from "@mui/icons-material/Check";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import CheckIcon from "@mui/icons-material/Check";
 
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,17 +13,19 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import useTheme from "@mui/material/styles/useTheme";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
-import { Dispatch, SetStateAction, memo, useCallback, useState } from "react";
-import dayjs from "dayjs";
-import { toast } from "react-toastify";
+import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
+import { Dialog, Stack } from "@mui/material";
 import axios from "axios";
-import FormQuestion from "./FormQuestion";
-import MyModal from "../custom/Modal";
+import dayjs from "dayjs";
+import { Dispatch, SetStateAction, memo, useCallback, useState } from "react";
+import { toast } from "react-toastify";
 import MyDialog from "../custom/Dialog";
-import { Stack } from "@mui/material";
+import MyModal from "../custom/Modal";
+import FormQuestion from "./FormQuestion";
+import ListAnswerRecords from "./ListAnswerRecords";
 
 type Props = {
   questions: IQuestion[];
@@ -33,19 +34,32 @@ type Props = {
 };
 
 const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: Props) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [question, setQuestion] = useState<IQuestion | null>(null);
+  const [openListAnswers, setOpenListAnswers] = useState<boolean>(false);
   const [openForm, setOpenForm] = useState<boolean>(false);
   const [openDialogConfirm, setOpenDialogConfirm] = useState<boolean>(false);
 
+  //  Open detail question
   const onOpenForm = (ques: IQuestion) => {
     setQuestion(ques);
     setOpenForm(true);
   };
 
+  // Close detail question
   const onCloseForm = () => {
     setOpenForm(false);
+  };
+
+  //  Open dialog
+  const onOpenDialog = (question: IQuestion) => {
+    setQuestion(question);
+    setOpenDialogConfirm(true);
+  };
+
+  // Open list answers for question
+  const onOpenListAnswers = (ques: IQuestion) => {
+    setOpenListAnswers(true);
+    setQuestion(ques);
   };
 
   // Edit question
@@ -84,12 +98,6 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
     setOpenDialogConfirm(false);
   }, []);
 
-  //  Open dialog
-  const onOpenDialog = (question: IQuestion) => {
-    setQuestion(question);
-    setOpenDialogConfirm(true);
-  };
-
   // Handle delete question
   const handleDeleteQuestion = useCallback(async () => {
     try {
@@ -100,6 +108,14 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
       toast.error("Delete question failed");
     }
   }, [question]);
+
+  if (questions.length === 0) {
+    return (
+      <Typography variant="body1" margin={"normarl"} textAlign={"center"}>
+        No question
+      </Typography>
+    );
+  }
 
   return (
     <>
@@ -177,6 +193,13 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
                 {/* Actions */}
                 {!readOnly && (
                   <TableCell>
+                    {question.category === "code" && (
+                      <Tooltip arrow title="Answers">
+                        <IconButton color="warning" onClick={() => onOpenListAnswers(question)}>
+                          <ChecklistIcon color="warning" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                     <Tooltip arrow title="Edit">
                       <IconButton color="info" onClick={() => onOpenForm(question)}>
                         <EditIcon color="info" />
@@ -193,12 +216,6 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
             ))}
           </TableBody>
         </Table>
-
-        {questions.length === 0 && (
-          <Typography variant="body1" textAlign={"center"}>
-            No question
-          </Typography>
-        )}
       </TableContainer>
 
       {/* Modal form question */}
@@ -218,6 +235,18 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
           onClose={onCloseDialog}
           onSubmit={handleDeleteQuestion}
         />
+      )}
+
+      {/* Detail list answers */}
+      {question && (
+        <Dialog open={openListAnswers} fullScreen onClose={() => setOpenListAnswers(false)}>
+          <Box>
+            <IconButton onClick={() => setOpenListAnswers(false)}>
+              <ArrowBackIos />
+            </IconButton>
+            <ListAnswerRecords question={question} />
+          </Box>
+        </Dialog>
       )}
     </>
   );

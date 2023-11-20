@@ -27,7 +27,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
     >
       <Grid
         container
-        columnSpacing={2}
+        columnSpacing={1}
         flexDirection={"row"}
         flexWrap={"wrap"}
         sx={{
@@ -51,95 +51,101 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
         </Grid>
 
         {/* Content  */}
-        <Grid item lg={9} md={9} xs={12}>
-          <Stack flexDirection={"row"} gap={1} alignItems={"center"}>
-            <Typography variant="h6" fontWeight={600}>
-              {course.name}
-            </Typography>
-            <Chip
-              label={course.type}
-              size="small"
-              color={course.type === "public" ? "success" : "info"}
-            />
-          </Stack>
-
-          {mode === "manager" && (
-            <>
-              <Box mb={1}>
-                <Chip
-                  label={course.status}
-                  color={course.status === "approved" ? "success" : "warning"}
-                  size="small"
-                />
-              </Box>
-              <Typography variant="subtitle1" gutterBottom>
-                Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
+        <Grid item lg={9} md={9} xs={12} pb={1}>
+          <Box pl={1}>
+            <Stack flexDirection={"row"} gap={1} alignItems={"center"}>
+              <Typography variant="h6" fontWeight={600}>
+                {course.name}
               </Typography>
-            </>
-          )}
+              <Chip
+                label={course.type}
+                size="small"
+                color={course.type === "public" ? "success" : "info"}
+              />
+            </Stack>
 
-          {mode === "visitor" && (
-            <Typography variant="subtitle1">Teacher: {course.createdBy.username}</Typography>
-          )}
-          <Typography variant="body1" gutterBottom>
-            Level: {course.level}
-          </Typography>
-
-          <Box display={"flex"} gap={1} mb={1}>
-            <Chip label={course.category} size="small" color="info" />
-            {course.programmingLanguages.map((lang, i) => (
-              <Chip key={i} label={lang} size="small" color="info" />
-            ))}
-          </Box>
-
-          {mode === "visitor" && course.type === "private" && (
-            <>
-              <Typography variant="subtitle2" mt={1}>
-                Open time: {dayjs(course.openDate).format("DD/MM/YYYY")}
-              </Typography>
-              <Typography variant="subtitle2">
-                Close time: {dayjs(course.closeDate).format("DD/MM/YYYY")}
-              </Typography>
-            </>
-          )}
-
-          {/* Rating */}
-          {course?.averageRating && (
-            <>
-              <Typography
-                variant="body1"
-                fontWeight={600}
-                textTransform={"lowercase"}
-                sx={{ color: "warning.dark" }}
-              >
-                {course?.averageRating} stars
-              </Typography>
-              <Stack
-                flexDirection={"row"}
-                alignItems={"center"}
-                textTransform={"lowercase"}
-                gap={1}
-              >
-                <Rating readOnly value={course?.averageRating} precision={0.5} />
-                <Typography variant="subtitle2" fontWeight={400}>
-                  {`(${course?.totalRating} rates)`}
+            {mode === "manager" && (
+              <>
+                <Box mb={1}>
+                  <Chip
+                    label={course.status}
+                    color={course.status === "approved" ? "success" : "warning"}
+                    size="small"
+                  />
+                </Box>
+                <Typography variant="subtitle1" gutterBottom>
+                  Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
                 </Typography>
-              </Stack>
-            </>
-          )}
+              </>
+            )}
 
-          <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
-            <Chip
-              label={course?.lessons?.length + " lesson" + (course.lessons?.length > 1 ? "s" : "")}
-              className="bg-gradient"
-              size="small"
-            />
-            <Chip
-              label={course?.members?.length + " member" + (course.members?.length > 1 ? "s" : "")}
-              className="bg-gradient"
-              size="small"
-            />
-          </Stack>
+            {mode === "visitor" && (
+              <Typography variant="subtitle1">Teacher: {course.createdBy.username}</Typography>
+            )}
+            <Typography variant="body1" gutterBottom>
+              Level: {course.level}
+            </Typography>
+
+            <Box display={"flex"} gap={1} mb={1}>
+              <Chip label={course.category} size="small" color="info" />
+              {course.programmingLanguages.map((lang, i) => (
+                <Chip key={i} label={lang} size="small" color="info" />
+              ))}
+            </Box>
+
+            {mode === "visitor" && course.type === "private" && (
+              <>
+                <Typography variant="subtitle2" mt={1}>
+                  Open time: {dayjs(course.openDate).format("DD/MM/YYYY")}
+                </Typography>
+                <Typography variant="subtitle2">
+                  Close time: {dayjs(course.closeDate).format("DD/MM/YYYY")}
+                </Typography>
+              </>
+            )}
+
+            {/* Rating */}
+            {course?.averageRating && (
+              <>
+                <Typography
+                  variant="body1"
+                  fontWeight={600}
+                  textTransform={"lowercase"}
+                  sx={{ color: "warning.dark" }}
+                >
+                  {course?.averageRating} stars
+                </Typography>
+                <Stack
+                  flexDirection={"row"}
+                  alignItems={"center"}
+                  textTransform={"lowercase"}
+                  gap={1}
+                >
+                  <Rating readOnly value={course?.averageRating} precision={0.5} />
+                  <Typography variant="subtitle2" fontWeight={400}>
+                    {`(${course?.totalRating} rates)`}
+                  </Typography>
+                </Stack>
+              </>
+            )}
+
+            <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
+              <Chip
+                label={
+                  course?.lessons?.length + " lesson" + (course.lessons?.length > 1 ? "s" : "")
+                }
+                className="bg-gradient"
+                size="small"
+              />
+              <Chip
+                label={
+                  course?.members?.length + " member" + (course.members?.length > 1 ? "s" : "")
+                }
+                className="bg-gradient"
+                size="small"
+              />
+            </Stack>
+          </Box>
         </Grid>
       </Grid>
     </Box>

@@ -14,11 +14,11 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { Intro } from "@/app/(protect)/(user)/profile/_components";
 import Banner from "@/components/course-components/Banner";
 import PreviewLesson from "@/components/lesson-components/PreviewLesson";
 import { SERVER_URI } from "@/utils/constants/common";
 import RegisterButton from "./_components/RegisterButton";
+import Intro from "@/components/profile-components/Intro";
 
 const DetailCourse = async ({ params }: { params: { slug: string } }) => {
   const res = await fetch(SERVER_URI + "/search/courses/" + params.slug);

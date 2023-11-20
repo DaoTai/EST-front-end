@@ -533,6 +533,13 @@
   dependencies:
     parchment "^1.1.2"
 
+"@types/react-csv@^1.1.8":
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/@types/react-csv/-/react-csv-1.1.8.tgz#b2b4b46e1ef056a4919a167604059cd1c8938a25"
+  integrity sha512-TNbpNDLlclMyAkClcJ1iHz/vOPxrxwAhNO5DI/t47e2HKhBRra6aOzOADPtw9K8nGYQ098ie3r4q70zQxLjfhg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@18.2.7":
   version "18.2.7"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.7.tgz#67222a08c0a6ae0a0da33c3532348277c70abb63"
@@ -2379,6 +2386,11 @@ randombytes@^2.1.0:
   integrity sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==
   dependencies:
     safe-buffer "^5.1.0"
+
+react-csv@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-2.2.2.tgz#5bbf0d72a846412221a14880f294da9d6def9bfb"
+  integrity sha512-RG5hOcZKZFigIGE8LxIEV/OgS1vigFQT4EkaHeKgyuCbUAu9Nbd/1RYq++bJcJJ9VOqO/n9TZRADsXNDR4VEpw==
 
 react-dom@18.2.0:
   version "18.2.0"
