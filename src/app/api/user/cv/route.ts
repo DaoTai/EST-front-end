@@ -1,7 +1,7 @@
 import serverAxios from "@/config/axios";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
-
+export const dynamic = "force-dynamic";
 export const GET = async (req: NextRequest) => {
   try {
     const res = await serverAxios.get("/cv/byUser");

@@ -23,7 +23,7 @@ serverAxios.interceptors.request.use(
     if (session?.accessToken && session.refreshToken) {
       const decodeToken: DecodedToken = jwt_decode(session.accessToken);
       const now = new Date();
-      if (decodeToken.exp < now.getTime() / 1000) {
+      if (config.headers && decodeToken.exp < now.getTime() / 1000) {
         const newTokens = await refreshToken(session.refreshToken);
         if (!newTokens) {
           setTimeout(async () => {
@@ -37,7 +37,7 @@ serverAxios.interceptors.request.use(
       }
     }
 
-    if (!config.headers || !config.headers.Authorization)
+    if (!config.headers.Authorization)
       config.headers.Authorization = "Bearer " + session?.accessToken;
 
     return config;
