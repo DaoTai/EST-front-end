@@ -6,10 +6,10 @@ import Grid from "@mui/material/Grid";
 import { getServerSession } from "next-auth";
 import { Suspense } from "react";
 
-import RegisteredCourses from "../../../../components/profile-components/RegisteredCourses";
 import HeadingProfile from "@/components/profile-components/Heading";
 import Intro from "@/components/profile-components/Intro";
 import PanelNavigation from "@/components/profile-components/PanelNavigation";
+import RegisteredCourses from "@/components/profile-components/RegisteredCourses";
 
 const Profile = async () => {
   const session = await getServerSession(options);

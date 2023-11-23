@@ -1,3 +1,8 @@
+"use client";
+
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
@@ -12,6 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MyList from "@/components/custom/MyList";
 import ToggleModeTheme from "../../ToggleModeTheme";
+import { ListItemIcon } from "@mui/material";
 
 const MenuAction = ({ onClose }: { onClose: () => void }) => {
   const { data: session } = useSession();
@@ -48,16 +54,14 @@ const MenuAction = ({ onClose }: { onClose: () => void }) => {
 
       {/* List action */}
       <MyList sx={{ pt: 0, pb: 0 }}>
-        {session?.roles.includes("admin") && (
-          <>
-            <ListItem component={Link} href="/admin/dashboard" divider onClick={onClose}>
-              Dashboard
-            </ListItem>
-            <ListItem component={Link} href="/admin/courses" divider onClick={onClose}>
-              Courses
-            </ListItem>
-          </>
-        )}
+        {/* Self-training */}
+        <ListItem component={Link} href="/self-training" divider onClick={onClose}>
+          <ListItemText>Training</ListItemText>
+          <ListItemIcon>
+            <EmojiEventsIcon color="warning" />
+          </ListItemIcon>
+        </ListItem>
+
         <ListItem component={Link} href="/my-courses" divider onClick={onClose}>
           My courses
         </ListItem>

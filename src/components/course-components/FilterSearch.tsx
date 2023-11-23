@@ -1,6 +1,8 @@
 "use client";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -15,6 +17,11 @@ const FilterSearch = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
   const pathName = usePathname();
 
+  const handleReset = () => {
+    router.push(pathName);
+    onClose();
+  };
+
   const searchByLevel = (level: string) => {
     router.push(pathName + "?level=" + level);
     onClose();
@@ -26,7 +33,7 @@ const FilterSearch = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <Stack gap={1} maxWidth={"fit-content"} p={2}>
+    <Stack gap={1} maxWidth={"fit-content"} alignItems={"flex-start"} p={2}>
       {/* <Box>
         <Typography variant="h6">Ratings</Typography>
         <FormControl>
@@ -65,6 +72,10 @@ const FilterSearch = ({ onClose }: { onClose: () => void }) => {
           </RadioGroup>
         </FormControl>
       </Box> */}
+      <IconButton onClick={handleReset}>
+        {" "}
+        <RestartAltIcon />
+      </IconButton>
       <Divider />
       <Box textTransform={"capitalize"}>
         <Typography variant="h6">Levels</Typography>

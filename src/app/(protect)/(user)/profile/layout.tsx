@@ -5,11 +5,11 @@ import React, { Suspense } from "react";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Suspense fallback={<Spinner />}>
-      <MainLayout>
+    <MainLayout>
+      <Suspense fallback={<Spinner />}>
         <Box p={1}>{children}</Box>
-      </MainLayout>
-    </Suspense>
+      </Suspense>
+    </MainLayout>
   );
 };
 

@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 
 import Link from "next/link";
 import useSWR from "swr";
+import Spinner from "@/components/custom/Spinner";
 
 const MyCourses = () => {
   const { data: listCourses, isLoading } = useSWR("/api/user/my-courses", fetcherMyCourses, {
@@ -20,11 +21,7 @@ const MyCourses = () => {
   });
 
   if (isLoading) {
-    return (
-      <Typography variant="h6" fontWeight={600} gutterBottom>
-        Loading ...
-      </Typography>
-    );
+    return <Spinner />;
   }
 
   return (

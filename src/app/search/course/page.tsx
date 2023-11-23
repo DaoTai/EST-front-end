@@ -15,9 +15,9 @@ import ListSkeletons from "@/components/course-components/ListSkeletons";
 import Spinner from "@/components/custom/Spinner";
 import { SERVER_URI } from "@/utils/constants/common";
 import { Button, Divider, Drawer } from "@mui/material";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useSWR, { Fetcher } from "swr";
-import Link from "next/link";
 
 type Response = {
   courses: ICourse[];
@@ -43,8 +43,6 @@ const CoursePage = () => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        console.log(data);
-
         setChips((prev) => {
           const chips = [...prev, ...data.courses.map((course) => course.category)];
           return Array.from(new Set(chips));
@@ -107,13 +105,11 @@ const CoursePage = () => {
 
       {/* Suggest search by category */}
       <Stack mt={1} mb={1} gap={1} flexDirection={"row"}>
-        <Typography variant="subtitle1">Suggest categories: </Typography>
         {chips.map((category, i) => (
           <Chip
             clickable
             key={i}
             label={category}
-            className="bg-gradient"
             size="small"
             onClick={() => onSearchByCategory(category)}
           />

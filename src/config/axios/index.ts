@@ -37,7 +37,7 @@ serverAxios.interceptors.request.use(
       }
     }
 
-    if (!config.headers.Authorization)
+    if (!config.headers || !config.headers.Authorization)
       config.headers.Authorization = "Bearer " + session?.accessToken;
 
     return config;

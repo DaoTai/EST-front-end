@@ -1,5 +1,5 @@
 "use client";
-import MyList from "@/components/custom/MyList";
+import ModeCommentIcon from "@mui/icons-material/ModeComment";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
@@ -27,6 +27,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import MenuAction from "./MenuAction";
 import MyCourses from "./MyCourses";
+import MyList from "@/components/custom/MyList";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
@@ -68,13 +69,11 @@ const Actions = () => {
     return (
       <>
         <Stack flexDirection={"row"} gap={1.5} alignItems={"center"}>
-          {!isMobile && <ToggleModeTheme />}
-
-          {/* Self-training */}
-          <Tooltip arrow title="Training">
-            <Link href="/self-training">
+          {/* Group chat */}
+          <Tooltip arrow title="Chat">
+            <Link href={"/group-chat/"}>
               <IconButton>
-                <EmojiEventsIcon color="warning" />
+                <ModeCommentIcon />
               </IconButton>
             </Link>
           </Tooltip>
@@ -107,7 +106,9 @@ const Actions = () => {
             </Badge>
           </Box>
 
-          {/* User  */}
+          {!isMobile && <ToggleModeTheme />}
+
+          {/* User menu */}
           <Box onClick={handleClick} sx={{ cursor: "pointer" }}>
             {session?.avatar ? (
               <Image
