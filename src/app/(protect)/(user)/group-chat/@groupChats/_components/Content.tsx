@@ -1,17 +1,16 @@
 "use client";
 import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
+import NewGroup from "@/components/group-chat-components/NewGroupIcon";
 import useDebounce from "@/hooks/useDebounce";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { Chip, Typography } from "@mui/material";
+
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
 import { useRouter } from "next/navigation";
 
 import { useMemo, useState } from "react";
-import useSWR, { Fetcher } from "swr";
+import { Fetcher } from "swr";
 import useSWRInfinite from "swr/infinite";
 type IResponse = {
   listGroupChats: IGroupChat[];
@@ -40,9 +39,10 @@ const GroupChats = () => {
     },
     fetcher,
     {
-      onSuccess(data, key, config) {
-        console.log("data: ", data);
-      },
+      revalidateOnMount: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: false,
+      onSuccess(data, key, config) {},
     }
   );
 
@@ -94,11 +94,7 @@ const GroupChats = () => {
           onChange={(val) => setSearch(val)}
           onClear={() => setSearch("")}
         />
-        <Tooltip title="Create group">
-          <IconButton>
-            <GroupAddIcon />
-          </IconButton>
-        </Tooltip>
+        <NewGroup mutate={mutate} />
       </Stack>
 
       {/* List group */}
@@ -124,7 +120,14 @@ const GroupChats = () => {
 
       {size < maxPage && (
         <Stack mt={2} mb={1} flexDirection={"row"} justifyContent={"center"}>
-          <Chip clickable disabled={isValidating} label="More" onClick={() => setSize(size + 1)} />
+          <Chip
+            variant="outlined"
+            clickable
+            disabled={isValidating}
+            label="More"
+            sx={{ width: "100%" }}
+            onClick={() => setSize(size + 1)}
+          />
         </Stack>
       )}
     </Box>

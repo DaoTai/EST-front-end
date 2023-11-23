@@ -1,9 +1,9 @@
 interface IGroupChat {
   _id: string;
   name: string;
-  host: Pick<IProfile, "avatar" | "_id">;
+  host: Member;
   members: Member[];
-  blockedMembers: any[];
+  blockedMembers: Member[];
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -14,6 +14,7 @@ interface Member {
   _id: string;
   username: string;
   avatar: IProfile["avatar"];
+  favouriteProrammingLanguages?: string[];
 }
 
 interface ILatestChat {

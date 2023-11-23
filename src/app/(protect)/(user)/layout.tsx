@@ -1,4 +1,3 @@
-import MainLayout from "@/components/common/MainLayout";
 import { options } from "@/config/next-auth";
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";

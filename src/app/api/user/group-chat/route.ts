@@ -18,3 +18,19 @@ export const GET = async (req: NextRequest) => {
     }
   }
 };
+
+export const POST = async (req: NextRequest) => {
+  try {
+    const body = await req.json();
+    const res = await serverAxios.post("/group-chat", body);
+    return NextResponse.json(res.data, {
+      status: res.status,
+    });
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      return NextResponse.json(error.response?.data, {
+        status: error.response?.status,
+      });
+    }
+  }
+};
