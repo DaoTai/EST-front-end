@@ -1,20 +1,21 @@
 "use client";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { Avatar, Box, Chip, Divider, IconButton, Link, Paper, Stack, Tooltip } from "@mui/material";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { Avatar, Box, Chip, Divider, IconButton, Paper, Stack, Tooltip } from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
 
-import { notFound, useParams } from "next/navigation";
-import React from "react";
-import NextLink from "next/link";
-import useSWR, { Fetcher } from "swr";
-import Edit from "@mui/icons-material/Edit";
-import ExitToApp from "@mui/icons-material/ExitToApp";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
+import Edit from "@mui/icons-material/Edit";
+import ExitToApp from "@mui/icons-material/ExitToApp";
+import NextLink from "next/link";
+import { useParams } from "next/navigation";
+import useSWR, { Fetcher } from "swr";
+import Actions from "./Actions";
+import BlockedMember from "./BlockedMember";
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
   fetch(url).then((res) => {
     if (res.ok) {
@@ -28,43 +29,14 @@ const About = () => {
   const params = useParams();
   const { data } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
     onSuccess(data, key, config) {
-      console.log("data: ", data);
+      // console.log("data: ", data);
     },
   });
   if (data) {
     return (
       <Paper sx={{ p: 1, height: "100vh", overflowY: "auto" }}>
-        <Stack
-          pb={1}
-          className="underline-gradient"
-          width={"100%"}
-          flexDirection={"row"}
-          alignItems={"center"}
-          gap={1}
-          justifyContent={"space-evenly"}
-        >
-          <Tooltip title="Edit name">
-            <IconButton color="primary">
-              <Edit />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Add members">
-            <IconButton color="success">
-              <Add />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Exit group">
-            <IconButton color="error">
-              <ExitToApp />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Delete group">
-            <IconButton color="error">
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-
+        {/* Actions */}
+        <Actions groupChat={data} />
         <Typography
           mt={1}
           fontWeight={600}
@@ -109,31 +81,7 @@ const About = () => {
             </AccordionSummary>
             <AccordionDetails sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {data.members.map((member) => {
-                return (
-                  <Stack
-                    key={member._id}
-                    flexDirection={"row"}
-                    alignItems={"center"}
-                    gap={2}
-                    borderBottom={1}
-                    pb={0.5}
-                    borderColor={"divider"}
-                  >
-                    <Avatar src={member.avatar.uri} />
-                    <Typography
-                      variant="body1"
-                      flexGrow={2}
-                      style={{ textDecoration: "line-through" }}
-                    >
-                      {member.username}
-                    </Typography>
-                    <Tooltip title="Unblock">
-                      <IconButton>
-                        <LockOpenIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Stack>
-                );
+                return <BlockedMember key={member._id} member={member} />;
               })}
             </AccordionDetails>
           </Accordion>
@@ -162,6 +110,7 @@ const About = () => {
                     <Avatar src={member.avatar.uri} />
                     <Box>
                       <Chip
+                        clickable
                         size="small"
                         color="info"
                         component={NextLink}

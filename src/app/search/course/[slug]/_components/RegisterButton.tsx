@@ -2,14 +2,15 @@
 
 import { fetcherMyCourses } from "@/components/common/Header/Actions/MyCourses";
 import MyDialog from "@/components/custom/Dialog";
+import { showErrorToast } from "@/utils/functions";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate } from "swr";
 
@@ -52,9 +53,7 @@ const RegisterButton = ({ _id, name, type }: IProps) => {
       setConfirm(false);
       toast.success("Register course successfully");
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data);
-      }
+      showErrorToast(error);
     }
   }, []);
 

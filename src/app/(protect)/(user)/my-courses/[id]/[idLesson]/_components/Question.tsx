@@ -6,10 +6,11 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
+import { showErrorToast } from "@/utils/functions";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import { memo, useEffect, useMemo, useState } from "react";
@@ -98,12 +99,10 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
         theme: "colored",
       });
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data, {
-          theme: "colored",
-          position: "bottom-right",
-        });
-      }
+      showErrorToast(error, {
+        theme: "colored",
+        position: "bottom-right",
+      });
     }
   };
 

@@ -4,14 +4,15 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import axios, { AxiosError } from "axios";
+import { showErrorToast } from "@/utils/functions";
+import axios from "axios";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher } from "swr";
 import MyDialog from "../custom/Dialog";
-import TextEditor from "../custom/TextEditor";
 import Spinner from "../custom/Spinner";
+import TextEditor from "../custom/TextEditor";
 
 const fetcher: Fetcher<ICv, string> = (url: string) => fetch(url).then((res) => res.json());
 
@@ -41,12 +42,8 @@ const Content = () => {
         toast.success("Submit your CV successfully");
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
-        if (Array.isArray(error.response?.data)) {
-          error.response?.data.map((message) => toast.error(message));
-        }
-        toast.error("Submit your CV failed");
-      }
+      showErrorToast(error);
+      toast.error("Submit your CV failed");
     }
   };
 
@@ -63,12 +60,8 @@ const Content = () => {
         toast.success("Update your CV successfully");
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
-        if (Array.isArray(error.response?.data)) {
-          error.response?.data.map((message) => toast.error(message));
-        }
-        toast.error("Update your CV failed");
-      }
+      showErrorToast(error);
+      toast.error("Update your CV failed");
     }
   };
 
@@ -81,6 +74,7 @@ const Content = () => {
       }
       mutate();
     } catch (error) {
+      showErrorToast(error);
       toast.error("Delete your CV failed");
     }
   };

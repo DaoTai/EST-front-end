@@ -11,15 +11,16 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 
+import { showErrorToast } from "@/utils/functions";
 import { GridRowSelectionModel } from "@mui/x-data-grid";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 import Table from "./Table";
-import dynamic from "next/dynamic";
 
 const ExportListUserToCSV = dynamic(() => import("./ExportListUserToCSV"), {
   ssr: false,
@@ -86,12 +87,8 @@ const Main = () => {
       mutate(`/api/admin/users?page=${page}&role=${role}&status=${status}`);
       toast.success("Handle action successfully");
     } catch (error) {
-      const { response } = error as AxiosError;
-      if (typeof response?.data === "string") {
-        toast.error(response?.data);
-      } else {
-        toast.error("Handle action failed");
-      }
+      showErrorToast(error);
+      toast.error("Handle action failed");
     }
   };
 

@@ -10,10 +10,11 @@ import Pagination from "@mui/material/Pagination";
 import React, { memo, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import SearchBox from "@/components/common/SearchBox";
+import useDebounce from "@/hooks/useDebounce";
 
 type IProps = {
-  existUsers: IProfile[];
-  onAdd: (user: IProfile) => void;
+  existUsers: IProfile[] | IMemberGroupChat[];
+  onAdd: (user: IProfile | IMemberGroupChat) => void;
 };
 
 type IResponse = {
@@ -34,15 +35,19 @@ const fetcher: Fetcher<IResponse, string> = (url: string) =>
 const AddMembers = ({ existUsers, onAdd }: IProps) => {
   const [name, setName] = useState<string>("");
   const [page, setPage] = useState<number>(1);
-
-  const { data, isLoading } = useSWR(`/api/user/profile?search=${name}&page=${page}`, fetcher, {
-    revalidateOnMount: false,
-    revalidateIfStale: true,
-    revalidateOnReconnect: false,
-    onSuccess(data, key, config) {
-      // console.log("data: ", data);
-    },
-  });
+  const nameDebounce = useDebounce(name);
+  const { data, isLoading } = useSWR(
+    `/api/user/profile?search=${nameDebounce}&page=${page}`,
+    fetcher,
+    {
+      revalidateOnMount: false,
+      revalidateIfStale: true,
+      revalidateOnReconnect: false,
+      onSuccess(data, key, config) {
+        // console.log("data: ", data);
+      },
+    }
+  );
 
   if (isLoading) {
     return (
@@ -81,7 +86,7 @@ const AddMembers = ({ existUsers, onAdd }: IProps) => {
                       </Typography>
                     </Box>
                     <Button
-                      disabled={existUsers.includes(user)}
+                      disabled={existUsers.map((user) => user._id).includes(user._id)}
                       variant="outlined"
                       onClick={() => onAdd(user)}
                     >

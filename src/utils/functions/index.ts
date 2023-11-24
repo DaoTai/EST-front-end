@@ -1,9 +1,8 @@
+import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { ToastOptions, toast } from "react-toastify";
 import { Fetcher } from "swr";
-
-// Cài đặt plugin relativeTime
-dayjs.extend(relativeTime);
 
 // get changed values between 2 objects
 export const getChangedValuesObject = (obj1: any, obj2: any) => {
@@ -31,6 +30,8 @@ export const convertObjectToFormData = (object: any) => {
 
 // Distance time between then and now
 export const getDistanceTimeToNow = (timestamp: string) => {
+  // Cài đặt plugin relativeTime
+  dayjs.extend(relativeTime);
   const now = dayjs(); // Thời gian hiện tại
   const time = dayjs(timestamp); // Thời gian cần tính khoảng cách
   // Tính toán khoảng cách thời gian
@@ -50,5 +51,27 @@ export const getDistanceTimeToNow = (timestamp: string) => {
     return time.format("DD/MM/YYYY"); // Hiển thị ngày tháng năm
   }
 };
+
+// Display toast Axios Error
+
+const showToast = (message: string, option?: ToastOptions) => {
+  toast.error(message.substring(0, 200), option);
+};
+
+export const showErrorToast = (error: unknown, option?: ToastOptions) => {
+  if (error instanceof AxiosError) {
+    if (Array.isArray(error.response?.data)) {
+      error.response?.data.forEach((message) => {
+        showToast(message, option);
+      });
+    } else {
+      showToast(error.response?.data, option);
+    }
+  } else {
+    showToast(String(error), option);
+  }
+};
+
+// Fetchers SWR
 export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
   fetch(url).then((res) => res.json());

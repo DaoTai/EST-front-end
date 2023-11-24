@@ -26,7 +26,7 @@ const NewGroup = ({ mutate }: { mutate: any }) => {
     setMembers([]);
   }, []);
 
-  const handleAddMember = useCallback((member: IProfile) => {
+  const handleAddMember = useCallback((member: any) => {
     setMembers((prev) => [...prev, member]);
   }, []);
 

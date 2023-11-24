@@ -10,11 +10,12 @@ import Grow from "@mui/material/Grow";
 type Props = {
   title: string;
   content: string;
+  loading?: boolean;
   onClose: () => void;
   onSubmit: () => void | Promise<void>;
 };
 
-export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
+export default function MyDialog({ title, content, loading = false, onClose, onSubmit }: Props) {
   return (
     <Dialog
       open
@@ -38,6 +39,7 @@ export default function MyDialog({ title, content, onClose, onSubmit }: Props) {
           Close
         </Button>
         <Button
+          disabled={loading}
           color="info"
           variant="contained"
           onClick={async () => {

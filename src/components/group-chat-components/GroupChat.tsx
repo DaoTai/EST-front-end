@@ -38,11 +38,24 @@ const GroupChatBanner = ({ groupChat }: { groupChat: IGroupChat }) => {
             <Avatar key={mem._id} sx={{ width: 42, height: 42 }} src={mem.avatar.uri} />
           ))}
       </AvatarGroup>
-      <Box flexGrow={2}>
-        <Typography variant="subtitle1">{groupChat.name}</Typography>
-        <Typography variant="body1" sx={{ color: grey[500] }}>
+      <Box flexGrow={2} display={"block"} overflow={"hidden"}>
+        <Typography
+          overflow={"hidden"}
+          textOverflow={"ellipsis"}
+          whiteSpace={"nowrap"}
+          variant="subtitle1"
+        >
+          {groupChat.name}
+        </Typography>
+        <Typography
+          overflow={"hidden"}
+          textOverflow={"ellipsis"}
+          whiteSpace={"nowrap"}
+          variant="body1"
+          sx={{ color: grey[500] }}
+        >
           {groupChat.latestChat?.message
-            ? groupChat.latestChat.message
+            ? groupChat.latestChat.sender.username + ": " + groupChat.latestChat.message
             : groupChat.latestChat?.attachments.length > 0
             ? "Sent attachments"
             : "No chat"}

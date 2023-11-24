@@ -1,10 +1,7 @@
 "use client";
-import SearchBox from "@/components/common/SearchBox";
-import GroupChat from "@/components/group-chat-components/GroupChat";
-import NewGroup from "@/components/group-chat-components/NewGroupIcon";
-import useDebounce from "@/hooks/useDebounce";
-import { Chip, Typography } from "@mui/material";
 
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/navigation";
@@ -12,6 +9,12 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Fetcher } from "swr";
 import useSWRInfinite from "swr/infinite";
+
+import SearchBox from "@/components/common/SearchBox";
+import GroupChat from "@/components/group-chat-components/GroupChat";
+import NewGroup from "@/components/group-chat-components/NewGroupIcon";
+import useDebounce from "@/hooks/useDebounce";
+
 type IResponse = {
   listGroupChats: IGroupChat[];
   total: number;
