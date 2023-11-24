@@ -14,8 +14,10 @@ import { useCallback, useState } from "react";
 import MyModal from "@/components/custom/Modal";
 import axios from "axios";
 import AddMembers from "./AddMembers";
+import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
 
-const NewGroup = ({ mutate }: { mutate: any }) => {
+const NewGroup = () => {
+  const { revalidate } = useListGroupChatContext();
   const [open, setOpen] = useState<boolean>(false);
   const [nameGroup, setNameGroup] = useState<string>("");
   const [members, setMembers] = useState<IProfile[]>([]);
@@ -38,7 +40,7 @@ const NewGroup = ({ mutate }: { mutate: any }) => {
     try {
       const idMembers = members.map((mem) => mem._id);
       await axios.post("/api/user/group-chat", { name: nameGroup, idMembers });
-      mutate();
+      revalidate();
       onCloseModal();
     } catch (error) {
       console.log("Error: ", error);

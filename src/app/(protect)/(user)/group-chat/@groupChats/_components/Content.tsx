@@ -1,88 +1,48 @@
 "use client";
 
-import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { useRouter } from "next/navigation";
-
-import { useMemo, useState } from "react";
-import { Fetcher } from "swr";
-import useSWRInfinite from "swr/infinite";
+import Typography from "@mui/material/Typography";
 
 import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
 import NewGroup from "@/components/group-chat-components/NewGroupIcon";
-import useDebounce from "@/hooks/useDebounce";
-
-type IResponse = {
-  listGroupChats: IGroupChat[];
-  total: number;
-  maxPage: number;
-};
-
-const fetcher: Fetcher<IResponse, string> = (url: string) =>
-  fetch(url).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      throw new Error("Fetch group failed");
-    }
-  });
+import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
+import { useParams, useRouter } from "next/navigation";
+import { Divider } from "@mui/material";
 
 const GroupChats = () => {
-  const router = useRouter();
-
-  const [search, setSearch] = useState<string>("");
-  const name = useDebounce(search);
-
-  const { data, size, setSize, mutate, isValidating, isLoading, error } = useSWRInfinite(
-    (page: number) => {
-      return `/api/user/group-chat?page=${+page + 1}&name=${name}`;
-    },
-    fetcher,
-    {
-      revalidateOnMount: false,
-      revalidateIfStale: true,
-      revalidateOnReconnect: false,
-      onSuccess(data, key, config) {},
-    }
-  );
-
-  const maxPage = useMemo(() => {
-    if (data) {
-      return data[0].maxPage;
-    }
-    return 0;
-  }, [data]);
-
-  const listGroupChats: IGroupChat[] = useMemo(() => {
-    if (data) {
-      const listGroupChats = data.reduce((acc: IGroupChat[], item) => {
-        return [...acc, ...item.listGroupChats];
-      }, []);
-      return listGroupChats;
-    }
-    return [];
-  }, [data]);
-
-  if (error) {
-    router.back();
-  }
+  const params = useParams();
+  const {
+    isLoadingInitial,
+    isValidating,
+    listGroupChats,
+    maxPage,
+    size,
+    search,
+    setSize,
+    setSearch,
+  } = useListGroupChatContext();
 
   return (
     <Box
       p={1}
       sx={{
         input: {
-          padding: 2,
+          padding: "12px",
         },
 
         ".MuiInputBase-root": {
-          borderRadius: 4,
+          borderRadius: 12,
         },
       }}
     >
+      <Divider>
+        <Typography variant="h5" textAlign={"center"} fontWeight={600} gutterBottom>
+          Group chat
+        </Typography>
+      </Divider>
       {/* Search & Actions */}
       <Stack
         gap={2}
@@ -97,12 +57,17 @@ const GroupChats = () => {
           onChange={(val) => setSearch(val)}
           onClear={() => setSearch("")}
         />
-        <NewGroup mutate={mutate} />
+        <NewGroup />
       </Stack>
 
       {/* List group */}
       <>
-        {isLoading ? (
+        {isValidating && !isLoadingInitial && (
+          <Typography variant="body1" textAlign={"center"}>
+            Loading ...
+          </Typography>
+        )}
+        {isLoadingInitial ? (
           <Typography variant="body1" textAlign={"center"}>
             Loading ...
           </Typography>
@@ -110,7 +75,9 @@ const GroupChats = () => {
           <Stack gap={1} mt={2}>
             {listGroupChats.length > 0 ? (
               listGroupChats.map((groupChat) => {
-                return <GroupChat key={groupChat._id} groupChat={groupChat} />;
+                const isActive = groupChat._id === params.id;
+
+                return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
               })
             ) : (
               <Typography variant="body1" textAlign={"center"}>

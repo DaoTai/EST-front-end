@@ -43,7 +43,6 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      revalidateOnMount: true,
       onSuccess(data, key, config) {
         // console.log("data: ", data);
       },

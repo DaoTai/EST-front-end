@@ -6,23 +6,33 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
+import Spinner from "@/components/custom/Spinner";
+import { showErrorToast } from "@/utils/functions";
 import { memo, useState } from "react";
 import BlockedMember from "./BlockedMember";
 import PrepareBlockMember from "./PrepareBlockMember";
-import Spinner from "@/components/custom/Spinner";
 
 type IProps = Pick<IGroupChat, "blockedMembers" | "name" | "members"> & {
   onClose: () => void;
+  onEdit: (val: string) => Promise<void>;
 };
 
-const EditGroupChat = ({ name, members, blockedMembers, onClose }: IProps) => {
+const EditGroupChat = ({ name, members, blockedMembers, onClose, onEdit }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [newName, setNewName] = useState<string>(name);
   //   Handle edit group
   const handleEdit = async () => {
-    try {
-      onClose();
-    } catch (error) {}
+    setLoading(true);
+    onEdit(newName.trim())
+      .then(() => {
+        onClose();
+      })
+      .catch((err) => {
+        showErrorToast(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const handleChangeName = (value: string) => {

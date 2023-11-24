@@ -1,16 +1,11 @@
 "use client";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import { Avatar, Box, Chip, Divider, IconButton, Paper, Stack, Tooltip } from "@mui/material";
+import { Avatar, Box, Chip, Divider, Paper, Stack } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 
-import Add from "@mui/icons-material/Add";
-import Delete from "@mui/icons-material/Delete";
-import Edit from "@mui/icons-material/Edit";
-import ExitToApp from "@mui/icons-material/ExitToApp";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import useSWR, { Fetcher } from "swr";
@@ -27,16 +22,20 @@ const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
 
 const About = () => {
   const params = useParams();
-  const { data } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
+  const { data, mutate } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
     onSuccess(data, key, config) {
       // console.log("data: ", data);
     },
   });
+
   if (data) {
     return (
-      <Paper sx={{ p: 1, height: "100vh", overflowY: "auto" }}>
+      <Paper elevation={5} sx={{ p: 1, height: "100vh", overflowY: "auto" }}>
         {/* Actions */}
-        <Actions groupChat={data} />
+        <Actions groupChat={data} mutate={mutate} />
         <Typography
           mt={1}
           fontWeight={600}

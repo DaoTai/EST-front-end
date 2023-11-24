@@ -20,9 +20,9 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
 export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const body = await req.json();
-    const res = await serverAxios.patch("/group-chat/" + params.id, body);
-    return NextResponse.json(res.data, {
-      status: res.status,
+    await serverAxios.patch("/group-chat/" + params.id, body);
+    return NextResponse.json("OK", {
+      status: 200,
     });
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -35,10 +35,8 @@ export const PATCH = async (req: NextRequest, { params }: { params: { id: string
 
 export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
-    const res = await serverAxios.delete("/group-chat/" + params.id);
-    return NextResponse.json(res.data, {
-      status: res.status,
-    });
+    await serverAxios.delete("/group-chat/" + params.id);
+    return NextResponse.json("OK");
   } catch (error) {
     if (error instanceof AxiosError) {
       return NextResponse.json(error.response?.data, {

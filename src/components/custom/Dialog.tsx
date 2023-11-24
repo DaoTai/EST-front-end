@@ -7,7 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grow from "@mui/material/Grow";
 
-type Props = {
+type IProps = {
   title: string;
   content: string;
   loading?: boolean;
@@ -15,7 +15,7 @@ type Props = {
   onSubmit: () => void | Promise<void>;
 };
 
-export default function MyDialog({ title, content, loading = false, onClose, onSubmit }: Props) {
+const MyDialog = ({ title, content, loading = false, onClose, onSubmit }: IProps) => {
   return (
     <Dialog
       open
@@ -53,4 +53,6 @@ export default function MyDialog({ title, content, loading = false, onClose, onS
       </DialogActions>
     </Dialog>
   );
-}
+};
+
+export default MyDialog;

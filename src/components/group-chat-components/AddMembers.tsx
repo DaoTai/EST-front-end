@@ -36,12 +36,12 @@ const AddMembers = ({ existUsers, onAdd }: IProps) => {
   const [name, setName] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const nameDebounce = useDebounce(name);
-  const { data, isLoading } = useSWR(
+  const { data, isLoading, isValidating } = useSWR(
     `/api/user/profile?search=${nameDebounce}&page=${page}`,
     fetcher,
     {
-      revalidateOnMount: false,
       revalidateIfStale: true,
+      revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
         // console.log("data: ", data);
@@ -62,7 +62,7 @@ const AddMembers = ({ existUsers, onAdd }: IProps) => {
       {/* Search */}
       <SearchBox value={name} onChange={(val) => setName(val)} onClear={() => setName("")} />
       <Divider />
-      {isLoading ? (
+      {isLoading || isValidating ? (
         <Typography variant="body1" textAlign={"center"}>
           Loading
         </Typography>

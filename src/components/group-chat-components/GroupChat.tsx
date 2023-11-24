@@ -10,12 +10,18 @@ import { grey } from "@mui/material/colors";
 import Link from "next/link";
 import { memo } from "react";
 
-const GroupChatBanner = ({ groupChat }: { groupChat: IGroupChat }) => {
+type IProps = {
+  groupChat: IGroupChat;
+  isActive?: boolean;
+};
+
+const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
   return (
     <Paper
       elevation={2}
       component={Link}
       href={"/group-chat/" + groupChat._id}
+      className={isActive ? "bg-gradient" : ""}
       sx={{
         display: "flex",
         p: 1,
@@ -23,6 +29,7 @@ const GroupChatBanner = ({ groupChat }: { groupChat: IGroupChat }) => {
         gap: 2,
         border: 0.5,
         borderColor: "divider",
+        background: (theme) => (isActive ? theme.palette.gradient.main : "initial"),
         "&:hover": {
           bgcolor: "action.hover",
         },
@@ -52,7 +59,7 @@ const GroupChatBanner = ({ groupChat }: { groupChat: IGroupChat }) => {
           textOverflow={"ellipsis"}
           whiteSpace={"nowrap"}
           variant="body1"
-          sx={{ color: grey[500] }}
+          sx={{ color: isActive ? "inherit" : grey[500] }}
         >
           {groupChat.latestChat?.message
             ? groupChat.latestChat.sender.username + ": " + groupChat.latestChat.message
