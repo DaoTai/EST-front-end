@@ -58,48 +58,85 @@ const Actions = ({ groupChat, mutate }: IProps) => {
   //   Handle exit group
   const handleExit = async () => {
     setLoading(true);
-  };
-
-  //   Handle delete group
-  const handleDelete = () => {
-    setLoading(true);
-    axios
-      .delete("/api/user/group-chat/" + groupChat._id)
-      .then(() => {
-        router.replace("/group-chat");
-        revalidate();
-      })
-      .catch((err) => showErrorToast(err))
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  //   Handle delete group
-  const handleAddMembers = async () => {
     try {
-      console.log("delete");
-    } catch (error) {}
+      await axios.delete("/api/user/group-chat/" + groupChat._id + "/cancel");
+      router.replace("/group-chat");
+      revalidate();
+    } catch (error) {
+      showErrorToast(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  //   Handle edit group
-  const handleEdit = async (newName: string) => {
+  //   Handle delete group
+  const handleDelete = async () => {
     setLoading(true);
-    axios
-      .patch("/api/user/group-chat/" + groupChat._id, {
-        name: newName.trim(),
-      })
-      .then(() => {
-        revalidate();
-        mutate();
-      })
-      .catch((err) => {
-        showErrorToast(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      await axios.delete("/api/user/group-chat/" + groupChat._id);
+      router.replace("/group-chat");
+      revalidate();
+    } catch (error) {
+      showErrorToast(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  //   Handle add new members to group
+  const handleAddMembers = useCallback(async (idMembers: string[]) => {
+    if (idMembers.length > 0) {
+      setLoading(true);
+      try {
+        await axios.post("/api/user/group-chat/" + groupChat._id + "/members", {
+          idMembers,
+        });
+        mutate();
+        revalidate();
+      } catch (error) {
+        showErrorToast(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  //   Handle edit name group
+  const handleEditName = useCallback(async (newName: string) => {
+    setLoading(true);
+    try {
+      await axios.patch("/api/user/group-chat/" + groupChat._id, {
+        name: newName.trim(),
+      });
+      revalidate();
+      mutate();
+    } catch (error) {
+      showErrorToast(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Handle block member
+  const handleStatusMember = useCallback(
+    async ({ idMember, option }: { idMember: string; option: "block" | "unblock" }) => {
+      setLoading(true);
+      try {
+        await axios.patch(
+          `/api/user/group-chat/${groupChat._id}/members/${idMember}?option=${option}`,
+          {
+            idMember,
+          }
+        );
+        mutate();
+      } catch (error) {
+        showErrorToast(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   return (
     <>
@@ -119,12 +156,7 @@ const Actions = ({ groupChat, mutate }: IProps) => {
             <Edit />
           </IconButton>
         </Tooltip>
-        {/* Add icon  */}
-        <Tooltip title="Add members">
-          <IconButton color="success" onClick={onOpenAddModal}>
-            <Add />
-          </IconButton>
-        </Tooltip>
+
         {/* Exit icon  */}
         <Tooltip title="Exit group">
           <IconButton color="error" onClick={onOpenExitDialog}>
@@ -133,11 +165,19 @@ const Actions = ({ groupChat, mutate }: IProps) => {
         </Tooltip>
         {/* Delete icon  */}
         {isHost && (
-          <Tooltip title="Delete group" onClick={onOpenDeleteDialog}>
-            <IconButton color="error">
-              <Delete />
-            </IconButton>
-          </Tooltip>
+          <>
+            {/* Add icon  */}
+            <Tooltip title="Add members">
+              <IconButton color="success" onClick={onOpenAddModal}>
+                <Add />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete group" onClick={onOpenDeleteDialog}>
+              <IconButton color="error">
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </>
         )}
       </Stack>
 
@@ -166,20 +206,27 @@ const Actions = ({ groupChat, mutate }: IProps) => {
       {/* Edit */}
       {
         <MyModal open={openModal === "edit"} onClose={onCloseModal}>
-          <EditGroupChat
-            name={groupChat.name}
-            blockedMembers={groupChat.blockedMembers}
-            members={groupChat.members}
-            onClose={onCloseModal}
-            onEdit={handleEdit}
-          />
+          <Box minWidth={"35vw"}>
+            <EditGroupChat
+              loading={loading}
+              groupChat={groupChat}
+              onClose={onCloseModal}
+              onEditName={handleEditName}
+              onHandleStatus={handleStatusMember}
+            />
+          </Box>
         </MyModal>
       }
       {/* Add */}
       {
         <MyModal open={openModal === "add"} onClose={onCloseModal}>
           <Box minHeight={"60vh"}>
-            <AddNewMembers members={groupChat.members} onClose={onCloseModal} />
+            <AddNewMembers
+              loading={loading}
+              members={groupChat.members}
+              onClose={onCloseModal}
+              onAdd={handleAddMembers}
+            />
           </Box>
         </MyModal>
       }

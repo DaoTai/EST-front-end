@@ -9,8 +9,8 @@ import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
 import NewGroup from "@/components/group-chat-components/NewGroupIcon";
 import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
-import { useParams, useRouter } from "next/navigation";
 import { Divider } from "@mui/material";
+import { useParams } from "next/navigation";
 
 const GroupChats = () => {
   const params = useParams();

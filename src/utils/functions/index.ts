@@ -55,7 +55,11 @@ export const getDistanceTimeToNow = (timestamp: string) => {
 // Display toast Axios Error
 
 const showToast = (message: string, option?: ToastOptions) => {
-  toast.error(message.substring(0, 200), option);
+  if (message) {
+    toast.error(message.substring(0, 200), option);
+  } else {
+    toast.error("Failed", option);
+  }
 };
 
 export const showErrorToast = (error: unknown, option?: ToastOptions) => {

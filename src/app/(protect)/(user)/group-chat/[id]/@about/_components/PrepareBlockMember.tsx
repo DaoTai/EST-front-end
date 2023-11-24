@@ -10,17 +10,21 @@ import Typography from "@mui/material/Typography";
 
 import { memo, useState } from "react";
 
-type IProps = { member: IMemberGroupChat; disalbed?: boolean };
+type IProps = {
+  member: IMemberGroupChat;
+  disalbed?: boolean;
+  onBlock: (idMember: string) => Promise<void>;
+};
 
-const PrepareBlockMember = ({ member, disalbed = false }: IProps) => {
+const PrepareBlockMember = ({ member, disalbed = false, onBlock }: IProps) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   //   / Toggle dialog
   const toggleDialog = () => setOpenDialog(!openDialog);
 
   //   handle block
   const handleBlock = async () => {
-    try {
-    } catch (error) {}
+    await onBlock(member._id);
+    toggleDialog();
   };
 
   return (

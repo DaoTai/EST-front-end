@@ -1,6 +1,11 @@
 "use client";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Avatar, Box, Chip, Divider, Paper, Stack } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -11,6 +16,7 @@ import { useParams } from "next/navigation";
 import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
+
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
   fetch(url).then((res) => {
     if (res.ok) {
@@ -22,7 +28,7 @@ const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
 
 const About = () => {
   const params = useParams();
-  const { data, mutate } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
+  const { data, mutate, isValidating } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -31,18 +37,27 @@ const About = () => {
     },
   });
 
+  if (!data && isValidating) {
+    return (
+      <Typography variant="body1" textAlign={"center"}>
+        Loading ...
+      </Typography>
+    );
+  }
+
   if (data) {
     return (
       <Paper elevation={5} sx={{ p: 1, height: "100vh", overflowY: "auto" }}>
         {/* Actions */}
         <Actions groupChat={data} mutate={mutate} />
+        {/* Name group chat */}
         <Typography
           mt={1}
-          fontWeight={600}
-          letterSpacing={1}
+          fontWeight={500}
+          letterSpacing={0.5}
           gutterBottom
-          textAlign={"center"}
           variant="h6"
+          textAlign={"center"}
           alignSelf={"center"}
         >
           {data.name}
@@ -52,7 +67,8 @@ const About = () => {
         {/* Information */}
         <Stack gap={1}>
           <Stack mt={1} gap={2} flexDirection={"row"} alignItems={"stretch"}>
-            <Typography gutterBottom variant="body1" fontWeight={600}>
+            {/* Host */}
+            <Typography gutterBottom variant="subtitle1" fontWeight={500}>
               Host
             </Typography>
             <Chip
@@ -65,73 +81,64 @@ const About = () => {
             />
           </Stack>
 
-          <Typography gutterBottom variant="body1">
-            Total members:<b> {data.members.length}</b>
+          <Typography gutterBottom variant="subtitle1" fontWeight={500}>
+            Total members: {data.members.length}
           </Typography>
 
           {/* Blocked members */}
           <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Blocked members</Typography>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="subtitle1" fontWeight={500}>
+                Blocked members ({data.blockedMembers.length})
+              </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {data.members.map((member) => {
+              {data.blockedMembers.map((member) => {
                 return <BlockedMember key={member._id} member={member} />;
               })}
             </AccordionDetails>
           </Accordion>
 
           {/* Members */}
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Members</Typography>
-            </AccordionSummary>
-            <AccordionDetails sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {data.members.map((member) => {
-                return (
-                  <Stack
-                    key={member._id}
-                    gap={2}
-                    borderBottom={1}
-                    pb={0.5}
-                    flexDirection={"row"}
-                    alignItems={"center"}
-                    borderColor={"divider"}
-                  >
-                    <Avatar src={member.avatar.uri} />
-                    <Box>
-                      <Chip
-                        clickable
-                        size="small"
-                        color="info"
-                        component={NextLink}
-                        href={"/profile/" + member._id}
-                        label={member.username}
-                      />
-                      <Stack gap={1} mt={1} flexDirection={"row"} flexWrap={"wrap"}>
-                        {member.favouriteProrammingLanguages?.map((lang, i) => (
-                          <Chip size="small" key={i} label={lang} />
-                        ))}
-                      </Stack>
-                    </Box>
-                  </Stack>
-                );
-              })}
-            </AccordionDetails>
-          </Accordion>
+          <Typography gutterBottom variant="subtitle1" fontWeight={500}>
+            Members
+          </Typography>
+          <Stack gap={2}>
+            {data.members.map((member) => {
+              return (
+                <Stack
+                  key={member._id}
+                  gap={2}
+                  borderBottom={1}
+                  pb={0.5}
+                  flexDirection={"row"}
+                  alignItems={"start"}
+                  borderColor={"divider"}
+                >
+                  <Avatar src={member.avatar.uri} />
+                  <Box>
+                    <Chip
+                      clickable
+                      size="small"
+                      color="info"
+                      component={NextLink}
+                      href={"/profile/" + member._id}
+                      label={member.username}
+                    />
+                    <Stack gap={1} mt={1} flexDirection={"row"} flexWrap={"wrap"}>
+                      {member.favouriteProrammingLanguages?.map((lang, i) => (
+                        <Chip size="small" key={i} label={lang} />
+                      ))}
+                    </Stack>
+                  </Box>
+                </Stack>
+              );
+            })}
+          </Stack>
         </Stack>
       </Paper>
     );
   }
-  return <></>;
 };
 
 export default About;

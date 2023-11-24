@@ -51,6 +51,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
           textOverflow={"ellipsis"}
           whiteSpace={"nowrap"}
           variant="subtitle1"
+          fontWeight={500}
         >
           {groupChat.name}
         </Typography>

@@ -43,7 +43,9 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   // Status loading when init data
-  const isLoadingInitial = !data && !isValidating;
+  const isLoadingInitial = useMemo(() => {
+    return !data && !isValidating;
+  }, [data, isValidating]);
 
   // Max page
   const maxPage = useMemo(() => {

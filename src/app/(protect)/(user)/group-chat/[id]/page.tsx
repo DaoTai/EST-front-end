@@ -1,8 +1,11 @@
 "use client";
+import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 
 const Page = ({ params }: { params: { id: string } }) => {
-  useEffect(() => {}, [params]);
+  useEffect(() => {
+    fetchInforGroupChat();
+  }, [params]);
 
   const fetchInforGroupChat = () => {
     fetch("/api/user/group-chat/" + params.id)
@@ -13,7 +16,7 @@ const Page = ({ params }: { params: { id: string } }) => {
       .catch((err) => console.log("error: ", err));
   };
 
-  return <div>Page</div>;
+  return <Box></Box>;
 };
 
 export default Page;

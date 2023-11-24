@@ -1,16 +1,15 @@
 "use client";
-import { Avatar, Box, Button, Chip, Stack, Typography } from "@mui/material";
-import React, { memo, useState } from "react";
 import AddMembers from "@/components/group-chat-components/AddMembers";
-import axios from "axios";
-import { showErrorToast } from "@/utils/functions";
+import { Avatar, Box, Button, Chip, Stack, Typography } from "@mui/material";
+import { memo, useState } from "react";
 
 type IProps = Pick<IGroupChat, "members"> & {
+  loading: boolean;
   onClose: () => void;
+  onAdd: (id: string[]) => Promise<void>;
 };
 
-const AddNewMembers = ({ members, onClose }: IProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
+const AddNewMembers = ({ loading, members, onClose, onAdd }: IProps) => {
   const [newMembers, setNewMembers] = useState<IMemberGroupChat[]>([]);
 
   // Add member
@@ -27,11 +26,9 @@ const AddNewMembers = ({ members, onClose }: IProps) => {
 
   // Submit
   const handleAddMembers = async () => {
-    try {
-      // onClose();
-    } catch (error) {
-      showErrorToast(error);
-    }
+    const listIds = newMembers.map((mem) => mem._id);
+    listIds && (await onAdd(listIds));
+    onClose();
   };
 
   return (
@@ -54,7 +51,7 @@ const AddNewMembers = ({ members, onClose }: IProps) => {
       </Stack>
       <Button
         variant="contained"
-        disabled={loading}
+        disabled={loading || newMembers.length === 0}
         sx={{ display: "block", ml: "auto" }}
         onClick={handleAddMembers}
       >

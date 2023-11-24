@@ -8,14 +8,19 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { memo, useState } from "react";
 
-const BlockedMember = ({ member }: { member: IMemberGroupChat }) => {
+type IProps = {
+  disabled?: boolean;
+  member: IMemberGroupChat;
+  onUnblock?: (idMember: string) => Promise<void>;
+};
+
+const BlockedMember = ({ member, onUnblock, disabled = false }: IProps) => {
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const toggleDialog = () => setOpenDialog(!openDialog);
 
   const handleUnLock = async () => {
-    try {
-    } catch (error) {}
+    await onUnblock?.(member._id);
   };
 
   return (
@@ -33,11 +38,13 @@ const BlockedMember = ({ member }: { member: IMemberGroupChat }) => {
         <Typography variant="body1" flexGrow={2} style={{ textDecoration: "line-through" }}>
           {member.username}
         </Typography>
-        <Tooltip title="Unblock">
-          <IconButton onClick={toggleDialog}>
-            <LockOpenIcon />
-          </IconButton>
-        </Tooltip>
+        {(onUnblock || disabled) && (
+          <Tooltip title="Unblock">
+            <IconButton onClick={toggleDialog}>
+              <LockOpenIcon />
+            </IconButton>
+          </Tooltip>
+        )}
       </Stack>
 
       {/* Dialog */}
