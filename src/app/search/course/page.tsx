@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import SearchBox from "@/components/common/SearchBox";
 import Banner from "@/components/course-components/Banner";
@@ -31,7 +31,6 @@ const CoursePage = () => {
   const router = useRouter();
   const [value, setValue] = useState<string>("");
   const [openFilter, setOpenFilter] = useState(false);
-  const [chips, setChips] = useState<string[]>([]);
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
@@ -43,10 +42,7 @@ const CoursePage = () => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        setChips((prev) => {
-          const chips = [...prev, ...data.courses.map((course) => course.category)];
-          return Array.from(new Set(chips));
-        });
+        console.log("data: ", data);
       },
     }
   );
@@ -73,14 +69,25 @@ const CoursePage = () => {
     router.push(pathName + "?name=" + value);
   }, [value]);
 
-  // Search by category
-  const onSearchByCategory = async (category: string) => {
-    router.push(pathName + "?category=" + category);
+  // Search by languages
+  const onSearchByLanguage = async (lang: string) => {
+    router.push(pathName + "?language=" + lang);
   };
 
   const onCloseFilter = useCallback(() => {
     setOpenFilter(false);
   }, []);
+
+  // List languages suggest
+  const listLanguages = useMemo(() => {
+    if (data) {
+      return data.courses.reduce((acc: string[], course) => {
+        const languages = course.programmingLanguages;
+        return [...acc, ...languages];
+      }, []);
+    }
+    return [];
+  }, [data]);
 
   if (isLoading) {
     return <ListSkeletons />;
@@ -103,17 +110,19 @@ const CoursePage = () => {
         />
       </Stack>
 
-      {/* Suggest search by category */}
-      <Stack mt={1} mb={1} gap={1} flexDirection={"row"}>
-        {chips.map((category, i) => (
-          <Chip
-            clickable
-            key={i}
-            label={category}
-            size="small"
-            onClick={() => onSearchByCategory(category)}
-          />
-        ))}
+      {/* Suggest search by language */}
+      <Stack m={1} gap={1} flexDirection={"row"}>
+        {listLanguages.map((lang, i) => {
+          return (
+            <Chip
+              clickable
+              key={i}
+              label={lang}
+              size="small"
+              onClick={() => onSearchByLanguage(lang)}
+            />
+          );
+        })}
       </Stack>
       <Divider />
 

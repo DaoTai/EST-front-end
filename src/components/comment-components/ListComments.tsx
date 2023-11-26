@@ -52,7 +52,7 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
     }
   );
 
-  const res = useMemo(() => {
+  const res: any = useMemo(() => {
     if (data) {
       const values = data.reduce(
         (acc, item) => {
@@ -112,7 +112,7 @@ const ListComments: ForwardRefRenderFunction<Partial<IListCommentsRef>, IProps> 
         ({res?.total || 0} comments)
       </Typography>
       <Stack mt={2} gap={2}>
-        {res?.listComments.map((comment) => {
+        {res?.listComments.map((comment: any) => {
           return (
             <Comment
               key={comment._id}

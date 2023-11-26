@@ -35,7 +35,10 @@ const RegisterButton = ({ _id, name, type }: IProps) => {
   );
 
   const isRegistered = useMemo(() => {
-    return listMyCourses?.some((register) => register.course._id === _id);
+    if (listMyCourses) {
+      return listMyCourses?.some((register) => register.course?._id === _id);
+    }
+    return false;
   }, [listMyCourses, _id]);
 
   const onOpenConfirm = () => {

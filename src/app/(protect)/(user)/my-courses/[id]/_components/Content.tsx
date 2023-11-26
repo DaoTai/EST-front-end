@@ -63,9 +63,11 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
                 <Chip label={register?.course.type} />
               </Box>
             </Tooltip>
-            <Tooltip arrow title="Category">
+            <Tooltip arrow title="Programming languages">
               <Box>
-                <Chip label={register?.course.category} />
+                {register?.course.programmingLanguages.map((lang, i) => (
+                  <Chip key={i} label={lang} />
+                ))}
               </Box>
             </Tooltip>
 

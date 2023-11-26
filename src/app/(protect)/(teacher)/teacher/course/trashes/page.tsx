@@ -305,7 +305,7 @@ const TrashedCourses = () => {
             </IconButton>
           </Stack>
           <Box pl={2} pr={2}>
-            <FormCourse course={selectedRow} type="watch" />
+            <FormCourse course={selectedRow} action="watch" />
           </Box>
         </Dialog>
       )}

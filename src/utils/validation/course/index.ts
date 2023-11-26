@@ -10,7 +10,7 @@ export const FormCourseSchema = Yup.object().shape({
     .required(MessageValidation.required)
     .min(2, minCharacterValidator("Name", 2))
     .max(300, maxCharacterValidator("Name", 300)),
-  category: Yup.string().trim().required(MessageValidation.required),
+  suitableJob: Yup.string().trim().required(MessageValidation.required),
   level: Yup.string()
     .trim()
     .required(MessageValidation.required)

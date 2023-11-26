@@ -77,8 +77,6 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
     if (file && file.type.startsWith("video")) {
       const fileSizeInBytes = file.size;
       const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
-      console.log("File size:", fileSizeInMegabytes, "MB");
-
       setVideo(file);
     }
   };
@@ -119,7 +117,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
         variant="h3"
         textAlign={"center"}
         textTransform={"capitalize"}
-        className="underline-gradient"
+        fontWeight={500}
         margin={"0 auto 16px"}
         gutterBottom
       >

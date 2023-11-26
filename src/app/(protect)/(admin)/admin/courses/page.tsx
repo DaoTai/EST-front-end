@@ -103,7 +103,7 @@ const Courses = () => {
                 textDecoration: "underline",
               }}
             >
-              {params.row.lessons.length}
+              {params.row?.lessons?.length}
             </Typography>
           );
         },
@@ -114,7 +114,7 @@ const Courses = () => {
         width: 80,
         renderCell: (params) => {
           const course: ICourse = params.row;
-          const totalReports = course.lessons.reduce((acc, lesson) => {
+          const totalReports = course?.lessons?.reduce((acc, lesson) => {
             return acc + lesson.reports.length;
           }, 0);
 
@@ -325,7 +325,7 @@ const Courses = () => {
       {course && (
         <MyModal open={openDetail} onClose={() => setOpenDetail(false)}>
           <Box width={"100vw"} p={2}>
-            <FormCourse course={course} type="watch" />
+            <FormCourse course={course} action="watch" />
             <Divider />
           </Box>
         </MyModal>

@@ -28,11 +28,11 @@ const GroupChats = () => {
   return (
     <Box
       p={1}
+      pb={4}
       sx={{
         input: {
           padding: "12px",
         },
-
         ".MuiInputBase-root": {
           borderRadius: 12,
         },

@@ -1,7 +1,7 @@
 interface ICourse {
   _id: string;
   name: string;
-  category: string;
+  suitableJob: string;
   level: "beginner" | "fresher" | "junior" | "senior" | "all";
   status: "pending" | "approved";
   deleted: boolean;

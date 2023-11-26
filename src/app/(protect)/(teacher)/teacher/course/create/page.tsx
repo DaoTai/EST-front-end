@@ -20,7 +20,7 @@ const CreateCourse = () => {
   };
   return (
     <Container sx={{ pt: 2 }}>
-      <FormCourse type="create" onSubmit={handleCreateCourse} />
+      <FormCourse action="create" onSubmit={handleCreateCourse} />
     </Container>
   );
 };

@@ -1,25 +1,24 @@
 "use client";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SendIcon from "@mui/icons-material/Send";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { DateTimePicker, DateTimeValidationError } from "@mui/x-date-pickers";
+
+import { DateTimeValidationError } from "@mui/x-date-pickers";
 
 import dayjs from "dayjs";
 import { useFormik } from "formik";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, memo, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
@@ -27,18 +26,21 @@ import { IFormCourse } from "@/types/ICourse";
 import { getChangedValuesObject } from "@/utils/functions";
 import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
+import { InputLabel } from "@mui/material";
+import TextEditor from "../custom/TextEditor";
 import AboutCourse from "./AboutCourse";
 import { selectFields, textFields } from "./_fields";
-import TextEditor from "../custom/TextEditor";
-import Add from "@mui/icons-material/Add";
-import { Chip, Stack } from "@mui/material";
+import DateTime from "./form-course-components/DateTime";
+import LanguagesBox from "./form-course-components/LanguagesBox";
+import SuitableJob from "./form-course-components/SuitableJob";
+import UploadThumbnail from "./form-course-components/UploadThumbnail";
 interface IPropsFormCourse {
-  type: "create" | "edit" | "watch";
+  action: "create" | "edit" | "watch";
   course?: ICourse;
   onSubmit?: (value: IFormCourse) => Promise<void>;
 }
 
-const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
+const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
   const router = useRouter();
   const {
     values,
@@ -65,7 +67,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           const formatOpenDate = dayjs(openDate).toISOString();
           const formatCloseDate = dayjs(closeDate).toISOString();
 
-          if (type === "edit") {
+          if (action === "edit") {
             if (formatOpenDate !== course?.openDate) payload.openDate = formatOpenDate;
             if (formatCloseDate !== course?.closeDate) payload.closeDate = formatCloseDate;
           } else {
@@ -76,13 +78,17 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           }
         }
 
-        if (type === "edit" && course) {
+        if (action === "edit" && course) {
           payload = getChangedValuesObject(payload, course);
         }
-        if (type === "create" && !payload["thumbnail"]) {
-          toast.error("Thumbnail is required");
+        if (action === "create" && !payload["thumbnail"]) {
+          toast.warn("Thumbnail is required", {
+            position: "top-center",
+            theme: "colored",
+          });
           return;
         }
+
         await onSubmit?.(payload);
         router.refresh();
         setTimeout(() => {
@@ -93,15 +99,13 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
       }
     },
   });
-  const [programmingLang, setProgramingLang] = useState<string>("");
+
   const [thumbnail, setThumbnail] = useState<{ file: File | null; preview: string }>();
   const [roadmap, setRoadmap] = useState<File | null>();
   const [openDate, setOpenDate] = useState<string | null | dayjs.Dayjs>(null);
   const [closeDate, setCloseDate] = useState<string | null | dayjs.Dayjs>(null);
   const [errorOpenDate, setErrorOpenDate] = useState<DateTimeValidationError | null>(null);
   const [errorCloseDate, setErrorCloseDate] = useState<DateTimeValidationError | null>(null);
-
-  const thumbnailInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (course) {
@@ -117,28 +121,11 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
   }, [course]);
 
   useEffect(() => {
-    return () => {
-      thumbnail?.preview && URL.revokeObjectURL(thumbnail.preview);
-    };
-  }, [thumbnail]);
-
-  useEffect(() => {
     if (values.type === "private") {
       if (!openDate) setOpenDate(dayjs().add(1, "hour"));
       if (!closeDate) setCloseDate(dayjs().add(2, "day"));
     }
   }, [values.type]);
-
-  // Peview thumbnail
-  const onPreviewThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file && file.type.includes("image"))
-      setThumbnail({
-        file,
-        preview: URL.createObjectURL(file),
-      });
-    thumbnailInputRef.current!.value = "";
-  };
 
   // On change field roadmap
   const onChangeRoadmap = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,93 +133,35 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
     if (file) setRoadmap(file);
   };
 
-  // On change open date
-  const handleChangeOpenDate = (value: any) => {
-    if (!value) {
-      setOpenDate(null);
-    } else {
-      setOpenDate(value);
-    }
-  };
+  // On change programming languages
+  const handleChangeLanguages = useCallback((programmingLanguages: string[]) => {
+    setFieldValue("programmingLanguages", programmingLanguages);
+  }, []);
 
-  // On change close date
-  const handleChangeCloseDate = (value: any) => {
-    if (!value) {
-      setCloseDate(null);
-    } else {
-      setCloseDate(value);
-    }
-  };
-
-  // Handle add programming lang
-  const handleAddProgrammingLangs = () => {
-    if (programmingLang.trim() && !values.programmingLanguages.includes(programmingLang.trim())) {
-      setFieldValue("programmingLanguages", [
-        ...values.programmingLanguages,
-        programmingLang.trim(),
-      ]);
-      setProgramingLang("");
-    }
-  };
-
-  // Handle delete programming lang
-  const handleDeleteProgrammingLangs = (deletedLang: string) => {
-    const updateLangs = values.programmingLanguages.filter((lang) => lang !== deletedLang);
-    setFieldValue("programmingLanguages", updateLangs);
-  };
   // On change intro
   const handleChangeIntro = (value: string) => {
     setFieldValue("intro", value);
   };
-  // Message for open date
-  const errorOpenDateMessage = useMemo(() => {
-    switch (errorOpenDate) {
-      case "minTime": {
-        return "Please select a datetime more than 30 minutes now";
-      }
 
-      default: {
-        return "";
-      }
-    }
-  }, [errorOpenDate]);
-
-  // Message for close date
-  const errorCloseDateMessage = useMemo(() => {
-    switch (errorCloseDate) {
-      case "minTime": {
-        return "Please select a datetime more than 4 hours open date";
-      }
-      default: {
-        return "";
-      }
-    }
-  }, [errorCloseDate]);
-
-  // Disabled open date register: when open date is past time
-  const isPastOpenDate = useMemo(() => {
-    if (course?.openDate) {
-      const now = new Date().getTime();
-      const openDate = new Date(course.openDate).getTime();
-      return now - openDate > 0;
-    }
-  }, [course, type]);
+  // useEffect(() => {
+  //   console.log("values: ", values);
+  // }, [values]);
 
   return (
     <Box pt={1} pb={2}>
       <Typography
+        gutterBottom
+        mb={2}
         variant="h3"
         className="underline-gradient"
         margin={"0 auto"}
         textTransform="capitalize"
-        gutterBottom
-        mb={2}
       >
-        {type} course
+        {action} course
       </Typography>
 
       {/* About */}
-      {course && <AboutCourse course={course} type={type} />}
+      {course && <AboutCourse course={course} type={action} />}
 
       {/* Form */}
       <Grid
@@ -254,21 +183,32 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               error={!!(touched[props.name] && errors[props.name])}
               helperText={touched[props.name] && errors[props.name]}
               InputProps={{
-                readOnly: type === "watch",
+                readOnly: action === "watch",
               }}
             />
           </Grid>
         ))}
 
+        {/* Suitable job */}
+        <Grid item md={6} xs={12}>
+          <SuitableJob
+            name="suitableJob"
+            value={values.suitableJob}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={!!(touched["suitableJob"] && errors["suitableJob"])}
+            helperText={touched["suitableJob"] && errors["suitableJob"]}
+          />
+        </Grid>
+
         {/* Select fields */}
         {selectFields.map(({ props, menuItem }, i) => (
           <Grid key={i} item md={6} xs={12}>
             <FormControl fullWidth required>
-              <Typography variant="subtitle2" color="text.secondary">
-                {props.label}
-              </Typography>
+              <InputLabel>{props.label}</InputLabel>
               <Select
                 {...props}
+                label={props.label}
                 MenuProps={{
                   disableScrollLock: true,
                 }}
@@ -276,7 +216,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={!!(touched[props.name] && errors[props.name])}
-                readOnly={type === "watch"}
+                readOnly={action === "watch"}
               >
                 {menuItem.map((menu, j) => (
                   <MenuItem key={j} value={menu.value}>
@@ -289,73 +229,26 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           </Grid>
         ))}
 
-        {/* Open date*/}
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
-            <DateTimePicker
-              readOnly={type === "watch"}
-              disablePast={type === "create"}
-              label="Open date register"
-              disabled={!!(values.type === "public") || isPastOpenDate}
-              minDateTime={type === "create" ? dayjs().add(29, "minutes") : undefined}
-              value={values.type === "private" ? openDate ?? dayjs().add(1, "hour") : null}
-              slotProps={{
-                textField: {
-                  helperText: errorOpenDateMessage,
-                  InputProps: {
-                    disabled: true,
-                    sx: {
-                      ".mui-aw45kt-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled": {
-                        WebkitTextFillColor: "text.primary",
-                      },
-                    },
-                  },
-                },
-              }}
-              onError={(newError) => setErrorOpenDate(newError)}
-              onChange={handleChangeOpenDate}
-            />
-          </FormControl>
-        </Grid>
+        {/* Date time */}
+        <DateTime
+          type={values.type}
+          openDate={openDate}
+          closeDate={closeDate}
+          setOpenDate={setOpenDate}
+          setCloseDate={setCloseDate}
+          course={course}
+          action={action}
+          errorCloseDate={errorCloseDate}
+          errorOpenDate={errorOpenDate}
+          setErrorCloseDate={setErrorCloseDate}
+          setErrorOpenDate={setErrorOpenDate}
+        />
 
-        {/* Close date */}
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
-            <DateTimePicker
-              readOnly={type === "watch"}
-              disablePast={type === "create"}
-              label="Close date register"
-              disabled={!!(values.type === "public")}
-              value={values.type === "private" ? closeDate ?? dayjs().add(2, "day") : null}
-              minDateTime={dayjs(openDate).add(4, "hour") || dayjs().add(4, "hour")}
-              slotProps={{
-                textField: {
-                  helperText: errorCloseDateMessage,
-                  InputProps: {
-                    disabled: true,
-                  },
-                  sx: {
-                    ".mui-aw45kt-MuiInputBase-input-MuiOutlinedInput-input.Mui-disabled": {
-                      WebkitTextFillColor: "text.primary",
-                    },
-                  },
-                },
-              }}
-              onError={(newError) => {
-                console.log("error: ", newError);
-
-                setErrorCloseDate(newError);
-              }}
-              onChange={handleChangeCloseDate}
-            />
-          </FormControl>
-        </Grid>
-
-        {type !== "watch" && (
+        {action !== "watch" && (
           <>
             {/* Upload files */}
             <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ overflow: "hidden" }}>
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
                   Upload roadmap
                   <VisuallyHiddenInput type="file" onChange={onChangeRoadmap} />
@@ -366,55 +259,14 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
 
             {/* Upload thumbnail */}
             <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                {thumbnail?.preview && (
-                  <Box position={"relative"} mb={2}>
-                    <Image
-                      src={thumbnail.preview}
-                      alt="thumb-nail"
-                      width={300}
-                      height={300}
-                      style={{ borderRadius: 12, width: "100%" }}
-                    />
-                    <IconButton
-                      size="small"
-                      sx={{ position: "absolute", top: 5, right: 5, bgcolor: "rgba(0,0,0,.3)" }}
-                      onClick={() =>
-                        setThumbnail({
-                          file: null,
-                          preview: "",
-                        })
-                      }
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                )}
-                <Button
-                  component="label"
-                  variant="contained"
-                  color="info"
-                  startIcon={<AddPhotoAlternateIcon />}
-                >
-                  Upload thumbnail*
-                  <VisuallyHiddenInput
-                    type="file"
-                    accept="image/png, image/gif, image/jpeg"
-                    ref={thumbnailInputRef}
-                    onChange={onPreviewThumbnail}
-                  />
-                </Button>
-                <Typography variant="caption" ml={1} mt={1}>
-                  Accept: image/png, image/gif, image/jpeg
-                </Typography>
-              </FormControl>
+              <UploadThumbnail thumbnail={thumbnail} setThumbnail={setThumbnail} />
             </Grid>
           </>
         )}
 
         {/* Box programming languages */}
         <Grid item md={6} xs={12}>
-          {type === "watch" ? (
+          {action === "watch" ? (
             <>
               <Typography variant="h6" gutterBottom>
                 Programming languages
@@ -426,38 +278,16 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               </Stack>
             </>
           ) : (
-            <>
-              <Stack flexDirection={"row"} flexWrap={"nowrap"} alignItems={"center"} gap={1}>
-                <TextField
-                  fullWidth
-                  placeholder="Add programming languages"
-                  value={programmingLang}
-                  onChange={(e) => setProgramingLang(e.target.value)}
-                />
-                <IconButton onClick={handleAddProgrammingLangs}>
-                  <Add />
-                </IconButton>
-              </Stack>
-
-              {
-                <Stack flexDirection={"row"} mt={2} gap={1}>
-                  {values.programmingLanguages.map((lang, index) => (
-                    <Chip
-                      key={index}
-                      label={lang}
-                      className="bg-gradient"
-                      onDelete={() => handleDeleteProgrammingLangs(lang)}
-                    />
-                  ))}
-                </Stack>
-              }
-            </>
+            <LanguagesBox
+              programmingLanguages={values.programmingLanguages}
+              onChange={handleChangeLanguages}
+            />
           )}
         </Grid>
 
         {/* Intro */}
-        <Grid item md={6} xs={12}>
-          {type === "watch" ? (
+        <Grid item md={12} xs={12}>
+          {action === "watch" ? (
             <>
               <Typography variant="h6" gutterBottom>
                 Intro
@@ -482,7 +312,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
           )}
         </Grid>
 
-        {type !== "watch" && (
+        {action !== "watch" && (
           <Grid item md={12} xs={12} display={"flex"} justifyContent={"end"}>
             <Button
               type="submit"
@@ -490,7 +320,7 @@ const FormCourse = ({ type, course, onSubmit }: IPropsFormCourse) => {
               endIcon={<SendIcon />}
               disabled={!!(errorOpenDate || errorCloseDate || isSubmitting)}
             >
-              {type === "create" ? "Create" : "Edit"}
+              {action === "create" ? "Create" : "Edit"}
             </Button>
           </Grid>
         )}

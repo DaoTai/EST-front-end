@@ -28,6 +28,8 @@ const lessonFetcher: Fetcher<{ lesson: ILesson; listAnswerRecords: IAnswerRecord
       return res.json();
     }
 
+    console.log("res: ", res);
+
     throw Error("Fetch data failed ");
   });
 
@@ -41,12 +43,17 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onSuccess(data, key, config) {},
+      onSuccess(data, key, config) {
+        console.log("data: ", data);
+      },
       onError(err, key, config) {
-        router.replace("/");
+        console.log("Error: ", err);
+
+        // router.replace("/");
       },
     }
   );
+
   const [tab, setTab] = useState<"Theory" | "References" | "Report" | "Questions">("Theory");
 
   const myReports = useMemo(() => {
@@ -56,7 +63,7 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
     return null;
   }, [response?.lesson, session]);
 
-  if (isLoading) {
+  if (isLoading && !response) {
     return (
       <Typography variant="body1" textAlign={"center"}>
         Loading lesson
@@ -75,7 +82,7 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
     return response?.listAnswerRecords.find((record) => record.question._id === idQuestion);
   };
 
-  if (response) {
+  if (response?.lesson && response.listAnswerRecords) {
     return (
       <>
         {response?.lesson?.video && <VideoPlayer uri={response?.lesson?.video.uri} />}
@@ -103,7 +110,7 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
           {tab === "Theory" && (
             <Box>
               <Typography gutterBottom variant="h6" fontWeight={600}>
-                {response?.lesson.name}
+                {response?.lesson?.name}
               </Typography>
               <Divider />
               <Typography
@@ -181,6 +188,12 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
           {tab === "Report" && <ReportBox idLesson={response.lesson._id} reports={myReports} />}
         </Box>
       </>
+    );
+  } else {
+    return (
+      <Typography variant="h6" textAlign={"center"}>
+        No exist lesson
+      </Typography>
     );
   }
 };

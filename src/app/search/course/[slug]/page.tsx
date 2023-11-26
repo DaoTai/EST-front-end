@@ -15,15 +15,16 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import Banner from "@/components/course-components/Banner";
-import PreviewLesson from "@/components/lesson-components/PreviewLesson";
+import Intro from "@/components/profile-components/Intro";
 import { SERVER_URI } from "@/utils/constants/common";
 import RegisterButton from "./_components/RegisterButton";
-import Intro from "@/components/profile-components/Intro";
 
 const DetailCourse = async ({ params }: { params: { slug: string } }) => {
   const res = await fetch(SERVER_URI + "/search/courses/" + params.slug);
   if (res.ok) {
     const detail: ICourse = await res.json();
+    console.log("detail: ", detail);
+
     return (
       <>
         <Grid container spacing={1} pt={1}>
@@ -79,11 +80,11 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
                   dangerouslySetInnerHTML={{ __html: detail.intro }}
                 ></Typography>
                 <Divider />
-                <Typography variant="subtitle1" gutterBottom>
+                {/* <Typography variant="subtitle1" gutterBottom>
                   <b>{detail.lessons.length}</b> lessons
-                </Typography>
+                </Typography> */}
                 {/* Lessons */}
-                <Stack gap={1}>
+                {/* <Stack gap={1}>
                   {detail.lessons.map((lesson, i) => (
                     <Stack key={lesson._id} flexDirection={"row"} alignItems={"center"} gap={1}>
                       <Typography
@@ -102,7 +103,7 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
                       </Box>
                     </Stack>
                   ))}
-                </Stack>
+                </Stack> */}
               </Box>
             </Paper>
           </Grid>

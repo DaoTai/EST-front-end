@@ -47,7 +47,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
 
   return (
     <Container>
-      {course && <FormCourse type="edit" course={course} onSubmit={handleEdit} />}
+      {course && <FormCourse action="edit" course={course} onSubmit={handleEdit} />}
     </Container>
   );
 };

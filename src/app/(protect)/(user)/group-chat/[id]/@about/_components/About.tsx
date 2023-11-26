@@ -47,7 +47,7 @@ const About = () => {
 
   if (data) {
     return (
-      <Paper elevation={5} sx={{ p: 1, height: "100vh", overflowY: "auto" }}>
+      <Paper elevation={5} sx={{ p: 1, height: "90vh", pb: 4, overflowY: "auto" }}>
         {/* Actions */}
         <Actions groupChat={data} mutate={mutate} />
         {/* Name group chat */}

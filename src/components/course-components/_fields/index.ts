@@ -20,14 +20,6 @@ export const textFields: CustomTextFieldProps[] = [
     fullWidth: true,
     required: true,
   },
-  {
-    name: "category",
-    label: "Category",
-    type: "text",
-    placeholder: "Enter category course (Ex: Front-end, Back-end, Mobile...)",
-    fullWidth: true,
-    required: true,
-  },
 ];
 
 export const selectFields: SelectFields[] = [

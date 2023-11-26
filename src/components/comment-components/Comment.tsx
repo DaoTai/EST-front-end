@@ -73,7 +73,13 @@ const Comment = ({ idLesson, comment, mutate }: IProps) => {
 
   return (
     <>
-      <Stack flexDirection={"row"} gap={2} alignItems={"start"}>
+      <Stack
+        flexDirection={"row"}
+        gap={2}
+        alignItems={"start"}
+        borderBottom={1}
+        borderColor={"divivder"}
+      >
         <Avatar
           component={Link}
           href={"/profile/" + comment.user._id}

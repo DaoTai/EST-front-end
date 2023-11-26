@@ -17,7 +17,7 @@ export const initChangePwd = {
 
 export const initFormCourse = {
   name: "",
-  category: "",
+  suitableJob: "",
   intro: "",
   level: "all",
   type: "public",

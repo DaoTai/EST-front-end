@@ -37,6 +37,7 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
             </Suspense>
           </Grid>
         </Grid>
+        {/* Create lesson */}
         <CreateLesson />
       </>
     );

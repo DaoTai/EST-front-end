@@ -39,15 +39,15 @@ const About = ({ course }: { course: ICourse }) => {
           <b>Members: </b> {course.members.length}
         </Typography>
         <Typography variant="body1">
-          <b>Lessons: </b> {course.lessons.length}
+          <b>Lessons: </b> {(course?.lessons && course?.lessons.length) ?? 0}
         </Typography>
         <Typography variant="body1" textTransform={"capitalize"}>
           <b>Level: </b>
           {course.level}
         </Typography>
         <Typography variant="body1">
-          <b>Category: </b>
-          {course.category}
+          <b>Suitable job: </b>
+          {course.suitableJob}
         </Typography>
         <Typography variant="body1">
           <b>Created time:</b> {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}

@@ -74,7 +74,7 @@ const CreateModal = () => {
             <ArrowBackIosNewIcon />
           </IconButton>
         </Box>
-        <Container>
+        <Container sx={{ pb: 2 }}>
           <FormLesson type="create" onSubmit={handleAddLesson} />
         </Container>
       </Dialog>
