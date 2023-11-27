@@ -5,5 +5,5 @@ export default styled("input")({
   bottom: 0,
   left: 0,
   whiteSpace: "nowrap",
-  width: 1,
+  width: 0,
 });

@@ -1,4 +1,3 @@
-import Header from "@/components/common/Header";
 import ListGroupChatProvider from "@/providers/ListGroupChatContext";
 import { Box, Grid } from "@mui/material";
 import React, { Suspense } from "react";
@@ -10,15 +9,19 @@ type IProps = {
 
 const RootLayout = ({ children, groupChats }: IProps) => {
   return (
-    <Box height={"100vh"} overflow={"hidden"}>
-      <Header />
+    <Box
+      sx={{
+        maxHeight: "100vh",
+        overflow: "hidden",
+      }}
+    >
       <ListGroupChatProvider>
-        <Grid container columnSpacing={1} style={{ marginTop: "80px", maxHeight: "100%" }}>
+        <Grid container columnSpacing={1}>
           <Grid
             item
             xs={3}
             sx={{
-              height: "90vh",
+              maxHeight: "100vh",
               overflowY: "auto",
             }}
           >

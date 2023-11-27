@@ -1,5 +1,5 @@
 import Header from "@/components/common/Header";
-import { Grid, Paper } from "@mui/material";
+import { Box, Grid, Paper, Stack } from "@mui/material";
 import React, { Suspense } from "react";
 
 type IProps = {
@@ -9,21 +9,21 @@ type IProps = {
 
 const RootLayout = ({ children, about }: IProps) => {
   return (
-    <Grid container columnSpacing={1} component={Paper} elevation={5}>
-      <Grid
-        item
-        xs={9}
+    <Stack flexDirection={"row"} position={"relative"} component={Paper} elevation={5}>
+      <Box
+        flex={2}
         sx={{
           height: "100vh",
           overflowY: "overlay",
+          pt: "50px",
         }}
       >
         <Suspense fallback={<p>Loading ...</p>}>{children}</Suspense>
-      </Grid>
-      <Grid item xs={3}>
+      </Box>
+      <Box position={"absolute"} sx={{ top: 0, right: 0, left: 0, boxShadow: 1 }}>
         <Suspense fallback={<p>Loading ...</p>}>{about}</Suspense>
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 };
 

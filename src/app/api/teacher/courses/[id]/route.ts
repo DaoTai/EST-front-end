@@ -22,7 +22,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
         "Content-Type": "multipart/form-data",
       },
     });
-    // http://localhost:3003/teacher/course/652cdd97bab003d11cd9b7a5/
     return NextResponse.json(res.data);
   } catch (error) {
     return NextResponse.json(null);

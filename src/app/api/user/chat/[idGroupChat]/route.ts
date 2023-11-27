@@ -5,7 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 export const GET = async (req: NextRequest, { params }: { params: { idGroupChat: string } }) => {
   try {
-    const res = await serverAxios.get("/chat/group-chat/" + params.idGroupChat);
+    const searchParams = req.nextUrl.searchParams;
+    const res = await serverAxios.get(
+      "/chat/group-chat/" + params.idGroupChat + "?" + searchParams
+    );
     return NextResponse.json(res.data, {
       status: res.status,
     });
@@ -20,8 +23,12 @@ export const GET = async (req: NextRequest, { params }: { params: { idGroupChat:
 
 export const POST = async (req: NextRequest, { params }: { params: { idGroupChat: string } }) => {
   try {
-    const body = await req.json();
-    const res = await serverAxios.post("/chat/group-chat/", body);
+    const body = await req.formData();
+    const res = await serverAxios.post("/chat/group-chat/" + params.idGroupChat, body, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return NextResponse.json(res.data, {
       status: res.status,
     });

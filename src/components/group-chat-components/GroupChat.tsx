@@ -1,5 +1,6 @@
+"use client";
 import { getDistanceTimeToNow } from "@/utils/functions";
-import { AvatarGroup, Tooltip } from "@mui/material";
+import { AvatarGroup, Stack, Tooltip } from "@mui/material";
 
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
@@ -7,6 +8,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
 import { grey } from "@mui/material/colors";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { memo } from "react";
 
@@ -16,6 +18,8 @@ type IProps = {
 };
 
 const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
+  const { data: session } = useSession();
+  const ownerLatestChat = session?._id === groupChat.latestChat?.sender._id;
   return (
     <Paper
       elevation={2}
@@ -55,19 +59,32 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         >
           {groupChat.name}
         </Typography>
-        <Typography
-          overflow={"hidden"}
-          textOverflow={"ellipsis"}
-          whiteSpace={"nowrap"}
-          variant="body1"
-          sx={{ color: isActive ? "inherit" : grey[500] }}
-        >
-          {groupChat.latestChat?.message
-            ? groupChat.latestChat.sender.username + ": " + groupChat.latestChat.message
-            : groupChat.latestChat?.attachments.length > 0
-            ? "Sent attachments"
-            : "No chat"}
-        </Typography>
+        <Stack flexDirection={"row"} gap={0.5}>
+          <Typography variant="body1" component={"span"} fontWeight={500}>
+            {ownerLatestChat ? "You: " : groupChat.latestChat?.sender.username}
+          </Typography>
+          {groupChat.latestChat?.attachments && groupChat.latestChat?.attachments.length > 0 ? (
+            <Typography
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              whiteSpace={"nowrap"}
+              variant="body1"
+              sx={{ color: isActive ? "inherit" : grey[500] }}
+            >
+              {groupChat.latestChat?.attachments.length + "attachment"}
+            </Typography>
+          ) : (
+            <Typography
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              whiteSpace={"nowrap"}
+              variant="body1"
+              sx={{ color: isActive ? "inherit" : grey[500] }}
+            >
+              {groupChat.latestChat?.message || "No chat"}
+            </Typography>
+          )}
+        </Stack>
       </Box>
       <Typography variant="subtitle2" fontWeight={400}>
         {getDistanceTimeToNow(groupChat.updatedAt)}

@@ -38,7 +38,9 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onSuccess(data, key, config) {},
+      onSuccess(data, key, config) {
+        console.log("list group chat: ", data);
+      },
     }
   );
 

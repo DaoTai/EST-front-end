@@ -2,12 +2,12 @@ interface IGroupChat {
   _id: string;
   name: string;
   host: IMemberGroupChat;
-  members: IMemberGroupChat[];
-  blockedMembers: IMemberGroupChat[];
   createdAt: string;
   updatedAt: string;
-  __v: number;
-  latestChat: ILatestChat;
+  members: IMemberGroupChat[];
+  blockedMembers: IMemberGroupChat[];
+  latestReadBy: IMemberGroupChat[];
+  latestChat?: IChat;
 }
 
 interface IMemberGroupChat {
@@ -17,14 +17,17 @@ interface IMemberGroupChat {
   favouriteProrammingLanguages?: string[];
 }
 
-interface ILatestChat {
+interface IChat {
   _id: string;
   idGroupChat: string;
-  sender: IProfile;
+  sender: Pick<IProfile, "_id" | "username" | "avatar">;
   message: string;
-  seen: any[];
-  attachments: any[];
   createdAt: string;
   updatedAt: string;
-  __v: number;
+  attachments: IAttachment[];
+}
+
+interface IFormChat {
+  message: string;
+  images?: FileList;
 }

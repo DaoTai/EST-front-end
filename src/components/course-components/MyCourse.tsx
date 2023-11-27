@@ -17,11 +17,9 @@ type IProps = {
 };
 
 const MyCourse = ({ direction = "column", data }: IProps) => {
-  console.log("data: ", data);
-
   const progress = useMemo(() => {
     if (data?.passedLessons && data.course?.lessons.length > 0) {
-      return (data.passedLessons.length / data.course.lessons.length) * 100;
+      return +(data.passedLessons.length / data.course.lessons.length).toFixed(1) * 100;
     }
     return 0;
   }, [data]);

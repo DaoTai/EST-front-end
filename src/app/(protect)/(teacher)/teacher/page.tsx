@@ -1,15 +1,14 @@
+import Banner from "@/components/course-components/Banner";
+import serverAxios from "@/config/axios";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Banner from "@/components/course-components/Banner";
-import serverAxios from "@/config/axios";
-import { Divider } from "@mui/material";
 const getListCourses = async (): Promise<ICourse[] | undefined> => {
   try {
     const res = await serverAxios.get("/courses");

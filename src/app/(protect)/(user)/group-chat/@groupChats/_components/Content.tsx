@@ -1,4 +1,5 @@
 "use client";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -9,11 +10,13 @@ import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
 import NewGroup from "@/components/group-chat-components/NewGroupIcon";
 import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
-import { Divider } from "@mui/material";
-import { useParams } from "next/navigation";
+import { Divider, IconButton } from "@mui/material";
+import { useParams, useRouter } from "next/navigation";
+import ToggleModeTheme from "@/components/common/ToggleModeTheme";
 
 const GroupChats = () => {
   const params = useParams();
+  const router = useRouter();
   const {
     isLoadingInitial,
     isValidating,
@@ -26,18 +29,13 @@ const GroupChats = () => {
   } = useListGroupChatContext();
 
   return (
-    <Box
-      p={1}
-      pb={4}
-      sx={{
-        input: {
-          padding: "12px",
-        },
-        ".MuiInputBase-root": {
-          borderRadius: 12,
-        },
-      }}
-    >
+    <Box p={1} pb={4}>
+      <Stack flexDirection={"row"} justifyContent={"space-between"}>
+        <IconButton sx={{ border: 1, borderColor: "divider" }} onClick={() => router.back()}>
+          <ArrowBackIcon />
+        </IconButton>
+        <ToggleModeTheme />
+      </Stack>
       <Divider>
         <Typography variant="h5" textAlign={"center"} fontWeight={600} gutterBottom>
           Group chat
@@ -50,6 +48,14 @@ const GroupChats = () => {
         flexDirection={"row"}
         justifyContent={"space-between"}
         alignItems={"center"}
+        sx={{
+          input: {
+            padding: "12px",
+          },
+          ".MuiInputBase-root": {
+            borderRadius: 12,
+          },
+        }}
       >
         <SearchBox
           placeholder="Search name group chat"
@@ -62,11 +68,6 @@ const GroupChats = () => {
 
       {/* List group */}
       <>
-        {isValidating && !isLoadingInitial && (
-          <Typography variant="body1" textAlign={"center"}>
-            Loading ...
-          </Typography>
-        )}
         {isLoadingInitial ? (
           <Typography variant="body1" textAlign={"center"}>
             Loading ...
@@ -85,6 +86,11 @@ const GroupChats = () => {
               </Typography>
             )}
           </Stack>
+        )}
+        {isValidating && !isLoadingInitial && (
+          <Typography variant="body1" textAlign={"center"} mt={1}>
+            Loading ...
+          </Typography>
         )}
       </>
 
