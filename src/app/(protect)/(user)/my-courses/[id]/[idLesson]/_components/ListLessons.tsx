@@ -51,6 +51,7 @@ const ListLessons = () => {
       revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      onSuccess(data, key, config) {},
     }
   );
 

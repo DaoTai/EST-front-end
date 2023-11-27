@@ -16,7 +16,7 @@ import Typography from "@mui/material/Typography";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useMemo, useState } from "react";
-import useSWR, { Fetcher } from "swr";
+import useSWR, { Fetcher, mutate } from "swr";
 import Question from "./Question";
 import ReportBox from "./ReportBox";
 
@@ -27,8 +27,6 @@ const lessonFetcher: Fetcher<{ lesson: ILesson; listAnswerRecords: IAnswerRecord
     if (res.ok) {
       return res.json();
     }
-
-    console.log("res: ", res);
 
     throw Error("Fetch data failed ");
   });
@@ -44,12 +42,15 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        console.log("data: ", data);
+        // Nếu bài học không có câu hỏi nào thì revalidate list lessons để enable next lesson
+        if (data.lesson.questions.length === 0) {
+          mutate(`/api/user/my-lessons?idRegisteredCourse=${idCourse}`);
+        }
       },
       onError(err, key, config) {
         console.log("Error: ", err);
 
-        // router.replace("/");
+        router.replace("/");
       },
     }
   );

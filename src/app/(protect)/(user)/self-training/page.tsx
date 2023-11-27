@@ -10,15 +10,14 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+
 import axios from "axios";
 import { useState } from "react";
-
 import { toast } from "react-toastify";
 import ChoiceQuestion from "./_components/ChoiceQuestion";
 import MultilChoiceQuestion from "./_components/MultilChoiceQuestion";
@@ -154,16 +153,14 @@ const SelfTraining = () => {
               <MenuItem value={"byCourseCategories"}>Your registered categories</MenuItem>
             </Select>
           </FormControl>
-          {(!isStarted || score) && (
-            <Button
-              variant="contained"
-              disabled={isLoading}
-              endIcon={<StartIcon />}
-              onClick={fetchQuestions}
-            >
-              {isLoading ? "Loading" : "Start"}
-            </Button>
-          )}
+          <Button
+            variant="contained"
+            disabled={isLoading}
+            endIcon={<StartIcon />}
+            onClick={fetchQuestions}
+          >
+            {isLoading ? "Loading" : "Start"}
+          </Button>
         </Stack>
 
         {isLoading && (

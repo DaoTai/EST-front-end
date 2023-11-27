@@ -402,7 +402,7 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
 
         <Grid item md={12} xs={12} display={"flex"} justifyContent={"end"}>
           <Button
-            fullWidth
+            // fullWidth
             type="submit"
             variant="contained"
             disabled={isDisabled || isSubmitting}

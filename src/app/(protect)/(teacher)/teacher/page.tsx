@@ -72,7 +72,7 @@ const Teacher = async () => {
         </Stack>
       </Box>
 
-      <Stack mt={1} gap={1}>
+      <Stack mt={2} gap={2}>
         {listCourses?.map((course) => (
           <Link
             key={course._id}
@@ -80,7 +80,6 @@ const Teacher = async () => {
             style={{ textDecoration: "none" }}
           >
             <Banner course={course} mode="manager" />
-            <Divider />
           </Link>
         ))}
       </Stack>

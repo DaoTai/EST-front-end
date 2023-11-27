@@ -29,6 +29,7 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      onSuccess(data, key, config) {},
       onError(err, key, config) {
         router.replace("/");
       },

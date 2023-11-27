@@ -19,7 +19,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
   return (
     <Grid
       container
-      columnSpacing={1}
+      spacing={1}
       flexDirection={"row"}
       flexWrap={"wrap"}
       border={1}
