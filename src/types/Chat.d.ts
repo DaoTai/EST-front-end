@@ -25,9 +25,24 @@ interface IChat {
   createdAt: string;
   updatedAt: string;
   attachments: IAttachment[];
+  seo?: ISEOChat;
 }
 
 interface IFormChat {
   message: string;
   images?: FileList;
+}
+
+interface ISEOChat {
+  ogUrl: string;
+  ogTitle: string;
+  ogDescription: string;
+  href: string;
+  ogImage: ISEOChatImage;
+}
+
+interface ISEOChatImage {
+  width?: string;
+  height?: string;
+  url: string;
 }

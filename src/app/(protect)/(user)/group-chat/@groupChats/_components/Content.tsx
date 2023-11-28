@@ -12,7 +12,11 @@ import NewGroup from "@/components/group-chat-components/NewGroupIcon";
 import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
 import { Divider, IconButton } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
-import ToggleModeTheme from "@/components/common/ToggleModeTheme";
+import dynamic from "next/dynamic";
+
+const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
+  ssr: false,
+});
 
 const GroupChats = () => {
   const params = useParams();
@@ -77,6 +81,7 @@ const GroupChats = () => {
             {listGroupChats.length > 0 ? (
               listGroupChats.map((groupChat) => {
                 const isActive = groupChat._id === params.id;
+                console.log("groupChat: ", groupChat);
 
                 return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
               })

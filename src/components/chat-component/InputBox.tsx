@@ -16,6 +16,7 @@ type IProps = {
 
 const InputBox = ({ onSend }: IProps) => {
   const inputRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [newChat, setNewChat] = useState<IFormChat>({ message: "" });
   const [files, setFiles] = useState<{ file: File | null; preview: string }[]>([]);
 
@@ -49,11 +50,13 @@ const InputBox = ({ onSend }: IProps) => {
 
   //   Send new chat
   const handleSend = async () => {
+    setLoading(true);
     await onSend({
       ...newChat,
       images: files?.map((item) => item.file),
     });
     setNewChat({ message: "" });
+    setLoading(false);
     files.length > 0 && setFiles([]);
     inputRef.current?.focus();
   };
@@ -117,7 +120,14 @@ const InputBox = ({ onSend }: IProps) => {
           placeholder="New chat"
           inputRef={inputRef}
           value={newChat.message}
-          sx={{ flex: "2 1 auto", border: 1, borderColor: "divider", borderRadius: 1, p: 1 }}
+          sx={{
+            flex: "2 1 auto",
+            border: 1,
+            borderRadius: 8,
+            p: 1,
+            pt: 1.5,
+            pb: 1.5,
+          }}
           onChange={(e) => handleChangeMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           onKeyUp={handleKeyUp}
@@ -135,7 +145,7 @@ const InputBox = ({ onSend }: IProps) => {
             />
           </IconButton>
 
-          <Button variant="text" onClick={handleSend}>
+          <Button variant="text" disabled={loading} onClick={handleSend}>
             Send
           </Button>
         </Stack>
