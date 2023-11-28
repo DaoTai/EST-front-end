@@ -4,7 +4,6 @@ import {
   signInByFetch,
   signUpWithFetch,
 } from "@/services/auth";
-import { AxiosError } from "axios";
 import { AuthOptions } from "next-auth";
 
 import CredentialsProvider from "next-auth/providers/credentials";

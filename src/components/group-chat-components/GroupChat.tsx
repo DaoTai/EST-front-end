@@ -18,6 +18,8 @@ type IProps = {
 };
 
 const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
+  // console.log("groupChat: ", groupChat);
+
   const { data: session } = useSession();
   const ownerLatestChat = session?._id === groupChat.latestChat?.sender._id;
   return (
@@ -61,7 +63,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         </Typography>
         <Stack flexDirection={"row"} gap={0.5}>
           <Typography variant="body1" component={"span"} fontWeight={500}>
-            {ownerLatestChat ? "You: " : groupChat.latestChat?.sender.username}
+            {ownerLatestChat ? "You: " : groupChat.latestChat?.sender.username + ": "}
           </Typography>
           {groupChat.latestChat?.attachments && groupChat.latestChat?.attachments.length > 0 ? (
             <Typography

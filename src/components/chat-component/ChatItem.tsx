@@ -57,10 +57,11 @@ const ChatItem = ({ chat }: { chat: IChat }) => {
 
         {/* Attachments */}
         {chat.attachments.length > 0 && (
-          <Grid
-            container
-            spacing={1}
+          <Stack
+            gap={1}
             mt={0.5}
+            flexDirection={"row"}
+            alignItems={"center"}
             sx={{
               img: {
                 borderRadius: 2,
@@ -72,13 +73,19 @@ const ChatItem = ({ chat }: { chat: IChat }) => {
             {chat.attachments.map((attachment, i) => {
               if (attachment.type === "image") {
                 return (
-                  <Grid key={i} item xs={4}>
-                    <Image src={attachment.uri} alt="attachment" width={80} height={80} />
-                  </Grid>
+                  <Box key={i} width={"100%"}>
+                    <Image
+                      src={attachment.uri}
+                      alt="attachment"
+                      width={200}
+                      height={200}
+                      style={{ width: "100%" }}
+                    />
+                  </Box>
                 );
               }
             })}
-          </Grid>
+          </Stack>
         )}
 
         {/* Distance time */}

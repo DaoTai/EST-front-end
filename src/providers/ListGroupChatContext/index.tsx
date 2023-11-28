@@ -1,33 +1,19 @@
 "use client";
-import React, { createContext, useContext, useMemo, useState } from "react";
-import { Fetcher } from "swr";
-import useSWRInfinite from "swr/infinite";
-import { IResponse, ListGroupChatContextProps } from "./interfaces";
-import { useRouter } from "next/navigation";
 import useDebounce from "@/hooks/useDebounce";
-
-const ListGroupChatContext = createContext<ListGroupChatContextProps | undefined>(undefined);
-
-export const useListGroupChatContext = (): ListGroupChatContextProps => {
-  const context = useContext(ListGroupChatContext);
-  if (!context) {
-    throw new Error("useListGroupChatContext must be used within a ListGroupChatProvider");
-  }
-  return context;
-};
-
-const fetcher: Fetcher<IResponse, string> = (url: string) =>
-  fetch(url).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      throw new Error("Fetch group chat failed");
-    }
-  });
+import { ListGroupChatContext } from "@/hooks/useListGroupChatContext";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Socket, io } from "socket.io-client";
+import useSWRInfinite from "swr/infinite";
+import { fetcher } from "./fetcher";
 
 const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
+  const [socket, setSocket] = useState<Socket>();
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
+  const [joinedGroups, setJoinedGroups] = useState<string[]>([]);
+  const joinedGroupsRef = useRef<string[]>([]);
+
   const name = useDebounce(search);
   const { data, size, setSize, mutate, isValidating, error } = useSWRInfinite(
     (page: number) => {
@@ -43,6 +29,10 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       },
     }
   );
+
+  useEffect(() => {
+    setSocket(io(process.env.SERVER_URL as string));
+  }, []);
 
   // Status loading when init data
   const isLoadingInitial = useMemo(() => {
@@ -68,9 +58,24 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     return [];
   }, [data]);
 
-  // Revalidate data
+  // Revalidate list group chat
   const revalidate = () => {
     mutate();
+  };
+
+  // Handle join group chat
+  const handleJoinGroup = ({ newGroupId }: { newGroupId: string }) => {
+    const isJoined = joinedGroups.includes(newGroupId);
+
+    if (!isJoined && socket) {
+      console.log("Join");
+
+      setJoinedGroups((prev) => [...prev, newGroupId]);
+      joinedGroupsRef.current.push(newGroupId);
+      socket.emit("join group", {
+        idGroup: newGroupId,
+      });
+    }
   };
 
   const value = {
@@ -83,6 +88,8 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     revalidate,
     setSize,
     setSearch,
+    handleJoinGroup,
+    socket,
   };
 
   if (error) {

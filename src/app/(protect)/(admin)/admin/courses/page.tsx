@@ -214,7 +214,7 @@ const Courses = () => {
     } catch (error) {
       toast.error("Edit courses failed");
     }
-  }, [course]);
+  }, [course, listIdCourse]);
 
   // Filter by status
   const handleFilterStatus = async (e: SelectChangeEvent) => {

@@ -1,3 +1,5 @@
+import { Socket } from "socket.io-client";
+
 export interface IResponse {
   listGroupChats: IGroupChat[];
   total: number;
@@ -14,4 +16,6 @@ export interface ListGroupChatContextProps {
   revalidate: () => void;
   setSearch: (value: string) => void;
   setSize: (size: number | ((_size: number) => number)) => Promise<IResponse[] | undefined>;
+  handleJoinGroup: ({ newGroupId }: { newGroupId: string }) => void;
+  socket: Socket | undefined;
 }

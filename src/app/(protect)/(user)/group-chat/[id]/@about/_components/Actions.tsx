@@ -19,10 +19,10 @@ import { useCallback, useMemo, useState } from "react";
 import MyDialog from "@/components/custom/Dialog";
 import MyModal from "@/components/custom/Modal";
 import Spinner from "@/components/custom/Spinner";
-import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
 import { showErrorToast } from "@/utils/functions";
 import AddNewMembers from "./Add";
 import EditGroupChat from "./Edit";
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 
 type IProps = {
   groupChat: IGroupChat;

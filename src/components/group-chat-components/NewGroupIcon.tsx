@@ -14,7 +14,7 @@ import { useCallback, useState } from "react";
 import MyModal from "@/components/custom/Modal";
 import axios from "axios";
 import AddMembers from "./AddMembers";
-import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 
 const NewGroup = () => {
   const { revalidate } = useListGroupChatContext();

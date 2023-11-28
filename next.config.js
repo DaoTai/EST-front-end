@@ -13,6 +13,10 @@ const nextConfig = {
     styledComponents: true,
   },
 
+  env: {
+    SERVER_URL: process.env.SERVER_URL,
+  },
+
   //To speed up development time and NextJS compilation time when using MUI, we have to use the modularizeImports
   modularizeImports: {
     "@mui/material": {
@@ -24,6 +28,15 @@ const nextConfig = {
     "@mui/styles": {
       transform: "@mui/styles/{{member}}",
     },
+  },
+
+  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    config.externals.push({
+      "utf-8-validate": "commonjs utf-8-validate",
+      bufferutil: "commonjs bufferutil",
+      "supports-color": "commonjs supports-color",
+    });
+    return config;
   },
 };
 

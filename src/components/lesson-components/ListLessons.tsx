@@ -114,7 +114,7 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
               href={preHrefLesson + lesson._id}
             >
               <Box flexGrow={2}>
-                <PreviewLesson lesson={lesson} />
+                <Typography variant="body1">{lesson.name}</Typography>
               </Box>
               <Stack flexDirection={"row"} gap={1}>
                 {lesson.reports.length > 0 && (

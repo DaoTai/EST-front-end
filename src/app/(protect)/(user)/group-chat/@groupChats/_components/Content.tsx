@@ -9,10 +9,10 @@ import Typography from "@mui/material/Typography";
 import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
 import NewGroup from "@/components/group-chat-components/NewGroupIcon";
-import { useListGroupChatContext } from "@/providers/ListGroupChatContext";
 import { Divider, IconButton } from "@mui/material";
 import { useParams, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
@@ -35,7 +35,7 @@ const GroupChats = () => {
   return (
     <Box p={1} pb={4}>
       <Stack flexDirection={"row"} justifyContent={"space-between"}>
-        <IconButton sx={{ border: 1, borderColor: "divider" }} onClick={() => router.back()}>
+        <IconButton sx={{ border: 1, borderColor: "divider" }} onClick={() => router.replace("/")}>
           <ArrowBackIcon />
         </IconButton>
         <ToggleModeTheme />
@@ -81,8 +81,6 @@ const GroupChats = () => {
             {listGroupChats.length > 0 ? (
               listGroupChats.map((groupChat) => {
                 const isActive = groupChat._id === params.id;
-                console.log("groupChat: ", groupChat);
-
                 return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
               })
             ) : (

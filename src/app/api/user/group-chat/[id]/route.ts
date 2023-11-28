@@ -17,6 +17,7 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
+// Edit name chat
 export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const body = await req.json();

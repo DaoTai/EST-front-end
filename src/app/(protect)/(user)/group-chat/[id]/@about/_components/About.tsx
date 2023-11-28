@@ -12,7 +12,9 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
 import { Drawer, IconButton } from "@mui/material";
+import axios from "axios";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -31,15 +33,20 @@ const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
 
 const About = () => {
   const params = useParams();
+
   const [toggle, setToggle] = useState<boolean>(false);
   const { data, mutate, isValidating } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     onSuccess(data, key, config) {
-      // console.log("data: ", data);
+      // console.log("detail group-chat: ", data);
     },
   });
+
+  const handleSeenLatestMessage = async () => {
+    await axios.put("/api/user/group-chat/" + params.id);
+  };
 
   if (!data && isValidating) {
     return (
@@ -55,17 +62,27 @@ const About = () => {
 
   if (data) {
     return (
-      <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
+      <Stack
+        flexDirection={"row"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        sx={{ bgcolor: (theme) => theme.palette.white.main }}
+      >
         <Typography fontWeight={500} letterSpacing={0.5} variant="h6" ml={2}>
           {data.name}
         </Typography>
-        <IconButton size="large" onClick={handleToggle}>
+        {/* Toggle display */}
+        <IconButton onClick={handleToggle}>
           <MenuIcon />
         </IconButton>
 
         {/* List edit */}
         <Drawer open={toggle} anchor="right" onClose={handleToggle}>
           <Paper elevation={5} sx={{ p: 1, height: "100%", pb: 4, overflowY: "auto" }}>
+            <IconButton onClick={handleToggle}>
+              <ArrowBackIos />
+            </IconButton>
+            <Divider />
             {/* Actions */}
             <Actions groupChat={data} mutate={mutate} />
             {/* Name group chat */}

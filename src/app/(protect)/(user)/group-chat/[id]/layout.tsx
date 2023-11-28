@@ -1,5 +1,7 @@
-import Header from "@/components/common/Header";
-import { Box, Grid, Paper, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+
 import React, { Suspense } from "react";
 
 type IProps = {
@@ -20,7 +22,7 @@ const RootLayout = ({ children, about }: IProps) => {
       >
         <Suspense fallback={<p>Loading ...</p>}>{children}</Suspense>
       </Box>
-      <Box position={"absolute"} sx={{ top: 0, right: 0, left: 0, boxShadow: 1 }}>
+      <Box position={"absolute"} sx={{ top: 0, right: 0, left: 0, boxShadow: 1, zIndex: 10 }}>
         <Suspense fallback={<p>Loading ...</p>}>{about}</Suspense>
       </Box>
     </Stack>
