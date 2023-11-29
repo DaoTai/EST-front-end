@@ -6,12 +6,15 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import useSWRInfinite from "swr/infinite";
 import { fetcher } from "./fetcher";
+import { useSession } from "next-auth/react";
 
 const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
+  const { data: session } = useSession();
   const [socket, setSocket] = useState<Socket>();
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const [joinedGroups, setJoinedGroups] = useState<string[]>([]);
+  const [listGroupChats, setListGroupChats] = useState<IGroupChat[]>([]);
   const joinedGroupsRef = useRef<string[]>([]);
 
   const name = useDebounce(search);
@@ -21,9 +24,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     },
     fetcher,
     {
-      revalidateIfStale: false,
       revalidateOnFocus: false,
-      revalidateOnReconnect: false,
       onSuccess(data, key, config) {
         // console.log("list group chat: ", data);
       },
@@ -31,8 +32,22 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   useEffect(() => {
-    setSocket(io(process.env.SERVER_URL as string));
-  }, []);
+    if (session) {
+      setSocket(io(process.env.SERVER_URL as string));
+    }
+  }, [session]);
+
+  useEffect(() => {
+    setListGroupChats(() => {
+      if (data) {
+        const listGroupChats = data.reduce((acc: IGroupChat[], item) => {
+          return [...acc, ...item.listGroupChats];
+        }, []);
+        return listGroupChats;
+      }
+      return [];
+    });
+  }, [data]);
 
   // Status loading when init data
   const isLoadingInitial = useMemo(() => {
@@ -47,17 +62,6 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     return 0;
   }, [data]);
 
-  // Data list group chat
-  const listGroupChats: IGroupChat[] = useMemo(() => {
-    if (data) {
-      const listGroupChats = data.reduce((acc: IGroupChat[], item) => {
-        return [...acc, ...item.listGroupChats];
-      }, []);
-      return listGroupChats;
-    }
-    return [];
-  }, [data]);
-
   // Revalidate list group chat
   const revalidate = () => {
     mutate();
@@ -66,10 +70,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   // Handle join group chat
   const handleJoinGroup = ({ newGroupId }: { newGroupId: string }) => {
     const isJoined = joinedGroups.includes(newGroupId);
-
     if (!isJoined && socket) {
-      console.log("Join");
-
       setJoinedGroups((prev) => [...prev, newGroupId]);
       joinedGroupsRef.current.push(newGroupId);
       socket.emit("join group", {
@@ -77,6 +78,24 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       });
     }
   };
+
+  // Handle update new chat to list group chat
+  const updateLatestMessage = ({ idGroup, newChat }: { idGroup: string; newChat: IChat }) => {
+    const update = [...listGroupChats].map((groupChat) => {
+      if (groupChat._id === idGroup) {
+        return {
+          ...groupChat,
+          latestChat: newChat,
+        };
+      }
+      return groupChat;
+    });
+    setListGroupChats(update);
+  };
+
+  // useEffect(() => {
+  //   console.log("listGroupChats: ", listGroupChats);
+  // }, [listGroupChats]);
 
   const value = {
     isLoadingInitial,
@@ -89,6 +108,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     setSize,
     setSearch,
     handleJoinGroup,
+    updateLatestMessage,
     socket,
   };
 

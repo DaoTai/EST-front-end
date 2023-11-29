@@ -18,8 +18,6 @@ type IProps = {
 };
 
 const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
-  // console.log("groupChat: ", groupChat);
-
   const { data: session } = useSession();
   const ownerLatestChat = session?._id === groupChat.latestChat?.sender._id;
   return (
@@ -41,6 +39,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         },
       }}
     >
+      {/* Avatar members */}
       <AvatarGroup max={2}>
         <Tooltip arrow placement="top" title="Host">
           <Avatar src={groupChat.host.avatar.uri} alt="avatar" sx={{ width: 42, height: 42 }} />
@@ -51,6 +50,8 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
             <Avatar key={mem._id} sx={{ width: 42, height: 42 }} src={mem.avatar.uri} />
           ))}
       </AvatarGroup>
+
+      {/* Name & latest message */}
       <Box flexGrow={2} display={"block"} overflow={"hidden"}>
         <Typography
           overflow={"hidden"}
@@ -87,7 +88,15 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
             </Typography>
           )}
         </Stack>
+
+        {groupChat.latestReadBy.map((member, i) => (
+          <Typography variant="subtitle1" key={i}>
+            {typeof member === "string" && member}
+          </Typography>
+        ))}
       </Box>
+
+      {/* Time distance */}
       <Typography variant="subtitle2" fontWeight={400}>
         {getDistanceTimeToNow(groupChat.updatedAt)}
       </Typography>

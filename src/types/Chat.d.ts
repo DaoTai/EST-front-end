@@ -6,7 +6,7 @@ interface IGroupChat {
   updatedAt: string;
   members: IMemberGroupChat[];
   blockedMembers: IMemberGroupChat[];
-  latestReadBy: IMemberGroupChat[];
+  latestReadBy: IMemberGroupChat[] | string[];
   latestChat?: IChat;
 }
 

@@ -18,4 +18,5 @@ export interface ListGroupChatContextProps {
   setSize: (size: number | ((_size: number) => number)) => Promise<IResponse[] | undefined>;
   handleJoinGroup: ({ newGroupId }: { newGroupId: string }) => void;
   socket: Socket | undefined;
+  updateLatestMessage: ({ idGroup, newChat }: { idGroup: string; newChat: IChat }) => void;
 }

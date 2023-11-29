@@ -44,6 +44,8 @@ const About = () => {
     },
   });
 
+  // console.log("About group chat: ", data);
+
   const handleSeenLatestMessage = async () => {
     await axios.put("/api/user/group-chat/" + params.id);
   };

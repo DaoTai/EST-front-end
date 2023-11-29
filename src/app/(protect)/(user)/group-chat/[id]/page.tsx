@@ -21,7 +21,7 @@ type IResponse = {
 
 const GroupChat = ({ params }: { params: { id: string } }) => {
   const { data: session } = useSession();
-  const { handleJoinGroup, socket } = useListGroupChatContext();
+  const { handleJoinGroup, socket, revalidate, updateLatestMessage } = useListGroupChatContext();
 
   const [listChats, setListChats] = useState<IChat[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -37,12 +37,15 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   }, [session]);
 
   useEffect(() => {
-    socket?.on("receive chat", (newChat: IChat) => {
+    socket?.on("receive chat", async (newChat: IChat) => {
       handleAddNewChat(newChat);
+      await axios.patch(`/api/user/group-chat/${params.id}/seen`);
+      // revalidate();
+      updateLatestMessage({ idGroup: params.id, newChat });
     });
-    return () => {
-      socket?.emit("leave group", params.id);
-    };
+    // return () => {
+    //   socket?.emit("leave group", params.id);
+    // };
   }, [socket]);
 
   const scrollLatestChat = () => {
@@ -55,10 +58,10 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   const fetchListChats = () => {
     const idGroupChat = params.id;
     const uri = `/api/user/chat/${idGroupChat}?page=${page}`;
-    fetch(uri)
-      .then((res) => res.json())
-      .then((data: IResponse) => {
-        const { listChats, maxPage, page: currentPage } = data;
+    axios
+      .get(uri)
+      .then((res) => {
+        const { listChats, maxPage, page: currentPage } = res.data;
         setListChats((prev) => [...prev, ...listChats]);
 
         listChats.length === 0 && setHasMore(false);
@@ -87,7 +90,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
           const res = await axios.post("/api/user/chat/" + idGroup, formData);
           const newChat = res.data;
           handleAddNewChat(newChat);
-
+          updateLatestMessage({ idGroup, newChat });
           // Emit event to socket
           socket?.emit("send chat", {
             idGroup,
