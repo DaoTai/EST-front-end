@@ -1,4 +1,4 @@
-import axios from "@/config/axios";
+import axios from "@/config/axios/server-side";
 import { AxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 

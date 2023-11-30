@@ -96,13 +96,12 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
             key={lesson._id}
             borderBottom={1}
             flexDirection={"row"}
+            pl={1}
+            pr={1}
             alignItems={"center"}
             width={"100%"}
             sx={{ borderColor: "divider" }}
           >
-            <Typography variant="body2" minWidth={20}>
-              {i + 1}
-            </Typography>
             <Stack
               flexDirection={"row"}
               justifyContent={"space-between"}
@@ -114,7 +113,9 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
               href={preHrefLesson + lesson._id}
             >
               <Box flexGrow={2}>
-                <Typography variant="body1">{lesson.name}</Typography>
+                <Typography variant="body1" fontWeight={500}>
+                  {lesson.name}
+                </Typography>
               </Box>
               <Stack flexDirection={"row"} gap={1}>
                 {lesson.reports.length > 0 && (

@@ -1,12 +1,12 @@
 "use client";
 import useDebounce from "@/hooks/useDebounce";
 import { ListGroupChatContext } from "@/hooks/useListGroupChatContext";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
-import useSWRInfinite from "swr/infinite";
+import useSWR from "swr";
 import { fetcher } from "./fetcher";
-import { useSession } from "next-auth/react";
 
 const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
@@ -18,15 +18,17 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   const joinedGroupsRef = useRef<string[]>([]);
 
   const name = useDebounce(search);
-  const { data, size, setSize, mutate, isValidating, error } = useSWRInfinite(
+
+  const { data, mutate, isValidating, error } = useSWR(
     (page: number) => {
       return `/api/user/group-chat?page=${+page + 1}&name=${name}`;
     },
     fetcher,
     {
+      revalidateOnReconnect: true,
       revalidateOnFocus: false,
       onSuccess(data, key, config) {
-        // console.log("list group chat: ", data);
+        setListGroupChats(data);
       },
     }
   );
@@ -38,29 +40,17 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   }, [session]);
 
   useEffect(() => {
-    setListGroupChats(() => {
-      if (data) {
-        const listGroupChats = data.reduce((acc: IGroupChat[], item) => {
-          return [...acc, ...item.listGroupChats];
-        }, []);
-        return listGroupChats;
-      }
-      return [];
-    });
-  }, [data]);
+    if (session && listGroupChats.length > 0) {
+      listGroupChats.forEach((groupChat) => {
+        handleJoinGroup({ newGroupId: groupChat._id });
+      });
+    }
+  }, [session, listGroupChats]);
 
   // Status loading when init data
   const isLoadingInitial = useMemo(() => {
     return !data && !isValidating;
   }, [data, isValidating]);
-
-  // Max page
-  const maxPage = useMemo(() => {
-    if (data) {
-      return data[0].maxPage;
-    }
-    return 0;
-  }, [data]);
 
   // Revalidate list group chat
   const revalidate = () => {
@@ -80,32 +70,27 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Handle update new chat to list group chat
-  const updateLatestMessage = ({ idGroup, newChat }: { idGroup: string; newChat: IChat }) => {
+  const updateLatestMessage = (newChat: IChat) => {
     const update = [...listGroupChats].map((groupChat) => {
-      if (groupChat._id === idGroup) {
+      if (groupChat._id === newChat.idGroupChat) {
         return {
           ...groupChat,
           latestChat: newChat,
+          updatedAt: newChat.updatedAt,
         };
       }
       return groupChat;
     });
+
     setListGroupChats(update);
   };
-
-  // useEffect(() => {
-  //   console.log("listGroupChats: ", listGroupChats);
-  // }, [listGroupChats]);
 
   const value = {
     isLoadingInitial,
     isValidating,
     listGroupChats,
-    maxPage,
-    size,
     search,
     revalidate,
-    setSize,
     setSearch,
     handleJoinGroup,
     updateLatestMessage,

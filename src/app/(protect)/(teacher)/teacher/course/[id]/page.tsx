@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
-import serverAxios from "@/config/axios";
+import serverAxios from "@/config/axios/server-side";
 import { redirect } from "next/navigation";
 import About from "@/components/course-components/About";
 import CreateLesson from "@/components/lesson-components/CreateLesson";

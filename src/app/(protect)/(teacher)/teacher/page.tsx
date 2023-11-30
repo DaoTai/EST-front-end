@@ -1,5 +1,5 @@
 import Banner from "@/components/course-components/Banner";
-import serverAxios from "@/config/axios";
+import serverAxios from "@/config/axios/server-side";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";

@@ -1,7 +1,7 @@
 import { Fetcher } from "swr";
 import { IResponse } from "./interfaces";
 
-export const fetcher: Fetcher<IResponse, string> = (url: string) =>
+export const fetcher: Fetcher<IGroupChat[], string> = (url: string) =>
   fetch(url).then((res) => {
     if (res.ok) {
       return res.json();

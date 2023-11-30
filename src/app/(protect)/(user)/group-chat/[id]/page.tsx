@@ -1,7 +1,6 @@
 "use client";
 
 import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import axios from "axios";
@@ -9,10 +8,12 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { convertObjectToFormData } from "@/utils/functions";
-import InputBox from "@/components/chat-component/InputBox";
 import ChatItem from "@/components/chat-component/ChatItem";
+import InputBox from "@/components/chat-component/InputBox";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
+import chatService from "@/services/chat";
+import { convertObjectToFormData, showErrorToast } from "@/utils/functions";
+import { toast } from "react-toastify";
 type IResponse = {
   listChats: IChat[];
   page: number;
@@ -20,8 +21,7 @@ type IResponse = {
 };
 
 const GroupChat = ({ params }: { params: { id: string } }) => {
-  const { data: session } = useSession();
-  const { handleJoinGroup, socket, revalidate, updateLatestMessage } = useListGroupChatContext();
+  const { socket, revalidate, updateLatestMessage, listGroupChats } = useListGroupChatContext();
 
   const [listChats, setListChats] = useState<IChat[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -33,19 +33,13 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   }, [params]);
 
   useEffect(() => {
-    session && handleJoinGroup({ newGroupId: params.id });
-  }, [session]);
-
-  useEffect(() => {
     socket?.on("receive chat", async (newChat: IChat) => {
-      handleAddNewChat(newChat);
-      await axios.patch(`/api/user/group-chat/${params.id}/seen`);
-      // revalidate();
-      updateLatestMessage({ idGroup: params.id, newChat });
+      if (newChat.idGroupChat === params.id) {
+        await axios.patch(`/api/user/group-chat/${params.id}/seen`);
+        updateLatestMessage(newChat);
+        handleAddNewChat(newChat);
+      }
     });
-    // return () => {
-    //   socket?.emit("leave group", params.id);
-    // };
   }, [socket]);
 
   const scrollLatestChat = () => {
@@ -81,36 +75,55 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   };
 
   // Send new chat
-  const handleSendNewChat = useCallback(
-    async (payload: IFormChat) => {
-      const idGroup = params.id;
-      try {
-        if (payload.message?.trim()) {
-          const formData = convertObjectToFormData(payload);
-          const res = await axios.post("/api/user/chat/" + idGroup, formData);
-          const newChat = res.data;
-          handleAddNewChat(newChat);
-          updateLatestMessage({ idGroup, newChat });
-          // Emit event to socket
-          socket?.emit("send chat", {
-            idGroup,
-            chat: newChat,
-          });
-          scrollLatestChat();
-        }
-      } catch (error) {
-        console.log("Error: ", error);
-      }
-    },
-    [session]
-  );
+  const handleSendNewChat = async (payload: IFormChat) => {
+    const idGroup = params.id;
+    try {
+      if (payload.message?.trim()) {
+        const formData = convertObjectToFormData(payload);
+        const res = await axios.post("/api/user/chat/" + idGroup, formData);
+        const newChat = res.data;
+        handleAddNewChat(newChat);
+        updateLatestMessage(newChat);
 
+        // Emit event to socket
+        socket?.emit("send chat", {
+          idGroup,
+          chat: newChat,
+        });
+        scrollLatestChat();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
+  // Fetch more data
   const fetchMoreData = () => {
     fetchListChats();
   };
 
+  // Delete chat
+  const handleDeleteChat = useCallback(
+    async (idChat: string) => {
+      try {
+        await chatService.deleteChat(idChat);
+        setListChats((prev) => [...prev].filter((chat) => chat._id !== idChat));
+        // If deleted chat is latest chat will revalidate group chat to update latest message
+        const currentGroupChat = listGroupChats.find((groupChat) => groupChat._id === params.id);
+        const istLatestChat = currentGroupChat?.latestChat?._id === idChat;
+
+        istLatestChat && revalidate();
+        // revalidate();
+        toast.success("Delete chat success");
+      } catch (error) {
+        showErrorToast(error);
+      }
+    },
+    [listGroupChats]
+  );
+
   return (
-    <Box height={"100%"}>
+    <>
       <Stack
         ref={frameChatRef}
         id="scrollableDiv"
@@ -143,14 +156,13 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
           scrollableTarget="scrollableDiv"
         >
           {listChats.map((chat, index) => {
-            return <ChatItem key={index} chat={chat} />;
+            return <ChatItem key={index} chat={chat} onDelete={handleDeleteChat} />;
           })}
         </InfiniteScroll>
       </Stack>
-
       {/* Box input new chat */}
       <InputBox onSend={handleSendNewChat} />
-    </Box>
+    </>
   );
 };
 

@@ -39,7 +39,7 @@ const About = ({ course }: { course: ICourse }) => {
           <b>Members: </b> {course.members.length}
         </Typography>
         <Typography variant="body1">
-          <b>Lessons: </b> {(course?.lessons && course?.lessons.length) ?? 0}
+          <b>Lessons: </b> {course?.totalLessons}
         </Typography>
         <Typography variant="body1" textTransform={"capitalize"}>
           <b>Level: </b>

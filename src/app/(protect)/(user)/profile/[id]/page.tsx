@@ -1,6 +1,6 @@
 import HeadingProfile from "@/components/profile-components/Heading";
 import Intro from "@/components/profile-components/Intro";
-import serverAxios from "@/config/axios";
+import serverAxios from "@/config/axios/server-side";
 import { Box, Chip, Stack, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";

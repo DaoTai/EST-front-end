@@ -136,25 +136,23 @@ const CoursePage = () => {
         <Box width={"100%"}>
           {isValidating && <Spinner />}
           {data && (
-            <Stack gap={1}>
-              <>
-                {data.courses.length > 0 ? (
-                  data.courses.map((course) => (
-                    <Link key={course._id} href={pathName + "/" + course.slug}>
-                      <Banner course={course} />
-                    </Link>
-                  ))
-                ) : (
-                  <Stack justifyContent={"center"} alignItems={"center"} gap={2}>
-                    <Typography variant="body1" textAlign={"center"} gutterBottom>
-                      Not found course
-                    </Typography>
-                    <Button variant="outlined" onClick={onClear}>
-                      Back
-                    </Button>
-                  </Stack>
-                )}
-              </>
+            <Stack gap={2}>
+              {data.courses.length > 0 ? (
+                data.courses.map((course) => (
+                  <Link key={course._id} href={pathName + "/" + course.slug}>
+                    <Banner course={course} />
+                  </Link>
+                ))
+              ) : (
+                <Stack justifyContent={"center"} alignItems={"center"} gap={2}>
+                  <Typography variant="body1" textAlign={"center"} gutterBottom>
+                    Not found course
+                  </Typography>
+                  <Button variant="outlined" onClick={onClear}>
+                    Back
+                  </Button>
+                </Stack>
+              )}
             </Stack>
           )}
 

@@ -2,24 +2,21 @@ import { refreshToken } from "@/services/auth";
 import { SERVER_URI } from "@/utils/constants/common";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { getServerSession } from "next-auth";
-import { signOut } from "next-auth/react";
-import { options } from "../next-auth"; // Chứa Auth Options config
-
-interface DecodedToken {
-  exp: number;
-}
-
-const serverAxios = axios.create({
+import { getSession, signOut } from "next-auth/react";
+const clientSideAxios = axios.create({
   baseURL: SERVER_URI,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-serverAxios.interceptors.request.use(
+interface DecodedToken {
+  exp: number;
+}
+
+clientSideAxios.interceptors.request.use(
   async function (config) {
-    const session = await getServerSession(options);
+    const session = await getSession();
     if (session?.accessToken && session.refreshToken) {
       const decodeToken: DecodedToken = jwt_decode(session.accessToken);
       const now = new Date();
@@ -48,16 +45,4 @@ serverAxios.interceptors.request.use(
   }
 );
 
-serverAxios.interceptors.response.use(
-  function (config) {
-    return config;
-  },
-  function (error) {
-    // if (error instanceof AxiosError) {
-    // error.status === 500 ? toast.error("Error server") : toast.error(error.response?.data);
-    // }
-    return Promise.reject(error);
-  }
-);
-
-export default serverAxios;
+export default clientSideAxios;

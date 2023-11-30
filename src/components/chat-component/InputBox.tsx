@@ -116,6 +116,7 @@ const InputBox = ({ onSend }: IProps) => {
       >
         {/* Input message */}
         <InputBase
+          autoFocus
           multiline
           placeholder="New chat"
           inputRef={inputRef}
@@ -124,9 +125,11 @@ const InputBox = ({ onSend }: IProps) => {
             flex: "2 1 auto",
             border: 1,
             borderRadius: 8,
-            p: 1,
             pt: 1.5,
             pb: 1.5,
+            ".MuiInputBase-input": {
+              pl: 2,
+            },
           }}
           onChange={(e) => handleChangeMessage(e.target.value)}
           onKeyDown={handleKeyDown}

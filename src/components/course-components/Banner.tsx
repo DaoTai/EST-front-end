@@ -16,6 +16,8 @@ type Props = {
 };
 
 const Banner = ({ course, mode = "visitor" }: Props) => {
+  console.log("course: ", course);
+
   return (
     <Grid
       container
@@ -118,7 +120,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
 
           <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
             <Chip
-              label={course?.lessons?.length + " lesson" + (course.lessons?.length > 1 ? "s" : "")}
+              label={course?.totalLessons + " lesson" + (course?.totalLessons > 1 ? "s" : "")}
               className="bg-gradient"
               size="small"
             />

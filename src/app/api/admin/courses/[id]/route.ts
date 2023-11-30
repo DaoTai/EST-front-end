@@ -1,4 +1,4 @@
-import serverAxios from "@/config/axios";
+import serverAxios from "@/config/axios/server-side";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {

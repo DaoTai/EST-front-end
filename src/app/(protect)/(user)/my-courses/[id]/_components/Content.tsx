@@ -72,7 +72,7 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
             </Tooltip>
 
             <Chip label={register?.course.members.length + " members"} className="bg-gradient" />
-            <Chip label={register?.course.lessons.length + " lessons"} className="bg-gradient" />
+            <Chip label={register?.course?.lessons?.length + " lessons"} className="bg-gradient" />
           </Stack>
 
           <Stack mt={1} flexDirection={"row"} alignItems={"end"} gap={1}>
@@ -82,22 +82,32 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
             ))}
           </Stack>
 
-          {/* About lesson */}
-          <Button
-            variant="outlined"
-            component={Link}
-            href={
-              pathName +
-              "/" +
-              (register!.passedLessons!.length > 0
-                ? register!.passedLessons.pop()
-                : register!.course.lessons[0])
-            }
-            endIcon={<ForwardIcon />}
-            sx={{ mt: 1, bgcolor: (theme) => theme.palette.mainBlue.main }}
-          >
-            Learn
-          </Button>
+          {/* Learn */}
+          {register.passedLessons.length > 0 ? (
+            <Button
+              variant="outlined"
+              component={Link}
+              href={pathName + "/" + register!.passedLessons.pop()}
+              endIcon={<ForwardIcon />}
+              sx={{ mt: 1, bgcolor: (theme) => theme.palette.mainBlue.main }}
+            >
+              Learn
+            </Button>
+          ) : (
+            <>
+              {register.course?.lessons && register.course?.lessons?.length > 0 && (
+                <Button
+                  variant="outlined"
+                  component={Link}
+                  href={pathName + "/" + register.course?.lessons[0]}
+                  endIcon={<ForwardIcon />}
+                  sx={{ mt: 1, bgcolor: (theme) => theme.palette.mainBlue.main }}
+                >
+                  Learn
+                </Button>
+              )}
+            </>
+          )}
         </Stack>
       </Grid>
       <Grid item md={6} sm={12}>

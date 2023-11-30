@@ -18,6 +18,8 @@ const RootLayout = ({ children, about }: IProps) => {
           height: "100vh",
           overflowY: "overlay",
           pt: "50px",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Suspense fallback={<p>Loading ...</p>}>{children}</Suspense>

@@ -6,10 +6,10 @@ import Typography from "@mui/material/Typography";
 
 import MainLayout from "@/components/common/MainLayout";
 import Spinner from "@/components/custom/Spinner";
+import { useRouter } from "next/navigation";
 import useSWR, { Fetcher } from "swr";
 import Content from "./_components/Content";
 import Heading from "./_components/Heading";
-import { notFound, useRouter } from "next/navigation";
 
 const myCourseFetcher: Fetcher<IRegisterCourse, string> = (url: string) =>
   fetch(url).then((res) => {
@@ -29,7 +29,9 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onSuccess(data, key, config) {},
+      onSuccess(data, key, config) {
+        console.log("my courses: ", data.course.lessons);
+      },
       onError(err, key, config) {
         router.replace("/");
       },

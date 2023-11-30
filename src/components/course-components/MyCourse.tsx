@@ -18,7 +18,7 @@ type IProps = {
 
 const MyCourse = ({ direction = "column", data }: IProps) => {
   const progress = useMemo(() => {
-    if (data?.passedLessons && data.course?.lessons.length > 0) {
+    if (data?.passedLessons && data.course?.lessons && data.course?.lessons.length > 0) {
       return +(data.passedLessons.length / data.course.lessons.length).toFixed(1) * 100;
     }
     return 0;
@@ -44,7 +44,9 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
         </Grid>
         <Grid item sm={direction === "row" ? 8 : 12} xs={direction === "row" ? 8 : 12}>
           <Box p={1}>
-            <Typography variant="h6">{data.course.name}</Typography>
+            <Typography variant="h6" fontWeight={500} gutterBottom>
+              {data.course.name}
+            </Typography>
             <Chip
               size="small"
               label={data.course.type}
@@ -53,14 +55,20 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
             />
             {direction === "column" && (
               <Stack mt={1}>
-                <Typography variant="body1">
+                <Typography variant="subtitle1">
                   Joined from: {dayjs(data.createdAt).format("DD/MM/YYYY")}
                 </Typography>
-                <Typography variant="body1">Total lessons: {data.course.lessons.length}</Typography>
-                <Typography variant="body1">Passed lessons: {data.passedLessons.length}</Typography>
-                <Typography variant="body1">Completed progress: {progress}%</Typography>
+                <Typography variant="subtitle1">
+                  Total lessons: {data.course?.lessons?.length}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Passed lessons: {data.passedLessons.length}
+                </Typography>
+                <Typography variant="subtitle1">Completed progress: {progress}%</Typography>
               </Stack>
             )}
+
+            {/* Progress */}
             <Tooltip arrow title={progress + "%"} placement="top-end">
               <Slider
                 max={100}

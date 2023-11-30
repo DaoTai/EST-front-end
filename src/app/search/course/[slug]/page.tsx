@@ -23,7 +23,6 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
   const res = await fetch(SERVER_URI + "/search/courses/" + params.slug);
   if (res.ok) {
     const detail: ICourse = await res.json();
-    console.log("detail: ", detail);
 
     return (
       <>

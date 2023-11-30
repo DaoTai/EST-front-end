@@ -1,4 +1,4 @@
-import serverAxios from "@/config/axios";
+import serverAxios from "@/config/axios/server-side";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
