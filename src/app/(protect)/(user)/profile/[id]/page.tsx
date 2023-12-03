@@ -48,8 +48,8 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                 <Grid container spacing={2}>
                   {listCourses.length > 0 ? (
                     listCourses?.map((register) => (
-                      <Grid item md={4} key={register._id} gap={1}>
-                        <Paper elevation={4} sx={{ pb: 2, borderRadius: 3 }}>
+                      <Grid key={register._id} item md={4} sm={6} xs={12} gap={1}>
+                        <Paper elevation={4} sx={{ pb: 2, borderRadius: 3, height: "100%" }}>
                           <Image
                             unoptimized
                             src={register.course.thumbnail.uri}
@@ -58,26 +58,27 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                             height={200}
                             style={{ width: "100%", borderRadius: 8 }}
                           />
-                          <Box pl={1} pr={1}>
-                            <Typography variant="h6" gutterBottom>
-                              {register.course.name}
-                            </Typography>
-                            <Stack flexDirection={"row"} gap={1}>
-                              <Chip
-                                size="small"
-                                label={register.course.type}
-                                color={register.course.type === "private" ? "info" : "success"}
-                                sx={{ textTransform: "capitalize" }}
-                              />
 
-                              <Chip
-                                size="small"
-                                className="bg-gradient"
-                                label={register.course.category}
-                                sx={{ textTransform: "capitalize" }}
-                              />
+                          {/* Texts */}
+                          <Stack alignItems={"start"} gap={1} pl={1} pr={1}>
+                            <Typography variant="h6">{register.course.name}</Typography>
+                            <Chip
+                              size="small"
+                              label={register.course.type}
+                              color={register.course.type === "private" ? "info" : "success"}
+                              sx={{ textTransform: "capitalize" }}
+                            />
+                            <Stack flexDirection={"row"} gap={1}>
+                              {register.course.programmingLanguages?.map((lang, i) => (
+                                <Chip
+                                  key={i}
+                                  size="small"
+                                  label={lang}
+                                  sx={{ textTransform: "capitalize" }}
+                                />
+                              ))}
                             </Stack>
-                          </Box>
+                          </Stack>
                         </Paper>
                       </Grid>
                     ))

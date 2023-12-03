@@ -34,6 +34,8 @@ import DateTime from "./form-course-components/DateTime";
 import LanguagesBox from "./form-course-components/LanguagesBox";
 import SuitableJob from "./form-course-components/SuitableJob";
 import UploadThumbnail from "./form-course-components/UploadThumbnail";
+import { mutate } from "swr";
+import { useSession } from "next-auth/react";
 interface IPropsFormCourse {
   action: "create" | "edit" | "watch";
   course?: ICourse;
@@ -90,9 +92,9 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
         }
 
         await onSubmit?.(payload);
-        router.refresh();
+        mutate("/api/teacher/courses");
         setTimeout(() => {
-          router.back();
+          router.replace("/teacher");
         }, 2000);
       } catch (error) {
         console.log("Error: ", error);
@@ -142,10 +144,6 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
   const handleChangeIntro = (value: string) => {
     setFieldValue("intro", value);
   };
-
-  // useEffect(() => {
-  //   console.log("values: ", values);
-  // }, [values]);
 
   return (
     <Box pt={1} pb={2}>

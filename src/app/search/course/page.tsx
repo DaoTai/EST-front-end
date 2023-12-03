@@ -42,7 +42,7 @@ const CoursePage = () => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        console.log("data: ", data);
+        // console.log("data: ", data);
       },
     }
   );

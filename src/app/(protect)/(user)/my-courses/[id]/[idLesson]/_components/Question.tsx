@@ -113,11 +113,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
         <Typography variant="subtitle1">{question.content}</Typography>
         {CategoryChip}
       </Stack>
-      {question.expiredTime && (
-        <Typography variant="subtitle2" gutterBottom>
-          Expired time: {dayjs(question.expiredTime).format("MMM D, YYYY h:mm A")}
-        </Typography>
-      )}
+
       {completed && (
         <>
           <Typography variant="body1">

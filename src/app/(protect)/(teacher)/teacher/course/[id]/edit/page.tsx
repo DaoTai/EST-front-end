@@ -6,26 +6,22 @@ import { redirect, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
+import useSWR, { Fetcher } from "swr";
+
+const fetcher: Fetcher<ICourse, string> = (url: string) =>
+  fetch(url).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    toast.error("Having issues");
+  });
 
 const EditCourse = ({ params }: { params: { id: string } }) => {
-  const [course, setCourse] = useState<ICourse>();
-  useEffect(() => {
-    (async () => {
-      const data = await getCourseById(params.id);
-      setCourse(data);
-    })();
-  }, []);
-
-  // Chưa revalidate
-  const getCourseById = async (id: string) => {
-    try {
-      const res = await fetch("/api/teacher/courses/" + id);
-
-      if (res.ok) return await res.json();
-
-      return undefined;
-    } catch (error) {}
-  };
+  const { data: course, mutate } = useSWR("/api/teacher/courses/" + params.id, fetcher, {
+    revalidateIfStale: true,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const handleEdit = useCallback(async (values: IFormCourse) => {
     try {
@@ -34,7 +30,7 @@ const EditCourse = ({ params }: { params: { id: string } }) => {
         method: "PATCH",
         body: formData,
       });
-
+      mutate();
       toast.success("Edited course successfully");
     } catch (error) {
       toast.error("Edit course failed");

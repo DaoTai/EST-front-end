@@ -165,8 +165,6 @@ const TrashedCourses = () => {
       const res = await fetch("/api/teacher/trashes/course");
       if (res.ok) {
         const data: ICourse[] = await res.json();
-        console.log("data: ", data);
-
         if (Array.isArray(data) && data.length > 0) {
           const listCourses = data?.map((course, index) => ({
             ...course,

@@ -30,7 +30,7 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        console.log("my courses: ", data.course.lessons);
+        // console.log("my courses: ", data.course.lessons);
       },
       onError(err, key, config) {
         router.replace("/");

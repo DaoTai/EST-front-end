@@ -43,9 +43,6 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
     initialValues: initFormQuestion,
     validationSchema: FormQuestionSchema,
     async onSubmit(values, { resetForm }) {
-      if (values.expiredTime) {
-        values.expiredTime = dayjs(values.expiredTime).format();
-      }
       await onSubmit(values);
       if (type === "create") {
         resetForm();
@@ -62,8 +59,6 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
     if (values.category === "code") {
       setFieldValue("correctAnswers", []);
       setFieldValue("answers", []);
-    } else {
-      setFieldValue("expiredTime", null);
     }
   }, [values.category]);
 
@@ -74,7 +69,6 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
       setFieldValue("explaination", question?.explaination);
       question?.correctAnswers && setFieldValue("correctAnswers", question?.correctAnswers);
       question.answers && setFieldValue("answers", question.answers);
-      question?.expiredTime && setFieldValue("expiredTime", dayjs(question.expiredTime));
     }
   }, [question]);
 
@@ -106,15 +100,6 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
     }
     return false;
   }, [values.category, values?.correctAnswers, values?.answers]);
-
-  // Change field date
-  const handleChangeDate = (val: any) => {
-    if (!val) {
-      setFieldValue("expiredTime", null);
-    } else {
-      setFieldValue("expiredTime", val);
-    }
-  };
 
   // Add answer
   const handleAddAnswer = () => {
@@ -195,25 +180,6 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
             onBlur={handleBlur}
             onKeyDown={(e) => e.stopPropagation()}
           />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
-            <DateTimePicker
-              label="Expire time"
-              value={values.expiredTime || null}
-              disabled={values.category !== "code"}
-              slotProps={{
-                textField: {
-                  InputProps: {
-                    name: "expiredTime",
-                    disabled: values.category !== "code",
-                  },
-                },
-              }}
-              onChange={handleChangeDate}
-            />
-          </FormControl>
         </Grid>
 
         <Grid item md={6} xs={12}>
@@ -303,7 +269,7 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
         </Grid>
 
         {/* Answers field */}
-        <Grid item md={12} xs={12}>
+        <Grid item md={6} xs={12}>
           <FormControl fullWidth disabled={values.category === "code"}>
             <FormLabel>Answers</FormLabel>
             <Stack flexDirection={"row"} alignItems={"center"} gap={1} width={"100%"}>

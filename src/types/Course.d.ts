@@ -10,7 +10,7 @@ interface ICourse {
   createdBy: IProfile;
   createdAt: string;
   updatedAt: string;
-  members: any[];
+  members?: IProfile[];
   lessons?: Lesson[];
   totalLessons: number;
   programmingLanguages: string[];

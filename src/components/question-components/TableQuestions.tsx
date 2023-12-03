@@ -129,7 +129,6 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
               <TableCell>Category</TableCell>
               <TableCell>Answers</TableCell>
               <TableCell>Correct answers</TableCell>
-              <TableCell>Expired time</TableCell>
               {!readOnly && <TableCell>Actions</TableCell>}
             </TableRow>
           </TableHead>
@@ -183,23 +182,21 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
                       </Stack>
                     ))}
                   </TableCell>
-                  <TableCell>
-                    {question?.expiredTime
-                      ? dayjs(question.expiredTime).format("MM/DD/YYYY h:mm A")
-                      : "No date"}
-                  </TableCell>
                 </>
 
                 {/* Actions */}
                 {!readOnly && (
                   <TableCell>
-                    {question.category === "code" && (
-                      <Tooltip arrow title="Answers">
-                        <IconButton color="warning" onClick={() => onOpenListAnswers(question)}>
-                          <ChecklistIcon color="warning" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
+                    <Tooltip arrow title="Answers">
+                      <IconButton
+                        disabled={question.category !== "code"}
+                        onClick={() => onOpenListAnswers(question)}
+                      >
+                        <ChecklistIcon
+                          color={question.category === "code" ? "warning" : "disabled"}
+                        />
+                      </IconButton>
+                    </Tooltip>
                     <Tooltip arrow title="Edit">
                       <IconButton color="info" onClick={() => onOpenForm(question)}>
                         <EditIcon color="info" />

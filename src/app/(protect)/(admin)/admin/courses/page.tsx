@@ -35,6 +35,7 @@ import MyDialog from "@/components/custom/Dialog";
 import MyModal from "@/components/custom/Modal";
 import Spinner from "@/components/custom/Spinner";
 import useDebounce from "@/hooks/useDebounce";
+import dayjs from "dayjs";
 
 type Response = {
   courses: ICourse[];
@@ -70,7 +71,7 @@ const Courses = () => {
 
   const columns: GridColDef[] = useMemo(() => {
     return [
-      { field: "name", headerName: "Name", width: 100 },
+      { field: "name", headerName: "Name", width: 200 },
       {
         field: "status",
         headerName: "Status",
@@ -139,6 +140,19 @@ const Courses = () => {
               <Avatar src={course.createdBy.avatar.uri} />
               <Typography variant="caption">{course.createdBy.username}</Typography>
             </Box>
+          );
+        },
+      },
+      {
+        field: "createdAt",
+        headerName: "Created at",
+        width: 200,
+        renderCell: (params) => {
+          const course: ICourse = params.row;
+          return (
+            <Typography variant="body2">
+              {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
+            </Typography>
           );
         },
       },

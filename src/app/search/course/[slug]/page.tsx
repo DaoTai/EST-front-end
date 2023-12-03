@@ -60,7 +60,9 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
           <Grid item lg={8.5} md={8} sm={12}>
             <Paper elevation={3}>
               {/* Banner */}
-              <Banner course={detail} mode="visitor" />
+              <Suspense fallback="Loading...">
+                <Banner course={detail} mode="visitor" />
+              </Suspense>
 
               {/* Button register */}
               <Box p={1}>
@@ -79,30 +81,6 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
                   dangerouslySetInnerHTML={{ __html: detail.intro }}
                 ></Typography>
                 <Divider />
-                {/* <Typography variant="subtitle1" gutterBottom>
-                  <b>{detail.lessons.length}</b> lessons
-                </Typography> */}
-                {/* Lessons */}
-                {/* <Stack gap={1}>
-                  {detail.lessons.map((lesson, i) => (
-                    <Stack key={lesson._id} flexDirection={"row"} alignItems={"center"} gap={1}>
-                      <Typography
-                        variant="body2"
-                        fontWeight={600}
-                        borderRadius={99}
-                        width={25}
-                        height={25}
-                        textAlign={"center"}
-                        className="bg-gradient"
-                      >
-                        {i + 1}
-                      </Typography>
-                      <Box flexGrow={2}>
-                        <PreviewLesson lesson={lesson} />
-                      </Box>
-                    </Stack>
-                  ))}
-                </Stack> */}
               </Box>
             </Paper>
           </Grid>

@@ -5,7 +5,6 @@ interface IQuestion {
   answers?: string[];
   correctAnswers?: string[];
   explaination?: string;
-  expiredTime?: string;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -71,7 +71,6 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
               </Box>
             </Tooltip>
 
-            <Chip label={register?.course.members.length + " members"} className="bg-gradient" />
             <Chip label={register?.course?.lessons?.length + " lessons"} className="bg-gradient" />
           </Stack>
 

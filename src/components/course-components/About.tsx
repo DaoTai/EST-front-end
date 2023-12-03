@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 
-const About = ({ course }: { course: ICourse }) => {
+const AboutCourse = ({ course }: { course: ICourse }) => {
   return (
     <Paper>
       <Image
@@ -36,7 +36,7 @@ const About = ({ course }: { course: ICourse }) => {
           sx={{ width: "fit-content" }}
         />
         <Typography variant="body1">
-          <b>Members: </b> {course.members.length}
+          <b>Members: </b> {course?.members?.length}
         </Typography>
         <Typography variant="body1">
           <b>Lessons: </b> {course?.totalLessons}
@@ -69,4 +69,4 @@ const About = ({ course }: { course: ICourse }) => {
   );
 };
 
-export default About;
+export default AboutCourse;

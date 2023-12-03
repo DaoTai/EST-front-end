@@ -34,7 +34,6 @@ export const initFormLesson = {
 export const initFormQuestion: Omit<IQuestion, "_id" | "createdAt" | "updatedAt"> = {
   content: "",
   category: "choice",
-  expiredTime: "",
   answers: [] as string[],
   correctAnswers: [] as string[],
   explaination: "",

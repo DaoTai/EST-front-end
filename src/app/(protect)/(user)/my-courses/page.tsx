@@ -1,7 +1,4 @@
 "use client";
-import { fetcherMyCourses } from "@/components/common/Header/Actions/MyCourses";
-import MainLayout from "@/components/common/MainLayout";
-import MyCourse from "@/components/course-components/MyCourse";
 
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -12,7 +9,9 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import useSWR from "swr";
 import Spinner from "@/components/custom/Spinner";
-
+import { fetcherMyCourses } from "@/components/common/Header/Actions/MyCourses";
+import MainLayout from "@/components/common/MainLayout";
+import MyCourse from "@/components/course-components/MyCourse";
 const MyCourses = () => {
   const { data: listCourses, isLoading } = useSWR("/api/user/my-courses", fetcherMyCourses, {
     revalidateIfStale: true,

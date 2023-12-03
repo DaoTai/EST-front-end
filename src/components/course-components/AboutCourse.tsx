@@ -4,17 +4,30 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import Dialog from "@/components/custom/Dialog";
+import Group from "@mui/icons-material/Group";
+import { Tooltip } from "@mui/material";
 import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { memo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import Dialog from "@/components/custom/Dialog";
+import MyModal from "../custom/Modal";
+import FormMembers from "./FormMembers";
 
 const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edit" | "watch" }) => {
-  const [open, setOpen] = useState<boolean>(false);
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  const [openFormMember, setOpenFormMember] = useState<boolean>(false);
   const router = useRouter();
-  console.log("course: ", course);
+  const { data: session } = useSession();
+
+  const isCreater = useMemo(() => {
+    if (typeof course.createdBy === "string") {
+      return session?._id === course.createdBy;
+    }
+    return false;
+  }, [session, course]);
 
   const handleDeleteCouse = async () => {
     try {
@@ -30,6 +43,14 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
       toast.success("Delete course failed");
     }
   };
+
+  const onCloseDialog = useCallback(() => {
+    setOpenConfirm(false);
+  }, []);
+
+  const onCloseModal = useCallback(() => {
+    setOpenFormMember(false);
+  }, []);
 
   return (
     <>
@@ -53,10 +74,10 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
             Updated time: {dayjs(course.updatedAt).format("dddd, MMMM D, YYYY h:mm A")}
           </Typography>
           <Typography component={"li"} variant="body1" gutterBottom>
-            Lessons: {course?.totalLessons}
+            Lessons: {course?.totalLessons || course?.lessons?.length}
           </Typography>
           <Typography component={"li"} variant="body1" gutterBottom>
-            Members: {course.members.length}
+            Members: {course?.members?.length}
           </Typography>
           {course.roadmap && (
             <Typography component={"li"} variant="body1" gutterBottom>
@@ -70,24 +91,48 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
 
         {/* Delete button*/}
         {type !== "watch" && (
-          <IconButton
-            color="error"
-            sx={{ alignSelf: "start", border: 1 }}
-            onClick={() => setOpen(true)}
-          >
-            <DeleteIcon />
-          </IconButton>
+          <>
+            {isCreater && (
+              <Tooltip title="Members">
+                <IconButton
+                  color="info"
+                  sx={{ alignSelf: "start", border: 1 }}
+                  onClick={() => setOpenFormMember(true)}
+                >
+                  <Group />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            <IconButton
+              color="error"
+              sx={{ alignSelf: "start", border: 1 }}
+              onClick={() => setOpenConfirm(true)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
         )}
       </Stack>
 
-      {open && (
+      {/* Dialog confirm */}
+      {openConfirm && (
         <Dialog
           title="Delete course?"
           content={"Do you want to delete " + course.name + " ?"}
-          onClose={() => setOpen(false)}
+          onClose={onCloseDialog}
           onSubmit={handleDeleteCouse}
         />
       )}
+
+      {/* Modal form member */}
+      {
+        <MyModal open={openFormMember} onClose={onCloseModal}>
+          <Box minHeight="80vh" minWidth={"50vw"} pt={1}>
+            <FormMembers course={course} />
+          </Box>
+        </MyModal>
+      }
     </>
   );
 };

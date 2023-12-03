@@ -16,8 +16,6 @@ type Props = {
 };
 
 const Banner = ({ course, mode = "visitor" }: Props) => {
-  console.log("course: ", course);
-
   return (
     <Grid
       container
@@ -119,16 +117,24 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           )}
 
           <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
+            {}
             <Chip
-              label={course?.totalLessons + " lesson" + (course?.totalLessons > 1 ? "s" : "")}
+              label={
+                String(course?.totalLessons) + " lesson" ||
+                String(course?.lessons?.length) + " lesson"
+              }
               className="bg-gradient"
               size="small"
             />
-            <Chip
-              label={course?.members?.length + " member" + (course.members?.length > 1 ? "s" : "")}
-              className="bg-gradient"
-              size="small"
-            />
+            {course?.members && (
+              <Chip
+                label={
+                  course?.members?.length + " member" + (course?.members?.length > 1 ? "s" : "")
+                }
+                className="bg-gradient"
+                size="small"
+              />
+            )}
           </Stack>
         </Box>
       </Grid>

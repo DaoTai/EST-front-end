@@ -9,7 +9,6 @@ export const FormQuestionSchema = Yup.object().shape({
   category: Yup.string()
     .required(MessageValidation.required)
     .oneOf(["code", "choice", "multiple-choice"], MessageValidation.categoryQuestion),
-  expiredTime: Yup.string().nullable(),
   correctAnswers: Yup.array().of(
     Yup.string().trim().min(1, minCharacterValidator("Correct answers", 1))
   ),
