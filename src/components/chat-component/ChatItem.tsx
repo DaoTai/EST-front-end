@@ -12,7 +12,7 @@ import Image from "next/image";
 import { getDistanceTimeToNow } from "@/utils/functions";
 import Delete from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
-import { memo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import MyDialog from "../custom/Dialog";
 
 type IProps = {
@@ -30,7 +30,10 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
     setOpen(false);
   };
 
-  const isMine = chat.sender._id === session?._id;
+  const isMine = useMemo(() => {
+    return chat.sender._id === session?._id;
+  }, [session, chat]);
+
   return (
     <>
       <Stack

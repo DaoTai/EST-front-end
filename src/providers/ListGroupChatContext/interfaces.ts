@@ -16,4 +16,5 @@ export interface ListGroupChatContextProps {
   handleJoinGroup: ({ newGroupId }: { newGroupId: string }) => void;
   socket: Socket | undefined;
   updateLatestMessage: (newChat: IChat) => void;
+  appendToLatestRead: (idGroupChat: string) => void;
 }

@@ -68,48 +68,18 @@ const GroupChats = () => {
 
       {/* List group */}
       <>
-        {isLoadingInitial ? (
-          <Typography variant="body1" textAlign={"center"}>
-            Loading ...
-          </Typography>
-        ) : (
-          <Stack gap={1} mt={2}>
-            {/* {listGroupChats.length > 0 ? (
-              listGroupChats.map((groupChat) => {
-                const isActive = groupChat._id === params.id;
-                return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
-              })
-            ) : (
-              <Typography variant="body1" textAlign={"center"}>
-                No group chat
-              </Typography>
-            )} */}
-
-            {listGroupChats.map((groupChat) => {
-              const isActive = groupChat._id === params.id;
-              return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
-            })}
-          </Stack>
-        )}
+        <Stack gap={1} mt={2}>
+          {listGroupChats.map((groupChat) => {
+            const isActive = groupChat._id === params.id;
+            return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
+          })}
+        </Stack>
         {isValidating && !isLoadingInitial && (
           <Typography variant="body1" textAlign={"center"} mt={1}>
             Loading ...
           </Typography>
         )}
       </>
-
-      {/* {size < maxPage && (
-        <Stack mt={2} mb={1} flexDirection={"row"} justifyContent={"center"}>
-          <Chip
-            variant="outlined"
-            clickable
-            disabled={isValidating}
-            label="More"
-            sx={{ width: "100%" }}
-            onClick={() => setSize(size + 1)}
-          />
-        </Stack>
-      )} */}
     </Box>
   );
 };

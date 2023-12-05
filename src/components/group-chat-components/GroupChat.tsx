@@ -37,7 +37,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
       elevation={2}
       component={Link}
       href={"/group-chat/" + groupChat._id}
-      className={isActive ? "bg-gradient" : ""}
+      className={isActive ? "bg-gradient" : !seen ? "unseen" : ""}
       sx={{
         display: "flex",
         p: 1,
@@ -48,6 +48,10 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         background: (theme) => (isActive ? theme.palette.gradient.main : "initial"),
         "&:hover": {
           bgcolor: "action.hover",
+        },
+
+        "&.unseen": {
+          background: (theme) => theme.palette.divider,
         },
       }}
     >
@@ -125,7 +129,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
             : getDistanceTimeToNow(groupChat.updatedAt)}
         </Typography>
         <Typography variant="subtitle2" fontWeight={400}>
-          {seen && <CheckCircleIcon fontSize="small" color="action" />}
+          {seen && <CheckCircleIcon fontSize="small" color="success" />}
         </Typography>
       </Stack>
     </Paper>

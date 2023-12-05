@@ -17,10 +17,12 @@ import { Drawer, IconButton } from "@mui/material";
 import axios from "axios";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
+import { useSession } from "next-auth/react";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
   fetch(url).then((res) => {
@@ -33,22 +35,27 @@ const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
 
 const About = () => {
   const params = useParams();
-
+  const { data: session } = useSession();
+  const { appendToLatestRead } = useListGroupChatContext();
   const [toggle, setToggle] = useState<boolean>(false);
   const { data, mutate, isValidating } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    onSuccess(data, key, config) {
-      // console.log("detail group-chat: ", data);
-    },
+    onSuccess(data, key, config) {},
   });
 
-  // console.log("About group chat: ", data);
+  useEffect(() => {
+    if (data && session) {
+      if (data.latestReadBy.includes(session._id as any)) {
+        appendToLatestRead(data._id);
+      }
+    }
+  }, [data, session]);
 
-  const handleSeenLatestMessage = async () => {
-    await axios.put("/api/user/group-chat/" + params.id);
-  };
+  // const handleSeenLatestMessage = async () => {
+  //   await axios.put("/api/user/group-chat/" + params.id);
+  // };
 
   if (!data && isValidating) {
     return (

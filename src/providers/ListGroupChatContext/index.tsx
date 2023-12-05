@@ -10,22 +10,21 @@ import { fetcher } from "./fetcher";
 
 const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
-  const [socket, setSocket] = useState<Socket>();
+  // const [socket, setSocket] = useState<Socket>();
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const [joinedGroups, setJoinedGroups] = useState<string[]>([]);
   const [listGroupChats, setListGroupChats] = useState<IGroupChat[]>([]);
   const joinedGroupsRef = useRef<string[]>([]);
-
+  const socket = useRef<Socket>();
   const name = useDebounce(search);
 
   const { data, mutate, isValidating, error } = useSWR(
-    (page: number) => {
-      return `/api/user/group-chat?page=${+page + 1}&name=${name}`;
-    },
+    `/api/user/group-chat?name=${name}`,
     fetcher,
     {
-      revalidateOnReconnect: true,
+      revalidateIfStale: false,
+      revalidateOnReconnect: false,
       revalidateOnFocus: false,
       onSuccess(data, key, config) {
         setListGroupChats(data);
@@ -35,8 +34,13 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (session) {
-      setSocket(io(process.env.SERVER_URL as string));
+      socket.current = io(process.env.SERVER_URL as string);
     }
+    // return () => {
+    //   if (session) {
+    //     socket.current?.disconnect();
+    //   }
+    // };
   }, [session]);
 
   useEffect(() => {
@@ -63,7 +67,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isJoined && socket) {
       setJoinedGroups((prev) => [...prev, newGroupId]);
       joinedGroupsRef.current.push(newGroupId);
-      socket.emit("join group", {
+      socket.current?.emit("join group", {
         idGroup: newGroupId,
       });
     }
@@ -71,7 +75,9 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Handle update new chat to list group chat
   const updateLatestMessage = (newChat: IChat) => {
-    const update = [...listGroupChats].map((groupChat) => {
+    const prevGroupChats = listGroupChats.length === 0 ? data ?? [] : listGroupChats;
+
+    const update = prevGroupChats.map((groupChat) => {
       if (groupChat._id === newChat.idGroupChat) {
         return {
           ...groupChat,
@@ -81,8 +87,20 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return groupChat;
     });
+    // setListGroupChats(update);
+  };
 
-    setListGroupChats(update);
+  // Handle update latest reader
+  const appendToLatestRead = (idGroupChat: string) => {
+    // setListGroupChats((prev) => {
+    //   return prev.map((groupChat) => {
+    //     if (groupChat._id === idGroupChat) {
+    //       console.log("Hi");
+    //       groupChat.latestReadBy.push(session!._id as any);
+    //     }
+    //     return groupChat;
+    //   });
+    // });
   };
 
   const value = {
@@ -94,7 +112,8 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     setSearch,
     handleJoinGroup,
     updateLatestMessage,
-    socket,
+    socket: socket.current,
+    appendToLatestRead,
   };
 
   if (error) {

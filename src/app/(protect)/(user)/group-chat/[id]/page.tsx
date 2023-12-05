@@ -21,8 +21,10 @@ type IResponse = {
 };
 
 const GroupChat = ({ params }: { params: { id: string } }) => {
-  const { socket, revalidate, updateLatestMessage, listGroupChats } = useListGroupChatContext();
+  const { socket, revalidate, updateLatestMessage, listGroupChats, appendToLatestRead } =
+    useListGroupChatContext();
 
+  const { data: session } = useSession();
   const [listChats, setListChats] = useState<IChat[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState<number>(1);
@@ -34,13 +36,14 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     socket?.on("receive chat", async (newChat: IChat) => {
-      if (newChat.idGroupChat === params.id) {
+      console.log("receive chat: ", newChat);
+      if (newChat.idGroupChat === params.id && newChat.sender._id !== session?._id) {
+        // call api update latest reader
         await axios.patch(`/api/user/group-chat/${params.id}/seen`);
-        updateLatestMessage(newChat);
         handleAddNewChat(newChat);
       }
     });
-  }, [socket]);
+  }, [session]);
 
   const scrollLatestChat = () => {
     if (frameChatRef.current) {
@@ -48,16 +51,22 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  useEffect(() => {
+    console.log("listChats: ", listChats);
+  }, [listChats]);
+
   // Fetch list chat
   const fetchListChats = () => {
+    console.log("Fetch");
+
     const idGroupChat = params.id;
     const uri = `/api/user/chat/${idGroupChat}?page=${page}`;
     axios
       .get(uri)
       .then((res) => {
-        const { listChats, maxPage, page: currentPage } = res.data;
-        setListChats((prev) => [...prev, ...listChats]);
+        const { listChats, maxPage, page: currentPage } = res.data as IResponse;
 
+        setListChats((prev) => [...prev, ...listChats]);
         listChats.length === 0 && setHasMore(false);
         // Nếu là trang cuối cùng
         if (maxPage === currentPage) {
@@ -72,6 +81,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   // Add new chat
   const handleAddNewChat = (newChat: IChat) => {
     setListChats((prev) => [newChat, ...prev]);
+    updateLatestMessage(newChat);
   };
 
   // Send new chat
@@ -83,7 +93,6 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
         const res = await axios.post("/api/user/chat/" + idGroup, formData);
         const newChat = res.data;
         handleAddNewChat(newChat);
-        updateLatestMessage(newChat);
 
         // Emit event to socket
         socket?.emit("send chat", {

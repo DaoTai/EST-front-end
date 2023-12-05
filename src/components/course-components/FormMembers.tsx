@@ -1,5 +1,7 @@
 import teacherCourseService from "@/services/teacher/course";
-import { Avatar, Chip, Stack } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { mutate } from "swr";
