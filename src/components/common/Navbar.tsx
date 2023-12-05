@@ -1,5 +1,6 @@
 "use client";
 
+import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupsIcon from "@mui/icons-material/Groups";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
@@ -51,6 +52,11 @@ const Navbar = () => {
           href: "/admin/members",
           Icon: PeopleAltIcon,
           title: "Accounts",
+        },
+        {
+          href: "/admin/questions",
+          Icon: QuestionMarkIcon,
+          title: "Questions",
         }
       );
     }
