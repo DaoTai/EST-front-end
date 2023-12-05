@@ -1,3 +1,4 @@
+"use client";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 
 import Avatar from "@mui/material/Avatar";
@@ -18,12 +19,38 @@ import Banner from "@/components/course-components/Banner";
 import Intro from "@/components/profile-components/Intro";
 import { SERVER_URI } from "@/utils/constants/common";
 import RegisterButton from "./_components/RegisterButton";
+import useSWR, { Fetcher } from "swr";
+import clientSideAxios from "@/config/axios/client-side";
+import Spinner from "@/components/custom/Spinner";
 
-const DetailCourse = async ({ params }: { params: { slug: string } }) => {
-  const res = await fetch(SERVER_URI + "/search/courses/" + params.slug);
-  if (res.ok) {
-    const detail: ICourse = await res.json();
+const fetcher: Fetcher<ICourse, string> = (url: string) => {
+  return clientSideAxios.get(url).then((res) => res.data);
+};
 
+const DetailCourse = ({ params }: { params: { slug: string } }) => {
+  const {
+    data: detail,
+    isLoading,
+    error,
+  } = useSWR("/search/courses/" + params.slug, fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+
+  if (error) {
+    return (
+      <Typography variant="h6" textAlign={"center"}>
+        Not found course
+      </Typography>
+    );
+  }
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (detail) {
     return (
       <>
         <Grid container spacing={1} pt={1}>
@@ -88,11 +115,6 @@ const DetailCourse = async ({ params }: { params: { slug: string } }) => {
       </>
     );
   }
-  return (
-    <Typography variant="h6" textAlign={"center"}>
-      Course not found
-    </Typography>
-  );
 };
 
 export default DetailCourse;

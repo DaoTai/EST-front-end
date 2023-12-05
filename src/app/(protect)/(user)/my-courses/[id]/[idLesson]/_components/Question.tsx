@@ -6,16 +6,15 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-import { showErrorToast } from "@/utils/functions";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import axios from "axios";
-import dayjs from "dayjs";
 import { useParams } from "next/navigation";
 import { memo, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { mutate } from "swr";
+import { showErrorToast } from "@/utils/functions";
 
 type Props = {
   question: IQuestion;
@@ -29,14 +28,14 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
   const [completed, setCompleted] = useState(isCompleted);
   const [linkCode, setLinkCode] = useState<string>("");
   const [answers, setAnswers] = useState<string[]>([]);
-  const [score, setScore] = useState<number>();
+  const [score, setScore] = useState<number>(0);
   const [correctAnswers, setCorrectAnswers] = useState<string[]>(
     answerRecord?.question.correctAnswers ?? []
   );
 
   useEffect(() => {
     if (answerRecord) {
-      String(answerRecord.score) && setScore(answerRecord.score);
+      typeof answerRecord.score === "number" && setScore(answerRecord.score);
       answerRecord.question.category === "code" && setLinkCode(answerRecord.answers[0]);
     }
   }, [answerRecord]);
@@ -116,7 +115,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
 
       {completed && (
         <>
-          <Typography variant="body1">
+          <Typography gutterBottom variant="body1">
             Your score:
             <Typography
               variant="body1"
@@ -124,7 +123,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
               fontWeight={600}
               sx={{ color: (theme) => theme.palette.error.light, ml: 1 }}
             >
-              {typeof score !== "undefined" ? score : "Pending"}
+              {String(score) || "Pending"}
             </Typography>
           </Typography>
           {answerRecord?.comment && (

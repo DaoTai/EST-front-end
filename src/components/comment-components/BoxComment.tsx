@@ -14,11 +14,14 @@ import useTheme from "@mui/material/styles/useTheme";
 import { useCallback, useRef, useState } from "react";
 import ListComments, { IListCommentsRef } from "./ListComments";
 import CreateComment from "./CreateComment";
+import { useSearchParams } from "next/navigation";
 
 const BoxComments = ({ idLesson }: { idLesson: string }) => {
+  const searchParams = useSearchParams();
+
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(!!searchParams.get("openComment"));
   const listCommentsRef = useRef<Partial<IListCommentsRef>>(null);
 
   // Toggle drawer
@@ -64,19 +67,33 @@ const BoxComments = ({ idLesson }: { idLesson: string }) => {
             overflowY: "scroll",
           }}
         >
-          <IconButton onClick={toggleDrawer} sx={{ position: "fixed", top: 5, right: 15 }}>
-            <Close />
-          </IconButton>
+          <Box
+            sx={{
+              position: "absolute",
+              zIndex: 10,
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "8vh",
+              background: (theme) => theme.palette.white.main,
+            }}
+          >
+            <IconButton onClick={toggleDrawer} sx={{ position: "absolute", top: 5, right: 15 }}>
+              <Close />
+            </IconButton>
+          </Box>
 
           {/* Create comment  */}
-          <Box mt={2}>
-            <CreateComment idLesson={idLesson} handleAddComment={handleAddComment} />
-          </Box>
-          <Divider />
+          <Box sx={{ mt: "4vh" }}>
+            <Box>
+              <CreateComment idLesson={idLesson} handleAddComment={handleAddComment} />
+            </Box>
+            <Divider />
 
-          {/* List comments */}
-          <Box mt={2}>
-            <ListComments idLesson={idLesson} ref={listCommentsRef} />
+            {/* List comments */}
+            <Box mt={2}>
+              <ListComments idLesson={idLesson} ref={listCommentsRef} />
+            </Box>
           </Box>
         </Paper>
       </Drawer>

@@ -14,7 +14,7 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SyntheticEvent, useMemo, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import Question from "./Question";
@@ -32,6 +32,7 @@ const lessonFetcher: Fetcher<{ lesson: ILesson; listAnswerRecords: IAnswerRecord
   });
 
 const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: string }) => {
+  // openComment
   const { data: session } = useSession();
   const router = useRouter();
   const { data: response, isLoading } = useSWR(
@@ -42,14 +43,14 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
+        console.log("data: ", data);
+
         // Nếu bài học không có câu hỏi nào thì revalidate list lessons để enable next lesson
         if (data.lesson.questions.length === 0) {
           mutate(`/api/user/my-lessons?idRegisteredCourse=${idCourse}`);
         }
       },
       onError(err, key, config) {
-        console.log("Error: ", err);
-
         router.replace("/");
       },
     }

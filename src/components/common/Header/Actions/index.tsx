@@ -1,18 +1,10 @@
 "use client";
 import ModeCommentIcon from "@mui/icons-material/ModeComment";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ListItemText from "@mui/material/ListItemText";
-import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
@@ -27,7 +19,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import MenuAction from "./MenuAction";
 import MyCourses from "./MyCourses";
-import MyList from "@/components/custom/MyList";
+import Notifications from "./Notifications";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
@@ -82,7 +74,8 @@ const Actions = () => {
           <MyCourses />
 
           {/* Notifycation */}
-          <Box onClick={handleClickNofity} mr={1}>
+          <Notifications />
+          {/* <Box onClick={handleClickNofity} mr={1}>
             <Badge
               badgeContent={99}
               color="info"
@@ -104,7 +97,7 @@ const Actions = () => {
                 }}
               />
             </Badge>
-          </Box>
+          </Box> */}
 
           {!isMobile && <ToggleModeTheme />}
 
@@ -129,7 +122,7 @@ const Actions = () => {
         {/* ========================= */}
 
         {/* Notifications */}
-        <Popover
+        {/* <Popover
           disableScrollLock
           open={!!anchorElNotify}
           anchorEl={anchorElNotify}
@@ -143,69 +136,8 @@ const Actions = () => {
             horizontal: "center",
           }}
         >
-          <Paper
-            sx={{
-              p: 1,
-              minWidth: "20vw",
-              bgcolor: "background.paper",
-              border: "1px solid rgba(0,0,0,0.1)",
-            }}
-          >
-            <Stack flexDirection={"row"} alignItems={"center"} justifyContent={"space-between"}>
-              <Typography variant="h6">Notifications</Typography>
-              <Chip
-                label="Mark all as read"
-                variant="outlined"
-                color="info"
-                clickable
-                size="small"
-              />
-            </Stack>
-
-            <MyList>
-              <Divider />
-              <ListItem divider>
-                <ListItemAvatar>
-                  <Avatar>
-                    <Image
-                      src={session?.avatar?.uri as string}
-                      alt="avatar"
-                      width={48}
-                      height={48}
-                    />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Photos" secondary="Jan 9, 2014" />
-              </ListItem>
-              <ListItem divider component={Link} href="/profile">
-                <ListItemAvatar>
-                  <Avatar>
-                    <Image
-                      src={session?.avatar?.uri as string}
-                      alt="avatar"
-                      width={48}
-                      height={48}
-                    />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Work" secondary="Jan 7, 2014" />
-              </ListItem>
-              <ListItem divider component={Link} href="/profile">
-                <ListItemAvatar>
-                  <Avatar>
-                    <Image
-                      src={session?.avatar?.uri as string}
-                      alt="avatar"
-                      width={48}
-                      height={48}
-                    />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Vacation" secondary="July 20, 2014" />
-              </ListItem>
-            </MyList>
-          </Paper>
-        </Popover>
+          <Notifications />
+        </Popover> */}
 
         {/* Menu user */}
         <Popover

@@ -32,13 +32,13 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
   const [lesson, setLesson] = useState<ILesson | null>(null);
   const maxPageRef = useRef<number>(1);
 
-  const { data, isLoading, error, mutate } = useSWR(
+  const { data, isLoading, error } = useSWR(
     `/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`,
     fetcher,
     {
-      revalidateOnFocus: false,
       revalidateIfStale: true,
-      revalidateOnReconnect: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: true,
       onSuccess(data, key, config) {
         maxPageRef.current = data.maxPage;
       },
@@ -65,7 +65,7 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
   const handleDeleteLesson = useCallback(async () => {
     try {
       await axios.delete("/api/teacher/lessons/detail/" + lesson?._id);
-      // mutate();
+      mutate(`/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`);
       router.refresh();
       toast.success("Delete lesson " + lesson?.name + " successfully");
     } catch (error) {
