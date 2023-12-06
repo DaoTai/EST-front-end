@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -13,22 +12,21 @@ const AboutCourse = ({ course }: { course: ICourse }) => {
   return (
     <Paper>
       <Image
-        src={course.thumbnail.uri}
+        src={course?.thumbnail ? (course?.thumbnail?.uri as string) : "/default-fallback-image.png"}
         alt="coure-thumbnail"
         width={300}
         height={150}
         style={{
           height: "100%",
-          maxHeight: "40vh",
+          maxHeight: "30vh",
           width: "100%",
         }}
       />
 
-      <Stack gap={1} p={1}>
-        <Typography variant="h4" fontWeight={500}>
+      <Stack gap={0.75} p={1}>
+        <Typography variant="h5" fontWeight={500}>
           {course.name}
         </Typography>
-        <Divider />
         <Chip
           label={course.status.toUpperCase()}
           color={course.status === "approved" ? "success" : "warning"}

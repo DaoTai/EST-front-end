@@ -25,6 +25,7 @@ import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
 import { FormControl, FormHelperText } from "@mui/material";
 import TextEditor from "../custom/TextEditor";
+import Rules from "./Rules";
 
 type Props = {
   type: "create" | "edit" | "watch";
@@ -124,21 +125,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
         {type} lesson
       </Typography>
 
-      <Typography variant="subtitle1">Lesson should be followed by these rules:</Typography>
-      <Box component={"ul"}>
-        <Typography variant="subtitle1" component={"li"}>
-          Fulfill required information{" "}
-        </Typography>
-        <Typography variant="subtitle1" component={"li"}>
-          Length of video should range of 20-25 minutes{" "}
-        </Typography>
-        <Typography variant="subtitle1" component={"li"}>
-          Offer questions involve lesson which should be uploaded full before launching lesson
-        </Typography>
-        <Typography variant="subtitle1" component={"li"}>
-          You need ussually give score for member in each code question
-        </Typography>
-      </Box>
+      <Rules />
 
       {/* Form lesson*/}
       <Grid

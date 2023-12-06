@@ -1,10 +1,10 @@
 import { refreshToken } from "@/services/auth";
-import { SERVER_URI } from "@/utils/constants/common";
+import { BACK_END_URI } from "@/utils/constants/common";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { getSession, signOut } from "next-auth/react";
 const clientSideAxios = axios.create({
-  baseURL: SERVER_URI,
+  baseURL: BACK_END_URI,
   headers: {
     "Content-Type": "application/json",
   },

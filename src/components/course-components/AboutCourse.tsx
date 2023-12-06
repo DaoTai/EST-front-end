@@ -89,10 +89,10 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
           )}
         </Box>
 
-        {/* Delete button*/}
+        {/* Add member button & Delete button*/}
         {type !== "watch" && (
           <>
-            {isCreater && (
+            {isCreater && course.type === "private" && (
               <Tooltip title="Members">
                 <IconButton
                   color="info"
@@ -104,13 +104,15 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
               </Tooltip>
             )}
 
-            <IconButton
-              color="error"
-              sx={{ alignSelf: "start", border: 1 }}
-              onClick={() => setOpenConfirm(true)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Delete">
+              <IconButton
+                color="error"
+                sx={{ alignSelf: "start", border: 1 }}
+                onClick={() => setOpenConfirm(true)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </>
         )}
       </Stack>

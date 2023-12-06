@@ -1,1 +1,22 @@
-export const SERVER_URI = "http://localhost:8008";
+export const BACK_END_URI = "http://localhost:8008";
+export const OPTIONS_PROGRAMMING_LANGUAGES = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "Python",
+  "Java",
+  "C++",
+  "C#",
+  "PHP",
+  "Ruby",
+  "Swift",
+  "TypeScript",
+  "Kotlin",
+  "Go",
+  "Rust",
+  "Perl",
+  "Scala",
+  "Haskell",
+  "R",
+  "SCSS",
+];

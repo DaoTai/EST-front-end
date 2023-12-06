@@ -2,7 +2,7 @@ import { SignInSchema, SignUpSchema } from "@/utils/validation/auth";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { InferType } from "yup";
-import { SERVER_URI } from "@/utils/constants/common";
+import { BACK_END_URI } from "@/utils/constants/common";
 import { signOut } from "next-auth/react";
 
 type ISignUpWithProvider = {
@@ -18,7 +18,7 @@ type ISignUp = InferType<typeof SignUpSchema> | ISignUpWithProvider;
 type ISignIn = InferType<typeof SignInSchema> | ISignInWithProvider;
 
 export const authRouteAxios = axios.create({
-  baseURL: SERVER_URI + "/auth",
+  baseURL: BACK_END_URI + "/auth",
 });
 
 export const verifyEmail = async (email: string) => {
@@ -52,7 +52,7 @@ export const signUpWithFetch = async ({
   provider: string;
 }) => {
   try {
-    const res = await fetch(SERVER_URI + "/auth/sign-up", {
+    const res = await fetch(BACK_END_URI + "/auth/sign-up", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const signIn = async (values: ISignIn) => {
 };
 
 export const signInByFetch = async ({ email, password }: { email: string; password: string }) => {
-  const res = await fetch(SERVER_URI + "/auth/sign-in", {
+  const res = await fetch(BACK_END_URI + "/auth/sign-in", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

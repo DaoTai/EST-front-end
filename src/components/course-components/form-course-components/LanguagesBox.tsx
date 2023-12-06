@@ -1,5 +1,7 @@
 "use client";
+import { OPTIONS_PROGRAMMING_LANGUAGES } from "@/utils/constants/common";
 import Add from "@mui/icons-material/Add";
+import Autocomplete from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -10,7 +12,7 @@ type IProps = {
   onChange: (programmingLanguages: string[]) => void;
 };
 
-const ProgrammingLanguagesBox = ({ programmingLanguages, onChange }: IProps) => {
+const ProgrammingLanguagesBox: React.FC<IProps> = ({ programmingLanguages, onChange }) => {
   const [programmingLang, setProgramingLang] = useState<string>("");
 
   // Handle add programming lang
@@ -30,11 +32,30 @@ const ProgrammingLanguagesBox = ({ programmingLanguages, onChange }: IProps) => 
   return (
     <>
       <Stack flexDirection={"row"} flexWrap={"nowrap"} alignItems={"center"} gap={1}>
-        <TextField
+        <Autocomplete
           fullWidth
-          placeholder="Add programming languages"
           value={programmingLang}
-          onChange={(e) => setProgramingLang(e.target.value)}
+          onChange={(event, newValue) => {
+            setProgramingLang(newValue ? newValue : "");
+          }}
+          inputValue={programmingLang}
+          onInputChange={(event, newInputValue) => {
+            setProgramingLang(newInputValue);
+          }}
+          options={OPTIONS_PROGRAMMING_LANGUAGES}
+          getOptionLabel={(option) => option}
+          renderInput={(params) => (
+            <TextField {...params} label="Programming languages" variant="outlined" />
+          )}
+          freeSolo
+          selectOnFocus
+          onBlur={() => {
+            // Nếu giá trị không có trong danh sách, tạo giá trị mới
+            if (!OPTIONS_PROGRAMMING_LANGUAGES.includes(programmingLang)) {
+              setProgramingLang(programmingLang);
+            }
+          }}
+          placeholder="Add programming languages"
         />
         <IconButton onClick={handleAddProgrammingLangs}>
           <Add />

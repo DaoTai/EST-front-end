@@ -12,13 +12,13 @@ type IProps = {
 };
 
 const FormAnswerRecord = ({ idAnswerRecord, idQuestion }: IProps) => {
-  const [score, setScore] = useState<number>(0);
+  const [score, setScore] = useState<number | undefined>(undefined);
   const [comment, setComment] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async () => {
     // Validate
-    if (score < 0 || score > 10) {
+    if (!score || score < 0 || score > 10) {
       toast.warn("Score is range of 0-10");
       return;
     }
@@ -56,7 +56,7 @@ const FormAnswerRecord = ({ idAnswerRecord, idQuestion }: IProps) => {
           type="number"
           min={0}
           max={10}
-          value={score}
+          value={score || 0}
           onChange={(e) => setScore(+e.target.value)}
         />
       </Stack>
@@ -71,7 +71,7 @@ const FormAnswerRecord = ({ idAnswerRecord, idQuestion }: IProps) => {
         />
       </Box>
       <Button
-        disabled={loading || score < 0 || score > 10}
+        disabled={loading || !score || score < 0 || score > 10}
         size="small"
         variant="contained"
         onClick={handleSubmit}

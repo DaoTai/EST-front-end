@@ -52,7 +52,11 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                         <Paper elevation={4} sx={{ pb: 2, borderRadius: 3, height: "100%" }}>
                           <Image
                             unoptimized
-                            src={register.course.thumbnail.uri}
+                            src={
+                              register?.course?.thumbnail
+                                ? (register?.course?.thumbnail?.uri as string)
+                                : "/default-fallback-image.png"
+                            }
                             alt="thumbnail"
                             width={100}
                             height={200}

@@ -1,5 +1,5 @@
 "use client";
-
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -32,6 +32,7 @@ const Lesson = ({ params }: { params: { id: string } }) => {
       revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      onSuccess(data, key, config) {},
     }
   );
 
@@ -78,37 +79,37 @@ const Lesson = ({ params }: { params: { id: string } }) => {
   return (
     <Box pt={0} p={2}>
       <Grid container spacing={2}>
-        {data?.video && (
-          <Grid item lg={6} md={12} xs={12}>
+        <Grid item md={12} xs={12}>
+          {data?.video && (
             <VideoPlayer uri={data?.video?.uri} thumbnail={data.course?.thumbnail?.uri} />
-            {/* Reports */}
-            {data && data?.reports?.length > 0 && (
-              <Box mt={2}>
-                <Accordion>
-                  <AccordionSummary>
-                    <Typography variant="subtitle1">Reports</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {data?.reports.map((report, i) => (
-                      <Stack key={i} flexDirection={"row"} justifyContent={"space-between"}>
-                        <Typography variant="subtitle1">{report.content}</Typography>
-                        <Typography variant="subtitle2">
-                          {dayjs(report.createdAt).format("DD/MM/YYYY")}
-                        </Typography>
-                      </Stack>
-                    ))}
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            )}
+          )}
+          {/* Reports */}
+          {data && data?.reports?.length > 0 && (
+            <Box mt={2}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="subtitle1">Reports</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {data?.reports.map((report, i) => (
+                    <Stack key={i} flexDirection={"row"} justifyContent={"space-between"}>
+                      <Typography variant="subtitle1">{report.content}</Typography>
+                      <Typography variant="subtitle2">
+                        {dayjs(report.createdAt).format("DD/MM/YYYY")}
+                      </Typography>
+                    </Stack>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+          )}
 
-            {/* Comment */}
-            <BoxComments idLesson={params.id} />
-          </Grid>
-        )}
+          {/* Comment */}
+          <BoxComments idLesson={params.id} />
+        </Grid>
 
         {/* Form lesson */}
-        <Grid item lg={data?.video ? 6 : 12} md={12} xs={12}>
+        <Grid item md={12} xs={12}>
           <FormLesson type="edit" lesson={data} onSubmit={handleEditLesson} />
         </Grid>
       </Grid>

@@ -2,8 +2,6 @@
 import Banner from "@/components/course-components/Banner";
 import Spinner from "@/components/custom/Spinner";
 import serverAxios from "@/config/axios/server-side";
-import teacherCourseService from "@/services/teacher/course";
-import { SERVER_URI } from "@/utils/constants/common";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -13,17 +11,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher } from "swr";
-const getListCourses = async (): Promise<ICourse[] | undefined> => {
-  try {
-    const res = await serverAxios.get("/courses");
-    return res.data;
-  } catch (error) {
-    notFound();
-  }
-};
 
 const fetcher: Fetcher<ICourse[], string> = (url: string) =>
   fetch(url).then((res) => {
@@ -38,6 +28,7 @@ const Teacher = () => {
     data: listCourses,
     isLoading,
     isValidating,
+    error,
   } = useSWR("/api/teacher/courses", fetcher, {
     revalidateIfStale: true,
     revalidateOnFocus: false,
@@ -58,9 +49,11 @@ const Teacher = () => {
         {isLoading ? (
           <Spinner />
         ) : (
-          <Typography variant="body1" textAlign={"center"}>
-            Having issues
-          </Typography>
+          error && (
+            <Typography variant="body1" textAlign={"center"}>
+              Having issues
+            </Typography>
+          )
         )}
       </Container>
     );

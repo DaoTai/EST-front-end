@@ -28,7 +28,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
   const [completed, setCompleted] = useState(isCompleted);
   const [linkCode, setLinkCode] = useState<string>("");
   const [answers, setAnswers] = useState<string[]>([]);
-  const [score, setScore] = useState<number>(0);
+  const [score, setScore] = useState<number | undefined>();
   const [correctAnswers, setCorrectAnswers] = useState<string[]>(
     answerRecord?.question.correctAnswers ?? []
   );
@@ -93,10 +93,6 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
       res.data?.score && setScore(res.data.score);
       // Revalidate list lessons
       mutate("/api/user/my-lessons?idRegisteredCourse=" + params.id);
-      toast.success("Answer successfully", {
-        position: "bottom-right",
-        theme: "colored",
-      });
     } catch (error) {
       showErrorToast(error, {
         theme: "colored",
@@ -123,7 +119,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
               fontWeight={600}
               sx={{ color: (theme) => theme.palette.error.light, ml: 1 }}
             >
-              {String(score) || "Pending"}
+              {score ?? "Pending"}
             </Typography>
           </Typography>
           {answerRecord?.comment && (

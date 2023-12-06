@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
+import Spinner from "@/components/custom/Spinner";
 
 type IRow = ICourse & { id: string; order: number };
 
@@ -31,7 +32,7 @@ const TrashedCourses = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [rows, setRows] = useState<IRow[]>([]);
   const [selectedRow, setSelectedRow] = useState<IRow | null>(null);
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [openDialogConfirm, setOpenDialogConfirm] = useState<boolean>(false);
   const [openDetail, setOpenDetail] = useState<boolean>(false);
 
@@ -161,7 +162,6 @@ const TrashedCourses = () => {
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
       const res = await fetch("/api/teacher/trashes/course");
       if (res.ok) {
         const data: ICourse[] = await res.json();
@@ -196,6 +196,7 @@ const TrashedCourses = () => {
     setSelectedRow(null);
   };
 
+  // Restore
   const handleRestore = async (id: string) => {
     try {
       const params = new URLSearchParams({ id });
@@ -213,6 +214,7 @@ const TrashedCourses = () => {
     }
   };
 
+  // Destroy / Force delete forever
   const handleDestroy = async () => {
     try {
       const params = new URLSearchParams({ id: selectedRow!.id });
@@ -308,6 +310,8 @@ const TrashedCourses = () => {
           </Box>
         </Dialog>
       )}
+
+      {isLoading && <Spinner />}
     </Box>
   );
 };

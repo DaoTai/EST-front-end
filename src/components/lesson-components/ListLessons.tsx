@@ -1,12 +1,12 @@
 "use client";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip";
 
 import axios from "axios";
 import Link from "next/link";
@@ -17,7 +17,6 @@ import useSWR, { Fetcher, mutate } from "swr";
 
 import MyDialog from "@/components/custom/Dialog";
 import Spinner from "@/components/custom/Spinner";
-import PreviewLesson from "./PreviewLesson";
 
 type IProps = { idCourse: string; preHrefLesson?: string };
 
@@ -120,7 +119,7 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
               </Box>
               <Stack flexDirection={"row"} gap={1}>
                 {lesson.reports.length > 0 && (
-                  <Chip size="small" label={lesson.reports.length + " reports"} />
+                  <Chip size="small" label={lesson.reports.length + " report"} />
                 )}
                 <Chip
                   size="small"

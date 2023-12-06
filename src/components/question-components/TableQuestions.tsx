@@ -19,7 +19,6 @@ import Typography from "@mui/material/Typography";
 import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
 import { Dialog, Stack } from "@mui/material";
 import axios from "axios";
-import dayjs from "dayjs";
 import { Dispatch, SetStateAction, memo, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import MyDialog from "../custom/Dialog";
@@ -187,16 +186,14 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
                 {/* Actions */}
                 {!readOnly && (
                   <TableCell>
-                    <Tooltip arrow title="Answers">
-                      <IconButton
-                        disabled={question.category !== "code"}
-                        onClick={() => onOpenListAnswers(question)}
-                      >
-                        <ChecklistIcon
-                          color={question.category === "code" ? "warning" : "disabled"}
-                        />
-                      </IconButton>
-                    </Tooltip>
+                    <IconButton
+                      disabled={question.category !== "code"}
+                      onClick={() => onOpenListAnswers(question)}
+                    >
+                      <ChecklistIcon
+                        color={question.category === "code" ? "warning" : "disabled"}
+                      />
+                    </IconButton>
                     <Tooltip arrow title="Edit">
                       <IconButton color="info" onClick={() => onOpenForm(question)}>
                         <EditIcon color="info" />

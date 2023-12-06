@@ -17,7 +17,7 @@ import { Suspense } from "react";
 
 import Banner from "@/components/course-components/Banner";
 import Intro from "@/components/profile-components/Intro";
-import { SERVER_URI } from "@/utils/constants/common";
+import { BACK_END_URI } from "@/utils/constants/common";
 import RegisterButton from "./_components/RegisterButton";
 import useSWR, { Fetcher } from "swr";
 import clientSideAxios from "@/config/axios/client-side";
@@ -53,39 +53,39 @@ const DetailCourse = ({ params }: { params: { slug: string } }) => {
   if (detail) {
     return (
       <>
-        <Grid container spacing={1} pt={1}>
+        <Grid container spacing={1} pt={2}>
           {/* About teacher */}
-          <Grid item lg={3.5} md={4} sm={12}>
-            <Paper elevation={3} sx={{ p: 1 }}>
-              <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
-                <Avatar
-                  src={detail.createdBy.avatar.uri}
-                  alt="avatar"
-                  sx={{ width: 120, height: 120 }}
-                />
-                <Stack flexDirection={"row"} alignItems={"center"} gap={2}>
-                  <Typography variant="body1" fontWeight={500}>
-                    {detail.createdBy.username}
-                  </Typography>
-                  <Tooltip arrow title="Visit">
-                    <Link href={"/profile/" + detail.createdBy._id} style={{ color: "inherit" }}>
-                      <IconButton sx={{ border: 1, borderColor: "info.light" }}>
-                        <PersonSearchIcon />
-                      </IconButton>
-                    </Link>
-                  </Tooltip>
-                </Stack>
+          <Grid item md={4} sm={12} component={Paper} p={1}>
+            <Stack flexDirection={"row"} alignItems={"center"} gap={1} p={1}>
+              <Avatar
+                src={detail.createdBy.avatar.uri}
+                alt="avatar"
+                sx={{ width: 120, height: 120 }}
+              />
+              <Stack flexDirection={"row"} alignItems={"center"} gap={2}>
+                <Typography variant="body1" fontWeight={500}>
+                  {detail.createdBy.username}
+                </Typography>
+                <Tooltip arrow title="Visit">
+                  <Link href={"/profile/" + detail.createdBy._id} style={{ color: "inherit" }}>
+                    <IconButton sx={{ border: 1, borderColor: "info.light" }}>
+                      <PersonSearchIcon />
+                    </IconButton>
+                  </Link>
+                </Tooltip>
               </Stack>
+            </Stack>
 
-              <Suspense fallback={<p>Loading</p>}>
+            <Suspense fallback={<p>Loading</p>}>
+              <Box p={1}>
                 <Intro user={detail.createdBy} />
-              </Suspense>
-            </Paper>
+              </Box>
+            </Suspense>
           </Grid>
 
           {/* About course */}
-          <Grid item lg={8.5} md={8} sm={12}>
-            <Paper elevation={3}>
+          <Grid item md={8} sm={12} p={1}>
+            <Paper elevation={3} sx={{ pl: 1, pr: 1 }}>
               {/* Banner */}
               <Suspense fallback="Loading...">
                 <Banner course={detail} mode="visitor" />

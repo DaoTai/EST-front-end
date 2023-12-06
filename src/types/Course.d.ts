@@ -15,7 +15,7 @@ interface ICourse {
   totalLessons: number;
   programmingLanguages: string[];
   intro: string;
-  thumbnail: IAttachment;
+  thumbnail?: IAttachment;
   openDate?: string;
   closeDate?: string;
   deletedAt?: string;

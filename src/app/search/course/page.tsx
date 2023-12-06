@@ -13,7 +13,7 @@ import Banner from "@/components/course-components/Banner";
 import FilterSearch from "@/components/course-components/FilterSearch";
 import ListSkeletons from "@/components/course-components/ListSkeletons";
 import Spinner from "@/components/custom/Spinner";
-import { SERVER_URI } from "@/utils/constants/common";
+import { BACK_END_URI } from "@/utils/constants/common";
 import { Button, Divider, Drawer } from "@mui/material";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -34,8 +34,8 @@ const CoursePage = () => {
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
-  const { data, isLoading, isValidating } = useSWR(
-    SERVER_URI + "/search/courses?" + searchParams.toString(),
+  const { data, isLoading, isValidating, error } = useSWR(
+    BACK_END_URI + "/search/courses?" + searchParams.toString(),
     fetcher,
     {
       revalidateIfStale: false,
@@ -93,6 +93,10 @@ const CoursePage = () => {
     return <ListSkeletons />;
   }
 
+  if (error) {
+    return <Typography textAlign={"center"}>Having issues</Typography>;
+  }
+
   return (
     <Box p={2}>
       <Stack flexDirection={"row"} alignItems={"center"} gap={1}>
@@ -136,7 +140,7 @@ const CoursePage = () => {
         <Box width={"100%"}>
           {isValidating && <Spinner />}
           {data && (
-            <Stack gap={2}>
+            <Stack gap={4}>
               {data.courses.length > 0 ? (
                 data.courses.map((course) => (
                   <Link key={course._id} href={pathName + "/" + course.slug}>

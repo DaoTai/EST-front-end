@@ -27,6 +27,7 @@ import { getChangedValuesObject } from "@/utils/functions";
 import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
 import { InputLabel } from "@mui/material";
+import { mutate } from "swr";
 import TextEditor from "../custom/TextEditor";
 import AboutCourse from "./AboutCourse";
 import { selectFields, textFields } from "./_fields";
@@ -34,8 +35,6 @@ import DateTime from "./form-course-components/DateTime";
 import LanguagesBox from "./form-course-components/LanguagesBox";
 import SuitableJob from "./form-course-components/SuitableJob";
 import UploadThumbnail from "./form-course-components/UploadThumbnail";
-import { mutate } from "swr";
-import { useSession } from "next-auth/react";
 interface IPropsFormCourse {
   action: "create" | "edit" | "watch";
   course?: ICourse;
@@ -82,13 +81,6 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
 
         if (action === "edit" && course) {
           payload = getChangedValuesObject(payload, course);
-        }
-        if (action === "create" && !payload["thumbnail"]) {
-          toast.warn("Thumbnail is required", {
-            position: "top-center",
-            theme: "colored",
-          });
-          return;
         }
 
         await onSubmit?.(payload);

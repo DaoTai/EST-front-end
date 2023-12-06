@@ -112,7 +112,11 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
       <Grid item md={6} sm={12}>
         <Image
           unoptimized
-          src={register?.course.thumbnail.uri as string}
+          src={
+            register?.course?.thumbnail
+              ? (register?.course?.thumbnail?.uri as string)
+              : "/default-fallback-image.png"
+          }
           alt="thumbnail"
           width={200}
           height={200}

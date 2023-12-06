@@ -34,7 +34,7 @@ const ListAnswerRecords = ({ question }: { question: IQuestion }) => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {
-        console.log("data: ", data);
+        // console.log("data: ", data);
       },
     }
   );
@@ -104,7 +104,7 @@ const ListAnswerRecords = ({ question }: { question: IQuestion }) => {
                       <TableCell sx={{ maxWidth: "30%" }}>
                         {record.comment ?? "No comment"}
                       </TableCell>
-                      <TableCell sx={{ width: "100%", maxWidth: "30%" }}>
+                      <TableCell sx={{ maxWidth: "30%" }}>
                         {record.answers[0] ? (
                           <Link target="_blank" href={record.answers[0]}>
                             {record.answers[0]}

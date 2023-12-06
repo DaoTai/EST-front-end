@@ -30,7 +30,11 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
         <Grid item sm={direction === "row" ? 4 : 12} xs={direction === "row" ? 4 : 12}>
           <Image
             unoptimized
-            src={data.course.thumbnail.uri}
+            src={
+              data.course?.thumbnail
+                ? (data.course?.thumbnail?.uri as string)
+                : "/default-fallback-image.png"
+            }
             width={100}
             height={100}
             alt="thumbnail"

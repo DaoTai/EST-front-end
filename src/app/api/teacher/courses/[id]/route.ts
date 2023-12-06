@@ -33,8 +33,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
   try {
     await serverAxios.delete("/courses/" + id);
-    // revalidatePath("/courses");
-    // revalidateTag("list-courses");
+
     return NextResponse.json("OK", { status: 200 });
   } catch (error) {
     return NextResponse.error();

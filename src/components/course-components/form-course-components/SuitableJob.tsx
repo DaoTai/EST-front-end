@@ -16,11 +16,24 @@ const SuitableJob = ({ name, value, onChange, onBlur, error, helperText }: IProp
   const [inputValue, setInputValue] = useState("");
 
   const options = [
-    "Front-end Dev",
-    "Back-end Dev",
-    "Fullstack Dev",
+    "Front-end Web Development",
+    "Back-end Web Development",
+    "Fullstack Web Development",
     "Fullstack Mobile",
     "AI Engineering",
+    "Software Development",
+    "Data Science",
+    "Cybersecurity",
+    "Cloud Computing",
+    "Artificial Intelligence",
+    "Mobile App Development",
+    "Network Engineering",
+    "Database Administration",
+    "DevOps",
+    "IT Project Management",
+    "Machine Learning",
+    "Blockchain Development",
+    "Game Development",
   ]; // Danh sách các giá trị
 
   return (

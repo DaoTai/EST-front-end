@@ -22,8 +22,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
       spacing={1}
       flexDirection={"row"}
       flexWrap={"wrap"}
-      border={1}
-      borderColor={"divider"}
+      boxShadow={2}
       sx={{
         color: "text.primary",
         textTransform: "capitalize",
@@ -36,7 +35,14 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
       }}
     >
       <Grid item lg={3} md={3} xs={12}>
-        <Image alt="thumbnail-course" src={course.thumbnail.uri} width={350} height={230} />
+        <Image
+          alt="thumbnail-course"
+          src={
+            course?.thumbnail ? (course?.thumbnail?.uri as string) : "/default-fallback-image.png"
+          }
+          width={200}
+          height={200}
+        />
       </Grid>
 
       {/* Content  */}
@@ -54,7 +60,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           </Stack>
 
           <Box display={"flex"} gap={1} mt={1} mb={1}>
-            <Chip label={course.suitableJob} size="small" color="info" />
+            <Chip label={course.suitableJob} size="small" className="bg-gradient" />
             {course.programmingLanguages.map((lang, i) => (
               <Chip key={i} label={lang} size="small" color="info" />
             ))}

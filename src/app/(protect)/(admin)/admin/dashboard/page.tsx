@@ -1,7 +1,18 @@
-import React from "react";
-
-const DashBoard = () => {
-  return <div>DashBoard</div>;
+import Typography from "@mui/material/Typography";
+import Users from "./_components/Users";
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+const BarRaceChart = () => {
+  return (
+    <Paper>
+      <Divider>
+        <Typography variant="h4" fontWeight={500} gutterBottom>
+          User
+        </Typography>
+      </Divider>
+      <Users />
+    </Paper>
+  );
 };
 
-export default DashBoard;
+export default BarRaceChart;
