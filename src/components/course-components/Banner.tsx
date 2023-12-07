@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
@@ -22,10 +23,12 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
       spacing={1}
       flexDirection={"row"}
       flexWrap={"wrap"}
-      boxShadow={2}
+      boxShadow={4}
+      overflow={"hidden"}
       sx={{
         color: "text.primary",
         textTransform: "capitalize",
+        bgcolor: "rgba(255,255,255,0.1)",
         img: {
           width: "100%",
           transition: "all linear 0.2s",
@@ -48,43 +51,47 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
       {/* Content  */}
       <Grid item lg={9} md={9} xs={12}>
         <Box p={1}>
-          <Stack flexDirection={"row"} gap={1} alignItems={"center"}>
+          <Stack flexDirection={"row"} flexWrap={"wrap"} gap={1} alignItems={"center"}>
             <Typography variant="h6" fontWeight={600}>
               {course.name}
             </Typography>
-            <Chip
-              label={course.type}
-              size="small"
-              color={course.type === "public" ? "success" : "info"}
-            />
+            <Box display={"flex"} flexWrap={"wrap"} gap={1}>
+              <Chip
+                label={course.type}
+                size="small"
+                color={course.type === "public" ? "success" : "info"}
+              />
+
+              {mode === "manager" && (
+                <>
+                  <Chip
+                    label={course.status}
+                    color={course.status === "approved" ? "success" : "warning"}
+                    size="small"
+                  />
+                  <Typography variant="subtitle2">
+                    {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
+                  </Typography>
+                </>
+              )}
+            </Box>
           </Stack>
 
-          <Box display={"flex"} gap={1} mt={1} mb={1}>
-            <Chip label={course.suitableJob} size="small" className="bg-gradient" />
-            {course.programmingLanguages.map((lang, i) => (
-              <Chip key={i} label={lang} size="small" color="info" />
-            ))}
-          </Box>
-
-          {mode === "manager" && (
-            <>
-              <Box>
-                <Chip
-                  label={course.status}
-                  color={course.status === "approved" ? "success" : "warning"}
-                  size="small"
-                />
-              </Box>
-              <Typography variant="subtitle1">
-                Created time: {dayjs(course.createdAt).format("MMMM D, YYYY h:mm A")}
-              </Typography>
-            </>
-          )}
+          <Stack gap={1} mt={1} mb={1} alignItems={"start"}>
+            <Tooltip title="Suitable job">
+              <Chip label={course.suitableJob} size="small" className="bg-gradient" />
+            </Tooltip>
+            <Stack flexDirection={"row"} flexWrap={"wrap"} gap={1}>
+              {course.programmingLanguages.map((lang, i) => (
+                <Chip key={i} label={lang} size="small" color="info" />
+              ))}
+            </Stack>
+          </Stack>
 
           {mode === "visitor" && (
-            <Typography variant="subtitle1">Teacher: {course.createdBy.username}</Typography>
+            <Typography variant="subtitle2">Teacher: {course.createdBy.username}</Typography>
           )}
-          <Typography variant="body1">Level: {course.level}</Typography>
+          <Typography variant="subtitle2">Level: {course.level}</Typography>
 
           {mode === "visitor" && course.type === "private" && (
             <>

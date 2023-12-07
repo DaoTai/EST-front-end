@@ -12,6 +12,7 @@ import useSWR, { Fetcher } from "swr";
 import { useState } from "react";
 import Link from "next/link";
 import MyCourse from "@/components/course-components/MyCourse";
+import Box from "@mui/material/Box";
 
 export const fetcherMyCourses: Fetcher<IRegisterCourse[], string> = (url: string) =>
   fetch(url).then((res) => res.json());
@@ -56,6 +57,7 @@ const MyCourses = () => {
           vertical: "top",
           horizontal: "center",
         }}
+        sx={{ maxHeight: "80vh" }}
       >
         {isLoading ? (
           <Typography variant="subtitle1">Loading...</Typography>
@@ -64,7 +66,9 @@ const MyCourses = () => {
             {listCourses && listCourses.length > 0 ? (
               listCourses?.map((course) => {
                 return (
-                  <Link
+                  <Box
+                    borderRadius={2}
+                    component={Link}
                     key={course._id}
                     href={
                       "/my-courses/" +
@@ -75,7 +79,7 @@ const MyCourses = () => {
                   >
                     <MyCourse data={course} direction="row" />
                     <Divider />
-                  </Link>
+                  </Box>
                 );
               })
             ) : (

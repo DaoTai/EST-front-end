@@ -155,6 +155,7 @@ const Notifications = () => {
           vertical: "top",
           horizontal: "center",
         }}
+        sx={{ maxHeight: "80vh" }}
       >
         <Paper
           sx={{

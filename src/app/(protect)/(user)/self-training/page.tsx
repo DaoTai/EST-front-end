@@ -3,24 +3,24 @@ import NormalHeader from "@/components/common/NormalHeader";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import StartIcon from "@mui/icons-material/Start";
 
-import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import IconButton from "@mui/material/IconButton";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 
+import { IMyAnswer } from "@/types/IAnswer";
+import Fab from "@mui/material/Fab";
 import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import ChoiceQuestion from "./_components/ChoiceQuestion";
-import MultilChoiceQuestion from "./_components/MultilChoiceQuestion";
+import ListCorrectAnswers from "./_components/ListCorrectAnswers";
+import ListQuestions from "./_components/ListQuestions";
 
 const SelfTraining = () => {
   const [type, setType] = useState<string>("byFavouriteProgrammingLanguages");
@@ -28,7 +28,7 @@ const SelfTraining = () => {
   const [isStarted, setStarted] = useState<boolean>(false);
   const [score, setScore] = useState<null | number>(null);
   const [listQuestions, setListQuestions] = useState<IQuestion[]>([]);
-  const [myAnswers, setMyAnswers] = useState<{ idQuestion: string; answers: string[] }[]>([]);
+  const [myAnswers, setMyAnswers] = useState<IMyAnswer[]>([]);
 
   //   Change type self-train
   const handleChange = (event: SelectChangeEvent) => {
@@ -41,7 +41,6 @@ const SelfTraining = () => {
       setLoading(true);
       const res = await axios.get<IQuestion[]>("/api/user/self-train?type=" + type);
       setListQuestions(res.data);
-      setLoading(false);
       setMyAnswers([]);
       setStarted(true);
       score && setScore(null);
@@ -50,65 +49,8 @@ const SelfTraining = () => {
         theme: "colored",
         position: "bottom-center",
       });
-    }
-  };
-
-  //   On change choice question
-  const handleChangeChoice = (idQuestion: string, newAnswer: string) => {
-    const currentAnswers = [...myAnswers];
-    const isAnswered = currentAnswers.some((answer) => answer.idQuestion === idQuestion);
-    if (isAnswered) {
-      const isDuplicated =
-        currentAnswers.find((answer) => answer.idQuestion === idQuestion)?.answers[0] === newAnswer;
-      const index = currentAnswers.findIndex((answer) => answer.idQuestion === idQuestion);
-      if (isDuplicated) {
-        currentAnswers[index] = { idQuestion, answers: [] };
-      } else {
-        currentAnswers[index] = { idQuestion, answers: [newAnswer] };
-      }
-
-      setMyAnswers(currentAnswers);
-    } else {
-      setMyAnswers([
-        ...currentAnswers,
-        {
-          idQuestion,
-          answers: [newAnswer],
-        },
-      ]);
-    }
-  };
-
-  // On change multil chocie question
-  const handleChangeMultilChoice = (idQuestion: string, newAnswer: string) => {
-    const currentAnswers = [...myAnswers];
-    const isAnswered = currentAnswers.some((answer) => answer.idQuestion === idQuestion);
-    if (isAnswered) {
-      const isDuplicated = currentAnswers
-        .find((answer) => answer.idQuestion === idQuestion)
-        ?.answers.includes(newAnswer);
-      const index = currentAnswers.findIndex((answer) => answer.idQuestion === idQuestion);
-      if (isDuplicated) {
-        currentAnswers[index] = {
-          idQuestion,
-          answers: currentAnswers[index].answers.filter((answer) => answer !== newAnswer),
-        };
-      } else {
-        currentAnswers[index] = {
-          idQuestion,
-          answers: [...currentAnswers[index].answers, newAnswer],
-        };
-      }
-
-      setMyAnswers(currentAnswers);
-    } else {
-      setMyAnswers([
-        ...currentAnswers,
-        {
-          idQuestion,
-          answers: [newAnswer],
-        },
-      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,25 +84,24 @@ const SelfTraining = () => {
   return (
     <Box>
       <NormalHeader />
+      <Typography gutterBottom variant="h4" fontWeight={500} textAlign={"center"}>
+        Quizzes
+      </Typography>
       <Box p={1}>
+        {/* Controls */}
         <Stack gap={3} mb={1} alignItems={"center"}>
           <FormControl margin="dense" fullWidth>
             <InputLabel>Type</InputLabel>
-            <Select value={type} label="Type" onChange={handleChange}>
+            <Select value={type} label="Options" onChange={handleChange}>
               <MenuItem value={"byFavouriteProgrammingLanguages"}>
-                Your programming languages
+                Your favourite programming languages
               </MenuItem>
-              <MenuItem value={"byCourseCategories"}>Your registered categories</MenuItem>
+              <MenuItem value={"bySuitableJobs"}>Suitable job in registered courses </MenuItem>
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            disabled={isLoading}
-            endIcon={<StartIcon />}
-            onClick={fetchQuestions}
-          >
+          <Fab disabled={isLoading} color="info" sx={{ p: 1 }} onClick={fetchQuestions}>
             {isLoading ? "Loading" : "Start"}
-          </Button>
+          </Fab>
         </Stack>
 
         {isLoading && (
@@ -178,32 +119,11 @@ const SelfTraining = () => {
 
         {/* List questions */}
         {!score && (
-          <Stack mt={2} mb={2} gap={2}>
-            {listQuestions.map((question, i) => {
-              const myAnswer = myAnswers.find((answer) => answer.idQuestion === question._id);
-              if (question.category === "choice") {
-                return (
-                  <ChoiceQuestion
-                    key={i}
-                    index={i + 1}
-                    myAnswer={myAnswer}
-                    question={question}
-                    onChange={handleChangeChoice}
-                  />
-                );
-              } else {
-                return (
-                  <MultilChoiceQuestion
-                    key={i}
-                    index={i + 1}
-                    myAnswer={myAnswer}
-                    question={question}
-                    onChange={handleChangeMultilChoice}
-                  />
-                );
-              }
-            })}
-          </Stack>
+          <ListQuestions
+            listQuestions={listQuestions}
+            myAnswers={myAnswers}
+            setMyAnswers={setMyAnswers}
+          />
         )}
 
         {listQuestions.length > 0 && !score && (
@@ -233,46 +153,7 @@ const SelfTraining = () => {
         )}
 
         {/* Correct answers */}
-        {score !== null && (
-          <Stack mt={2} gap={2}>
-            {listQuestions.map((question, i) => {
-              return (
-                <Paper key={i} elevation={4} sx={{ p: 1 }}>
-                  <Stack flexDirection={"row"} gap={1} mb={1}>
-                    <Typography variant="body1" fontWeight={500}>
-                      {i + 1}. {question.content}
-                    </Typography>
-                    <Chip
-                      label={question.category}
-                      color={question.category === "choice" ? "info" : "secondary"}
-                      size="small"
-                    />
-                  </Stack>
-
-                  <Stack mb={1} gap={1}>
-                    {question.answers?.map((answer, index) => {
-                      return (
-                        <Box
-                          key={index}
-                          p={1}
-                          sx={{
-                            bgcolor: (theme) =>
-                              question.correctAnswers?.includes(answer)
-                                ? theme.palette.success.light
-                                : theme.palette.error.light,
-                          }}
-                        >
-                          {answer}
-                        </Box>
-                      );
-                    })}
-                  </Stack>
-                  <Typography variant="body1">{question.explaination}</Typography>
-                </Paper>
-              );
-            })}
-          </Stack>
-        )}
+        {score !== null && <ListCorrectAnswers listQuestions={listQuestions} />}
       </Box>
     </Box>
   );

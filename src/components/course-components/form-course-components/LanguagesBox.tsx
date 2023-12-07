@@ -33,8 +33,13 @@ const ProgrammingLanguagesBox: React.FC<IProps> = ({ programmingLanguages, onCha
     <>
       <Stack flexDirection={"row"} flexWrap={"nowrap"} alignItems={"center"} gap={1}>
         <Autocomplete
+          freeSolo
+          selectOnFocus
           fullWidth
+          placeholder="Add used programming languages/technologies"
+          options={OPTIONS_PROGRAMMING_LANGUAGES}
           value={programmingLang}
+          getOptionLabel={(option) => option}
           onChange={(event, newValue) => {
             setProgramingLang(newValue ? newValue : "");
           }}
@@ -42,20 +47,15 @@ const ProgrammingLanguagesBox: React.FC<IProps> = ({ programmingLanguages, onCha
           onInputChange={(event, newInputValue) => {
             setProgramingLang(newInputValue);
           }}
-          options={OPTIONS_PROGRAMMING_LANGUAGES}
-          getOptionLabel={(option) => option}
-          renderInput={(params) => (
-            <TextField {...params} label="Programming languages" variant="outlined" />
-          )}
-          freeSolo
-          selectOnFocus
           onBlur={() => {
             // Nếu giá trị không có trong danh sách, tạo giá trị mới
             if (!OPTIONS_PROGRAMMING_LANGUAGES.includes(programmingLang)) {
               setProgramingLang(programmingLang);
             }
           }}
-          placeholder="Add programming languages"
+          renderInput={(params) => (
+            <TextField {...params} label="Programming languages/technologies" variant="outlined" />
+          )}
         />
         <IconButton onClick={handleAddProgrammingLangs}>
           <Add />
@@ -63,7 +63,7 @@ const ProgrammingLanguagesBox: React.FC<IProps> = ({ programmingLanguages, onCha
       </Stack>
 
       {
-        <Stack flexDirection={"row"} mt={2} gap={1}>
+        <Stack flexDirection={"row"} flexWrap={"wrap"} mt={2} gap={1}>
           {programmingLanguages.map((lang, index) => (
             <Chip
               key={index}

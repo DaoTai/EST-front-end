@@ -26,10 +26,20 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
 
   if (data) {
     return (
-      <Grid container columnSpacing={1} alignItems={direction === "row" ? "center" : "start"}>
-        <Grid item sm={direction === "row" ? 4 : 12} xs={direction === "row" ? 4 : 12}>
+      <Grid
+        container
+        columnSpacing={1}
+        alignItems={direction === "row" ? "center" : "start"}
+        borderRadius={"inherit"}
+      >
+        <Grid
+          item
+          sm={direction === "row" ? 4 : 12}
+          xs={direction === "row" ? 4 : 12}
+          borderRadius={"inherit"}
+        >
           <Image
-            unoptimized
+            priority
             src={
               data.course?.thumbnail
                 ? (data.course?.thumbnail?.uri as string)
@@ -41,7 +51,7 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
             style={{
               width: direction === "row" ? "100px" : "100%",
               height: direction === "row" ? "100px" : "200px",
-              borderRadius: 4,
+              borderRadius: "inherit",
               flex: "1 1 auto",
             }}
           />

@@ -4,9 +4,9 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 
-import useSWR from "swr";
 import { fetcherMyCourses } from "@/components/common/Header/Actions/MyCourses";
 import MyCourse from "@/components/course-components/MyCourse";
+import useSWR from "swr";
 
 const RegisteredCourses = () => {
   const { data: listCourses, isLoading } = useSWR("/api/user/my-courses", fetcherMyCourses, {
@@ -30,7 +30,7 @@ const RegisteredCourses = () => {
           <Grid container spacing={3}>
             {listCourses.map((course) => (
               <Grid item key={course._id} md={4} xs={6}>
-                <Paper elevation={4} sx={{ borderRadius: 4 }}>
+                <Paper elevation={4} sx={{ borderRadius: 2 }}>
                   <MyCourse data={course} />
                 </Paper>
               </Grid>
