@@ -23,6 +23,7 @@ const MyDialog = ({ title, content, loading = false, onClose, onSubmit }: IProps
       fullWidth
       scroll="paper"
       sx={{
+        textTransform: "capitalize",
         ".MuiDialog-container": {
           alignItems: "start",
         },

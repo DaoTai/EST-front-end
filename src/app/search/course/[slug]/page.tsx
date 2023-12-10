@@ -16,12 +16,11 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import Banner from "@/components/course-components/Banner";
-import Intro from "@/components/profile-components/Intro";
-import { BACK_END_URI } from "@/utils/constants/common";
-import RegisterButton from "./_components/RegisterButton";
-import useSWR, { Fetcher } from "swr";
-import clientSideAxios from "@/config/axios/client-side";
 import Spinner from "@/components/custom/Spinner";
+import Intro from "@/components/profile-components/Intro";
+import clientSideAxios from "@/config/axios/client-side";
+import useSWR, { Fetcher } from "swr";
+import RegisterButton from "./_components/RegisterButton";
 
 const fetcher: Fetcher<ICourse, string> = (url: string) => {
   return clientSideAxios.get(url).then((res) => res.data);

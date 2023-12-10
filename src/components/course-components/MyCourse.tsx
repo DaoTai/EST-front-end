@@ -51,7 +51,8 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
             style={{
               width: direction === "row" ? "100px" : "100%",
               height: direction === "row" ? "100px" : "200px",
-              borderRadius: "inherit",
+              borderTopLeftRadius: 3,
+              borderTopRightRadius: 3,
               flex: "1 1 auto",
             }}
           />

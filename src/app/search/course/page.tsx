@@ -115,7 +115,7 @@ const CoursePage = () => {
       </Stack>
 
       {/* Suggest search by language */}
-      <Stack m={1} gap={1} flexDirection={"row"}>
+      <Stack m={1} gap={1} flexDirection={"row"} flexWrap={"wrap"}>
         {listLanguages.map((lang, i) => {
           return (
             <Chip
@@ -140,7 +140,7 @@ const CoursePage = () => {
         <Box width={"100%"}>
           {isValidating && <Spinner />}
           {data && (
-            <Stack gap={4}>
+            <Stack gap={3}>
               {data.courses.length > 0 ? (
                 data.courses.map((course) => (
                   <Link key={course._id} href={pathName + "/" + course.slug}>

@@ -14,7 +14,7 @@ const nextConfig = {
   },
 
   env: {
-    SERVER_URL: process.env.SERVER_URL,
+    BACK_END_URI: process.env.BACK_END_URI,
   },
 
   //To speed up development time and NextJS compilation time when using MUI, we have to use the modularizeImports

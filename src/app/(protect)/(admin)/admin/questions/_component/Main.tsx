@@ -116,6 +116,9 @@ const Questions = () => {
             </Select>
           </FormControl>
         </Stack>
+        <Typography variant="body1" gutterBottom fontWeight={500}>
+          Total: {data.total}
+        </Typography>
 
         {(isLoading || isValidating) && <Spinner />}
 
@@ -124,10 +127,6 @@ const Questions = () => {
             No question
           </Typography>
         )}
-
-        <Typography variant="body1" gutterBottom fontWeight={500}>
-          Total: {data.total}
-        </Typography>
 
         {/* Questions */}
         <Stack gap={1}>

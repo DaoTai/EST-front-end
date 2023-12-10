@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3003",
-    "build": "next build ",
-    "start": "next start -p 3003",
+    "dev": "cross-env BUILD_MODE=dev next dev -p 3003",
+    "build": "cross-env BUILD_MODE=production next build ",
+    "start": "cross-env BUILD_MODE=dev next start -p 3003",
     "lint": "next lint"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "axios": "^1.5.0",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.11.10",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",

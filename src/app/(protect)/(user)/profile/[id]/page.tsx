@@ -48,8 +48,15 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                 <Grid container spacing={2}>
                   {listCourses.length > 0 ? (
                     listCourses?.map((register) => (
-                      <Grid key={register._id} item md={4} sm={6} xs={12} gap={1}>
-                        <Paper elevation={4} sx={{ pb: 2, borderRadius: 3, height: "100%" }}>
+                      <Grid key={register._id} item sm={6} xs={12} gap={1}>
+                        <Paper
+                          elevation={4}
+                          sx={{
+                            pb: 2,
+                            borderRadius: 3,
+                            height: "100%",
+                          }}
+                        >
                           <Image
                             unoptimized
                             src={
@@ -60,7 +67,11 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                             alt="thumbnail"
                             width={100}
                             height={200}
-                            style={{ width: "100%", borderRadius: 8 }}
+                            style={{
+                              width: "100%",
+                              borderTopLeftRadius: 3,
+                              borderTopRightRadius: 3,
+                            }}
                           />
 
                           {/* Texts */}
@@ -72,7 +83,7 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                               color={register.course.type === "private" ? "info" : "success"}
                               sx={{ textTransform: "capitalize" }}
                             />
-                            <Stack flexDirection={"row"} gap={1}>
+                            <Stack flexDirection={"row"} flexWrap={"wrap"} gap={1}>
                               {register.course.programmingLanguages?.map((lang, i) => (
                                 <Chip
                                   key={i}

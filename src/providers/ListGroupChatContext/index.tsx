@@ -34,7 +34,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (session) {
-      socket.current = io(process.env.SERVER_URL as string);
+      socket.current = io(process.env.BACK_END_URI as string);
     }
     // return () => {
     //   if (session) {

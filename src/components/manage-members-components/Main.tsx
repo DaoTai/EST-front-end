@@ -21,6 +21,8 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 import Table from "./Table";
+import Spinner from "../custom/Spinner";
+import MyDialog from "../custom/Dialog";
 
 const ExportListUserToCSV = dynamic(() => import("./ExportListUserToCSV"), {
   ssr: false,
@@ -42,6 +44,7 @@ const Main = () => {
   const [action, setAction] = useState<"authorize" | "unAuthorize" | "block" | "unBlock">(
     "authorize"
   );
+  const [openConfirm, setOpenConfirm] = useState(false);
   const [listIds, setListIds] = useState<GridRowSelectionModel>([]);
 
   const { data, isLoading, isValidating, error } = useSWR(
@@ -89,12 +92,18 @@ const Main = () => {
     } catch (error) {
       showErrorToast(error);
       toast.error("Handle action failed");
+    } finally {
+      setListIds([]);
     }
   };
 
   // On select id row table
   const onSelectRow = (newSelectionModel: GridRowSelectionModel) => {
     setListIds(newSelectionModel);
+  };
+
+  const toggleConfirm = () => {
+    setOpenConfirm(!openConfirm);
   };
 
   if (error) {
@@ -175,6 +184,7 @@ const Main = () => {
             labelId="action"
             value={action}
             label="Action"
+            disabled={listIds.length === 0}
             onChange={handleChangeAction}
           >
             <MenuItem value={"authorize"}>Authorize to teacher</MenuItem>
@@ -187,17 +197,13 @@ const Main = () => {
           variant="outlined"
           disabled={listIds.length === 0}
           endIcon={<SendIcon />}
-          onClick={handleAction}
+          onClick={toggleConfirm}
         >
           Handle action
         </Button>
       </Stack>
 
-      {(isLoading || isValidating) && (
-        <Typography variant="body1" textAlign={"center"}>
-          Loading ...
-        </Typography>
-      )}
+      {(isLoading || isValidating) && <Spinner />}
 
       {data && data.listUsers.length > 0 ? (
         <Box mt={2}>
@@ -217,12 +223,22 @@ const Main = () => {
         </Box>
       ) : (
         <Box p={2}>
-          {
+          {!isLoading && (
             <Typography variant="h6" textAlign={"center"}>
               No members
             </Typography>
-          }
+          )}
         </Box>
+      )}
+
+      {/* Confirm dialog */}
+      {openConfirm && (
+        <MyDialog
+          title="Confirm action"
+          content={action}
+          onClose={toggleConfirm}
+          onSubmit={handleAction}
+        />
       )}
     </Box>
   );

@@ -2,6 +2,7 @@
 import React, { ReactNode, memo, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { OPTIONS_SUITABLE_JOBS } from "@/utils/constants/common";
 
 type IProps = {
   name: string;
@@ -15,27 +16,6 @@ type IProps = {
 const SuitableJob = ({ name, value, onChange, onBlur, error, helperText }: IProps) => {
   const [inputValue, setInputValue] = useState("");
 
-  const options = [
-    "Front-end Web Development",
-    "Back-end Web Development",
-    "Fullstack Web Development",
-    "Fullstack Mobile",
-    "AI Engineering",
-    "Software Development",
-    "Data Science",
-    "Cybersecurity",
-    "Cloud Computing",
-    "Artificial Intelligence",
-    "Mobile App Development",
-    "Network Engineering",
-    "Database Administration",
-    "DevOps",
-    "IT Project Management",
-    "Machine Learning",
-    "Blockchain Development",
-    "Game Development",
-  ]; // Danh sách các giá trị
-
   return (
     <Autocomplete
       fullWidth
@@ -47,7 +27,7 @@ const SuitableJob = ({ name, value, onChange, onBlur, error, helperText }: IProp
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
-      options={options}
+      options={OPTIONS_SUITABLE_JOBS}
       getOptionLabel={(option) => option}
       renderInput={(params) => (
         <TextField
@@ -65,7 +45,7 @@ const SuitableJob = ({ name, value, onChange, onBlur, error, helperText }: IProp
       selectOnFocus
       onBlur={() => {
         // Nếu giá trị không có trong danh sách, tạo giá trị mới
-        if (!options.includes(inputValue)) {
+        if (!OPTIONS_SUITABLE_JOBS.includes(inputValue)) {
           onChange(name)(inputValue);
         }
       }}

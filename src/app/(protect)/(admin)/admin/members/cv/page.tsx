@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 import Detail from "./_components/Detail";
 import Table from "./_components/Table";
+import MyDialog from "@/components/custom/Dialog";
 
 type IResponse = {
   listCvs: ICv[];
@@ -30,6 +31,7 @@ const fetcher: Fetcher<IResponse, string> = (url: string) => fetch(url).then((re
 const CvPage = () => {
   const [action, setAction] = useState<"authorize" | "reject">("authorize");
   const [page, setPage] = useState(1);
+  const [openConfirm, setConfirm] = useState(false);
   const [listIds, setListIds] = useState<{ idUser: string; idCv: string }[]>([]);
   const [detail, setDetail] = useState<ICv | null>(null);
   const { data, error } = useSWR(`/api/admin/cvs?page=${page}`, fetcher, {
@@ -91,10 +93,12 @@ const CvPage = () => {
     }
   };
 
+  const toggleConfirm = () => setConfirm(!openConfirm);
+
   return (
     <Box p={2}>
       <Divider>
-        <Typography variant="h5" fontWeight={600} gutterBottom>
+        <Typography variant="h4" fontWeight={500} gutterBottom>
           List CV
         </Typography>
       </Divider>
@@ -126,7 +130,7 @@ const CvPage = () => {
               variant="outlined"
               disabled={listIds.length === 0}
               endIcon={<SendIcon />}
-              onClick={handleAction}
+              onClick={toggleConfirm}
             >
               Handle action
             </Button>
@@ -157,6 +161,17 @@ const CvPage = () => {
         </>
       )}
 
+      {/* COnfirm dialog */}
+      {openConfirm && (
+        <MyDialog
+          title="CV"
+          content="Delete this CV"
+          onClose={toggleConfirm}
+          onSubmit={handleAction}
+        />
+      )}
+
+      {/* Modal detail */}
       {detail && (
         <MyModal open={!!detail} onClose={() => setDetail(null)}>
           <Box minWidth={"60vw"}>

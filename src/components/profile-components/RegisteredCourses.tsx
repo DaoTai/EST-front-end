@@ -27,9 +27,9 @@ const RegisteredCourses = () => {
     if (listCourses.length > 0) {
       return (
         <>
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             {listCourses.map((course) => (
-              <Grid item key={course._id} md={4} xs={6}>
+              <Grid item key={course._id} sm={6} xs={12}>
                 <Paper elevation={4} sx={{ borderRadius: 2 }}>
                   <MyCourse data={course} />
                 </Paper>
