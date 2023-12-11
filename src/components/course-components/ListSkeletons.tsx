@@ -6,10 +6,10 @@ import Skeleton from "@mui/material/Skeleton";
 const ListSkeletons = () => {
   return Array.from(new Array(3)).map((item, i) => (
     <Grid key={i} component={Paper} container height={250} alignItems={"center"}>
-      <Grid item lg={3} md={3}>
+      <Grid item xs={3}>
         <Skeleton animation="wave" variant="rectangular" height={230} width={"100%"} />
       </Grid>
-      <Grid item lg={9} md={9} pl={1}>
+      <Grid item xs={9} pl={1}>
         <Skeleton animation="wave" variant="text" />
         <Skeleton animation="wave" variant="text" />
         <Skeleton animation="wave" variant="text" />
