@@ -1,19 +1,24 @@
 "use client";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
+import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 import { getDistanceTimeToNow } from "@/utils/functions";
 import Delete from "@mui/icons-material/Delete";
-import { IconButton } from "@mui/material";
 import { memo, useMemo, useState } from "react";
 import MyDialog from "../custom/Dialog";
+import MyList from "../custom/MyList";
 
 type IProps = {
   chat: IChat;
@@ -23,25 +28,41 @@ type IProps = {
 const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
   const { data: session } = useSession();
 
-  const [open, setOpen] = useState<boolean>(false);
-
-  const handleDelete = async () => {
-    await onDelete(chat._id);
-    setOpen(false);
-  };
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  const [openOptions, setOpenOptions] = useState<null | HTMLElement>(null);
 
   const isMine = useMemo(() => {
     return chat.sender._id === session?._id;
   }, [session, chat]);
+
+  const handleOpenOptions = (event: React.MouseEvent<HTMLElement>) => {
+    setOpenOptions(event.currentTarget);
+  };
+
+  const handleCloseOptions = () => {
+    setOpenOptions(null);
+  };
+
+  const handleToggleConfirm = () => {
+    setOpenConfirm(!openConfirm);
+    handleCloseOptions();
+  };
+
+  // Delete chat
+  const handleDelete = async () => {
+    await onDelete(chat._id);
+    setOpenConfirm(false);
+    handleCloseOptions();
+  };
 
   return (
     <>
       <Stack
         flexDirection={"row"}
         alignItems={"center"}
-        gap={2}
         ml={isMine ? "auto" : "initial"}
         mr={!isMine ? "auto" : "initial"}
+        gap={1}
         maxWidth={"80%"}
       >
         <Avatar
@@ -67,7 +88,7 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
                   alt="title seo"
                   width={100}
                   height={100}
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover", width: "100%" }}
                 />
                 <Typography variant="body1">{chat.seo.ogDescription}</Typography>
               </Link>
@@ -122,16 +143,40 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
 
         {/* Button delete */}
         {isMine && (
-          <IconButton color="error" onClick={() => setOpen(true)}>
-            <Delete />
-          </IconButton>
+          <Box sx={{ cursor: "pointer" }} onClick={handleOpenOptions}>
+            <MoreVertIcon />
+          </Box>
         )}
       </Stack>
 
-      {open && (
+      <Popover
+        disableScrollLock
+        open={!!openOptions}
+        anchorEl={openOptions}
+        onClose={handleCloseOptions}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <MyList>
+          <ListItem sx={{ gap: 1 }} onClick={handleToggleConfirm}>
+            <ListItemText>Delete</ListItemText>
+            <ListItemIcon>
+              <Delete fontSize="small" color="error" />
+            </ListItemIcon>
+          </ListItem>
+        </MyList>
+      </Popover>
+
+      {openConfirm && (
         <MyDialog
           content="Do you want to delete this chat? "
-          onClose={() => setOpen(false)}
+          onClose={handleToggleConfirm}
           title="Chat"
           onSubmit={handleDelete}
         />

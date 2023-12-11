@@ -23,6 +23,7 @@ import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import { useSession } from "next-auth/react";
+import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
   fetch(url).then((res) => {
@@ -42,7 +43,9 @@ const About = () => {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    onSuccess(data, key, config) {},
+    onSuccess(data, key, config) {
+      console.log("data");
+    },
   });
 
   useEffect(() => {
@@ -57,6 +60,10 @@ const About = () => {
   //   await axios.put("/api/user/group-chat/" + params.id);
   // };
 
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
+
   if (!data && isValidating) {
     return (
       <Typography variant="body1" textAlign={"center"}>
@@ -65,12 +72,15 @@ const About = () => {
     );
   }
 
-  const handleToggle = () => {
-    setToggle(!toggle);
-  };
+  if (!data) {
+    return <Typography textAlign={"center"}>No chat</Typography>;
+  }
 
-  if (data) {
-    return (
+  return (
+    <>
+      {/* <Helmet>
+          <title>{data.name}</title>
+        </Helmet> */}
       <Stack
         flexDirection={"row"}
         justifyContent={"space-between"}
@@ -183,8 +193,8 @@ const About = () => {
           </Paper>
         </Drawer>
       </Stack>
-    );
-  }
+    </>
+  );
 };
 
 export default About;

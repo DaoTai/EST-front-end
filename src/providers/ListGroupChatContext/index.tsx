@@ -3,14 +3,13 @@ import useDebounce from "@/hooks/useDebounce";
 import { ListGroupChatContext } from "@/hooks/useListGroupChatContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import useSWR from "swr";
 import { fetcher } from "./fetcher";
 
 const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session } = useSession();
-  // const [socket, setSocket] = useState<Socket>();
   const router = useRouter();
   const [search, setSearch] = useState<string>("");
   const [joinedGroups, setJoinedGroups] = useState<string[]>([]);
@@ -26,27 +25,33 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       revalidateIfStale: false,
       revalidateOnReconnect: false,
       revalidateOnFocus: false,
-      onSuccess(data, key, config) {
-        setListGroupChats(data);
-      },
+      onSuccess(data, key, config) {},
     }
   );
 
   useEffect(() => {
-    if (session) {
-      socket.current = io(process.env.BACK_END_URI as string);
-    }
-    // return () => {
-    //   if (session) {
-    //     socket.current?.disconnect();
-    //   }
-    // };
-  }, [session]);
+    data && setListGroupChats(data);
+  }, [data]);
+
+  useEffect(() => {
+    socket.current = io(process.env.BACK_END_URI as string);
+    return () => {
+      socket.current?.close();
+    };
+  }, []);
 
   useEffect(() => {
     if (session && listGroupChats.length > 0) {
+      // Join group chat with socket
       listGroupChats.forEach((groupChat) => {
         handleJoinGroup({ newGroupId: groupChat._id });
+      });
+
+      // Listen event new latest message from groups
+      socket.current?.on("receive chat", (newChat: IChat) => {
+        console.log("newChat: ", newChat);
+
+        updateLatestMessage(newChat);
       });
     }
   }, [session, listGroupChats]);
@@ -75,9 +80,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Handle update new chat to list group chat
   const updateLatestMessage = (newChat: IChat) => {
-    const prevGroupChats = listGroupChats.length === 0 ? data ?? [] : listGroupChats;
-
-    const update = prevGroupChats.map((groupChat) => {
+    const update = [...listGroupChats].map((groupChat) => {
       if (groupChat._id === newChat.idGroupChat) {
         return {
           ...groupChat,
@@ -87,26 +90,36 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       }
       return groupChat;
     });
-    // setListGroupChats(update);
+    setListGroupChats(update);
   };
 
   // Handle update latest reader
   const appendToLatestRead = (idGroupChat: string) => {
-    // setListGroupChats((prev) => {
-    //   return prev.map((groupChat) => {
-    //     if (groupChat._id === idGroupChat) {
-    //       console.log("Hi");
-    //       groupChat.latestReadBy.push(session!._id as any);
-    //     }
-    //     return groupChat;
-    //   });
-    // });
+    setListGroupChats((prev) => {
+      return [...prev].map((groupChat) => {
+        if (groupChat._id === idGroupChat) {
+          groupChat.latestReadBy.push(session!._id as any);
+        }
+        return groupChat;
+      });
+    });
   };
+
+  const sortedListChats = useMemo(() => {
+    return listGroupChats.sort((a, b) => {
+      if (a.latestChat && b.latestChat) {
+        return (
+          new Date(b.latestChat?.createdAt).getTime() - new Date(a.latestChat?.createdAt).getTime()
+        );
+      }
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+  }, [listGroupChats]);
 
   const value = {
     isLoadingInitial,
     isValidating,
-    listGroupChats,
+    listGroupChats: sortedListChats,
     search,
     revalidate,
     setSearch,

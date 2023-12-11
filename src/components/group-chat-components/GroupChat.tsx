@@ -14,6 +14,7 @@ import { grey } from "@mui/material/colors";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { memo, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type IProps = {
   groupChat: IGroupChat;
@@ -22,15 +23,27 @@ type IProps = {
 
 const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const ownerLatestChat = session?._id === groupChat.latestChat?.sender._id;
 
   const [seen, setSeen] = useState<boolean>(false);
 
   useEffect(() => {
     if (session) {
+      // console.log("Latest message: ", groupChat.latestChat);
+
+      // console.log("Readers: ", groupChat.latestReadBy);
+      // console.log("session: ", session._id);
+
       setSeen(groupChat.latestReadBy.includes(session._id as any));
     }
   }, [session, groupChat]);
+
+  const handleNavigate = () => {
+    console.log("navigate");
+
+    router.replace(`/group-chat/" + ${groupChat._id}`);
+  };
 
   return (
     <Paper
@@ -39,11 +52,13 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
       href={"/group-chat/" + groupChat._id}
       className={isActive ? "bg-gradient" : !seen ? "unseen" : ""}
       sx={{
+        cursor: "pointer",
         display: "flex",
         p: 1,
         justifyContent: "space-between",
         gap: 2,
         border: 0.5,
+        overflow: "hidden",
         borderColor: "divider",
         background: (theme) => (isActive ? theme.palette.gradient.main : "initial"),
         "&:hover": {
@@ -115,14 +130,14 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
 
         {/* Latest read by */}
         {/* {groupChat.latestReadBy.map((member, i) => (
-          <Typography variant="subtitle1" key={i}>
-            {typeof member === "string" && member}
-          </Typography>
-        ))} */}
+            <Typography variant="subtitle1" key={i}>
+              {typeof member === "string" && member}
+            </Typography>
+          ))} */}
       </Box>
 
       {/* Time distance */}
-      <Stack justifyContent={"space-between"}>
+      <Stack justifyContent={"space-between"} alignItems={"end"}>
         <Typography variant="subtitle2" fontWeight={400}>
           {groupChat.latestChat
             ? getDistanceTimeToNow(groupChat.latestChat.updatedAt)

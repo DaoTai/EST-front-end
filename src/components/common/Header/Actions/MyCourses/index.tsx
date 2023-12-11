@@ -26,11 +26,11 @@ const MyCourses = () => {
     isLoading,
     error,
   } = useSWR("/api/user/my-courses", fetcherMyCourses, {
-    revalidateIfStale: true,
+    revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     onSuccess(data, key, config) {
-      console.log("data: ", data);
+      // console.log("data: ", data);
     },
   });
 
@@ -46,76 +46,74 @@ const MyCourses = () => {
     return <Spinner />;
   }
 
-  if (listCourses) {
-    return (
-      <>
-        {/* Mine courses */}
-        <Tooltip arrow title="My courses">
-          <IconButton size="large" color="primary" onClick={handleClick}>
-            <LaptopChromebookIcon fontSize="medium" color="action" />
-          </IconButton>
-        </Tooltip>
+  return (
+    <>
+      {/* Mine courses */}
+      <Tooltip arrow title="My courses">
+        <IconButton size="large" color="primary" onClick={handleClick}>
+          <LaptopChromebookIcon fontSize="medium" color="action" />
+        </IconButton>
+      </Tooltip>
 
-        {/* Popover */}
-        <Popover
-          disableScrollLock
-          open={!!anchorEl}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          sx={{ maxHeight: "80vh" }}
-        >
-          {isLoading ? (
-            <Typography variant="subtitle1">Loading...</Typography>
-          ) : (
-            <Stack gap={1} p={1} minWidth={350}>
-              {listCourses && listCourses?.length > 0 ? (
-                listCourses?.map((course) => {
-                  return (
-                    <Box
-                      borderRadius={2}
-                      component={Link}
-                      key={course._id}
-                      href={
-                        "/my-courses/" +
-                        (course.passedLessons.length > 0
-                          ? course._id + "/" + course.passedLessons[course.passedLessons.length - 1]
-                          : course._id)
-                      }
-                    >
-                      <MyCourse data={course} direction="row" />
-                      <Divider />
-                    </Box>
-                  );
-                })
-              ) : (
-                <Stack
-                  alignItems={"center"}
-                  sx={{
-                    a: {
-                      color: (theme) => theme.palette.info.dark + "!important",
-                    },
-                  }}
-                >
-                  <Typography variant="body1" textAlign={"center"} gutterBottom>
-                    No course
-                  </Typography>
-                  <Link href={"/search/course"}>Let's explore</Link>
-                </Stack>
-              )}
-            </Stack>
-          )}
-        </Popover>
-      </>
-    );
-  }
+      {/* Popover */}
+      <Popover
+        disableScrollLock
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        sx={{ maxHeight: "80vh" }}
+      >
+        {isLoading ? (
+          <Typography variant="subtitle1">Loading...</Typography>
+        ) : (
+          <Stack gap={1} p={1} minWidth={350}>
+            {listCourses && listCourses?.length > 0 ? (
+              listCourses?.map((course) => {
+                return (
+                  <Box
+                    borderRadius={2}
+                    component={Link}
+                    key={course._id}
+                    href={
+                      "/my-courses/" +
+                      (course.passedLessons.length > 0
+                        ? course._id + "/" + course.passedLessons[course.passedLessons.length - 1]
+                        : course._id)
+                    }
+                  >
+                    <MyCourse data={course} direction="row" />
+                    <Divider />
+                  </Box>
+                );
+              })
+            ) : (
+              <Stack
+                alignItems={"center"}
+                sx={{
+                  a: {
+                    color: (theme) => theme.palette.info.dark + "!important",
+                  },
+                }}
+              >
+                <Typography variant="body1" textAlign={"center"} gutterBottom>
+                  No course
+                </Typography>
+                <Link href={"/search/course"}>Let's explore</Link>
+              </Stack>
+            )}
+          </Stack>
+        )}
+      </Popover>
+    </>
+  );
 };
 
 export default MyCourses;

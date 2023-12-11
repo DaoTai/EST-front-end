@@ -12,6 +12,7 @@ import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import { Divider, IconButton } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
@@ -24,7 +25,7 @@ const GroupChats = () => {
     useListGroupChatContext();
 
   const handleExit = () => {
-    socket?.emit("leave all");
+    // socket?.emit("leave all");
     router.replace("/");
   };
 

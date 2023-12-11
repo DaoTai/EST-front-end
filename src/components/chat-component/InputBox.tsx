@@ -148,7 +148,7 @@ const InputBox = ({ onSend }: IProps) => {
             />
           </IconButton>
 
-          <Button variant="text" disabled={loading} onClick={handleSend}>
+          <Button variant="outlined" disabled={loading} onClick={handleSend}>
             Send
           </Button>
         </Stack>

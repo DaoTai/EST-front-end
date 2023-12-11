@@ -7,13 +7,14 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { toast } from "react-toastify";
 
 import ChatItem from "@/components/chat-component/ChatItem";
 import InputBox from "@/components/chat-component/InputBox";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import chatService from "@/services/chat";
 import { convertObjectToFormData, showErrorToast } from "@/utils/functions";
-import { toast } from "react-toastify";
+
 type IResponse = {
   listChats: IChat[];
   page: number;
@@ -35,15 +36,17 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   }, [params]);
 
   useEffect(() => {
-    socket?.on("receive chat", async (newChat: IChat) => {
-      console.log("receive chat: ", newChat);
-      if (newChat.idGroupChat === params.id && newChat.sender._id !== session?._id) {
-        // call api update latest reader
-        await axios.patch(`/api/user/group-chat/${params.id}/seen`);
-        handleAddNewChat(newChat);
-      }
-    });
-  }, [session]);
+    if (session) {
+      socket?.on("receive chat", async (newChat: IChat) => {
+        if (newChat.idGroupChat === params.id && newChat.sender._id !== session?._id) {
+          handleAddNewChat(newChat);
+          // call api update latest reader
+          await axios.patch(`/api/user/group-chat/${params.id}/seen`);
+        }
+      });
+      appendToLatestRead(params.id);
+    }
+  }, [session, listGroupChats]);
 
   const scrollLatestChat = () => {
     if (frameChatRef.current) {
@@ -51,25 +54,27 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("listChats: ", listChats);
-  }, [listChats]);
-
   // Fetch list chat
   const fetchListChats = () => {
-    console.log("Fetch");
-
     const idGroupChat = params.id;
     const uri = `/api/user/chat/${idGroupChat}?page=${page}`;
     axios
       .get(uri)
       .then((res) => {
-        const { listChats, maxPage, page: currentPage } = res.data as IResponse;
+        const { listChats: newData, maxPage, page: currentPage } = res.data as IResponse;
+        // Lấy ra các unique chat
+        //  Trường hợp xảy ra trùng chat khi đoạn chat mới tạo trùng với đoạn chat được scroll mới nhất
+        const newListChats = [...listChats, ...newData].reduce((acc: IChat[], chat) => {
+          const exist = acc.find((item) => item._id === chat._id);
+          if (!exist) {
+            acc.push(chat);
+          }
+          return acc;
+        }, []);
 
-        setListChats((prev) => [...prev, ...listChats]);
-        listChats.length === 0 && setHasMore(false);
-        // Nếu là trang cuối cùng
-        if (maxPage === currentPage) {
+        setListChats(newListChats);
+        // Nếu là trang cuối cùng hoặc không có đoạn chat nào
+        if (maxPage === currentPage || newData.length === 0) {
           setHasMore(false);
         } else {
           setPage(currentPage + 1);
@@ -80,7 +85,12 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
 
   // Add new chat
   const handleAddNewChat = (newChat: IChat) => {
-    setListChats((prev) => [newChat, ...prev]);
+    setListChats((prev) => {
+      const listChatIds = prev.map((chat) => chat._id);
+      const isExist = listChatIds.includes(newChat._id);
+
+      return isExist ? prev : [newChat, ...prev];
+    });
     updateLatestMessage(newChat);
   };
 
@@ -88,7 +98,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
   const handleSendNewChat = async (payload: IFormChat) => {
     const idGroup = params.id;
     try {
-      if (payload.message?.trim()) {
+      if (payload.message?.trim() || payload.images) {
         const formData = convertObjectToFormData(payload);
         const res = await axios.post("/api/user/chat/" + idGroup, formData);
         const newChat = res.data;
@@ -108,7 +118,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
 
   // Fetch more data
   const fetchMoreData = () => {
-    fetchListChats();
+    hasMore && fetchListChats();
   };
 
   // Delete chat
@@ -141,7 +151,8 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
         style={{
           flex: "1 1 auto",
           height: "100%",
-          overflow: "auto",
+          overflowY: "auto",
+          overflowX: "hidden",
           display: "flex",
           flexDirection: "column-reverse",
         }}
@@ -160,12 +171,12 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
               Yay! You have seen it all
             </Typography>
           }
-          style={{ display: "flex", flexDirection: "column-reverse", gap: 8 }} //To put endMessage and loader to the top.
-          inverse={true} //
+          style={{ display: "flex", flexDirection: "column-reverse", gap: 8, height: "100%" }} //To put endMessage and loader to the top.
+          inverse={true}
           scrollableTarget="scrollableDiv"
         >
           {listChats.map((chat, index) => {
-            return <ChatItem key={index} chat={chat} onDelete={handleDeleteChat} />;
+            return <ChatItem key={chat._id} chat={chat} onDelete={handleDeleteChat} />;
           })}
         </InfiniteScroll>
       </Stack>

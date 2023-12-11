@@ -23,6 +23,7 @@ const MyDialog = ({ title, content, loading = false, onClose, onSubmit }: IProps
       fullWidth
       scroll="paper"
       sx={{
+        zIndex: (theme) => theme.zIndex.snackbar,
         textTransform: "capitalize",
         ".MuiDialog-container": {
           alignItems: "start",

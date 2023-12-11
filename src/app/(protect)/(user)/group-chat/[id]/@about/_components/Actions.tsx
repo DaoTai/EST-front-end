@@ -60,8 +60,10 @@ const Actions = ({ groupChat, mutate }: IProps) => {
     setLoading(true);
     try {
       await axios.delete("/api/user/group-chat/" + groupChat._id + "/cancel");
-      router.replace("/group-chat");
       revalidate();
+      setTimeout(() => {
+        router.replace("/group-chat");
+      }, 1500);
     } catch (error) {
       showErrorToast(error);
     } finally {
@@ -74,8 +76,10 @@ const Actions = ({ groupChat, mutate }: IProps) => {
     setLoading(true);
     try {
       await axios.delete("/api/user/group-chat/" + groupChat._id);
-      router.replace("/group-chat");
       revalidate();
+      setTimeout(() => {
+        router.replace("/group-chat");
+      }, 1500);
     } catch (error) {
       showErrorToast(error);
     } finally {
