@@ -42,6 +42,15 @@ const Actions = ({ groupChat, mutate }: IProps) => {
     return groupChat?.host._id === session?._id;
   }, [groupChat, session]);
 
+  // Exist in blocked members
+  const isBlocked = useMemo(() => {
+    if (session && groupChat) {
+      const idUser = session!._id;
+      return groupChat.blockedMembers.some((blocker) => blocker._id === idUser);
+    }
+    return false;
+  }, [groupChat, session]);
+
   const onCloseDialog = useCallback(() => {
     seOpenDialog(null);
   }, []);
@@ -155,11 +164,13 @@ const Actions = ({ groupChat, mutate }: IProps) => {
         justifyContent={"space-evenly"}
       >
         {/* Edit icon  */}
-        <Tooltip title="Edit name">
-          <IconButton color="primary" onClick={onOpenEditModal}>
-            <Edit />
-          </IconButton>
-        </Tooltip>
+        {!isBlocked && (
+          <Tooltip title="Edit">
+            <IconButton color="primary" onClick={onOpenEditModal}>
+              <Edit />
+            </IconButton>
+          </Tooltip>
+        )}
 
         {/* Exit icon  */}
         <Tooltip title="Exit group">

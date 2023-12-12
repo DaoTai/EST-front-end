@@ -88,7 +88,7 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
                   alt="title seo"
                   width={100}
                   height={100}
-                  style={{ objectFit: "cover", width: "100%" }}
+                  style={{ objectFit: "cover", width: "100%", height: "100%", maxHeight: "30vh" }}
                 />
                 <Typography variant="body1">{chat.seo.ogDescription}</Typography>
               </Link>

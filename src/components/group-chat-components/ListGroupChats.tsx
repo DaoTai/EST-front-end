@@ -12,20 +12,18 @@ import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import { Divider, IconButton } from "@mui/material";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 
 const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeTheme"), {
   ssr: false,
 });
 
-const GroupChats = () => {
+const ListGroupChats = () => {
   const params = useParams();
   const router = useRouter();
-  const { isLoadingInitial, isValidating, listGroupChats, search, setSearch, socket } =
+  const { isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
     useListGroupChatContext();
 
   const handleExit = () => {
-    // socket?.emit("leave all");
     router.replace("/");
   };
 
@@ -85,4 +83,4 @@ const GroupChats = () => {
   );
 };
 
-export default GroupChats;
+export default ListGroupChats;

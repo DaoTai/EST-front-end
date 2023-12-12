@@ -1,7 +1,7 @@
-import React from "react";
-import Content from "./_components/Content";
-const GroupChats = () => {
-  return <Content />;
+import ListGroupChats from "@/components/group-chat-components/ListGroupChats";
+
+const PageGroupChats = () => {
+  return <ListGroupChats />;
 };
 
-export default GroupChats;
+export default PageGroupChats;

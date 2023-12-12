@@ -14,7 +14,6 @@ import { grey } from "@mui/material/colors";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { memo, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 type IProps = {
   groupChat: IGroupChat;
@@ -23,27 +22,15 @@ type IProps = {
 
 const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
   const { data: session } = useSession();
-  const router = useRouter();
   const ownerLatestChat = session?._id === groupChat.latestChat?.sender._id;
 
   const [seen, setSeen] = useState<boolean>(false);
 
   useEffect(() => {
     if (session) {
-      // console.log("Latest message: ", groupChat.latestChat);
-
-      // console.log("Readers: ", groupChat.latestReadBy);
-      // console.log("session: ", session._id);
-
       setSeen(groupChat.latestReadBy.includes(session._id as any));
     }
   }, [session, groupChat]);
-
-  const handleNavigate = () => {
-    console.log("navigate");
-
-    router.replace(`/group-chat/" + ${groupChat._id}`);
-  };
 
   return (
     <Paper
@@ -116,24 +103,20 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
               overflow={"hidden"}
               textOverflow={"ellipsis"}
               whiteSpace={"nowrap"}
-              variant="body2"
-              sx={{ color: isActive ? "inherit" : "text.primary" }}
+              variant={groupChat.latestChat?.message ? "body2" : "caption"}
+              sx={{
+                color: isActive ? "inherit" : "text.primary",
+                ":is(span)": {
+                  color: (theme) => theme.palette.text.secondary,
+                },
+              }}
             >
               {groupChat.latestChat?.message
                 ? groupChat.latestChat?.message
-                : groupChat.latestReadBy.length > 0
-                ? "Latest message was deleted"
-                : "No chat"}
+                : "No chat or deleted message"}
             </Typography>
           )}
         </Stack>
-
-        {/* Latest read by */}
-        {/* {groupChat.latestReadBy.map((member, i) => (
-            <Typography variant="subtitle1" key={i}>
-              {typeof member === "string" && member}
-            </Typography>
-          ))} */}
       </Box>
 
       {/* Time distance */}

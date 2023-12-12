@@ -12,18 +12,17 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
 import { Drawer, IconButton } from "@mui/material";
-import axios from "axios";
+import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
-import useListGroupChatContext from "@/hooks/useListGroupChatContext";
-import { useSession } from "next-auth/react";
-import { Helmet } from "react-helmet";
+// import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
   fetch(url).then((res) => {
@@ -43,9 +42,7 @@ const About = () => {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    onSuccess(data, key, config) {
-      console.log("data");
-    },
+    onSuccess(data, key, config) {},
   });
 
   useEffect(() => {
@@ -55,10 +52,6 @@ const About = () => {
       }
     }
   }, [data, session]);
-
-  // const handleSeenLatestMessage = async () => {
-  //   await axios.put("/api/user/group-chat/" + params.id);
-  // };
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -85,19 +78,24 @@ const About = () => {
         flexDirection={"row"}
         justifyContent={"space-between"}
         alignItems={"center"}
+        pt={1}
+        pb={1}
         sx={{ bgcolor: (theme) => theme.palette.white.main }}
       >
-        <Typography fontWeight={500} letterSpacing={0.5} variant="h6" ml={2}>
+        <Typography fontWeight={600} letterSpacing={0.5} variant="h5" ml={2}>
           {data.name}
         </Typography>
         {/* Toggle display */}
-        <IconButton onClick={handleToggle}>
+        <IconButton size="large" onClick={handleToggle}>
           <MenuIcon />
         </IconButton>
 
         {/* List edit */}
         <Drawer open={toggle} anchor="right" onClose={handleToggle}>
-          <Paper elevation={5} sx={{ p: 1, height: "100%", pb: 4, overflowY: "auto" }}>
+          <Paper
+            elevation={5}
+            sx={{ p: 1, pb: 4, height: "100%", minWidth: "25vw", overflowY: "auto" }}
+          >
             <IconButton onClick={handleToggle}>
               <ArrowBackIos />
             </IconButton>

@@ -3,7 +3,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { ListGroupChatContext } from "@/hooks/useListGroupChatContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import useSWR from "swr";
 import { fetcher } from "./fetcher";
@@ -14,7 +14,6 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [search, setSearch] = useState<string>("");
   const [joinedGroups, setJoinedGroups] = useState<string[]>([]);
   const [listGroupChats, setListGroupChats] = useState<IGroupChat[]>([]);
-  const joinedGroupsRef = useRef<string[]>([]);
   const socket = useRef<Socket>();
   const name = useDebounce(search);
 
@@ -25,6 +24,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
       revalidateIfStale: false,
       revalidateOnReconnect: false,
       revalidateOnFocus: false,
+      revalidateOnMount: true,
       onSuccess(data, key, config) {},
     }
   );
@@ -49,8 +49,6 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
 
       // Listen event new latest message from groups
       socket.current?.on("receive chat", (newChat: IChat) => {
-        console.log("newChat: ", newChat);
-
         updateLatestMessage(newChat);
       });
     }
@@ -71,7 +69,6 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     const isJoined = joinedGroups.includes(newGroupId);
     if (!isJoined && socket) {
       setJoinedGroups((prev) => [...prev, newGroupId]);
-      joinedGroupsRef.current.push(newGroupId);
       socket.current?.emit("join group", {
         idGroup: newGroupId,
       });
@@ -86,6 +83,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
           ...groupChat,
           latestChat: newChat,
           updatedAt: newChat.updatedAt,
+          latestReadBy: [newChat.sender._id],
         };
       }
       return groupChat;
@@ -94,15 +92,19 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   // Handle update latest reader
+  // Chỉ khi đang mounting tại group chat thì mới thêm vào
   const appendToLatestRead = (idGroupChat: string) => {
-    setListGroupChats((prev) => {
-      return [...prev].map((groupChat) => {
-        if (groupChat._id === idGroupChat) {
-          groupChat.latestReadBy.push(session!._id as any);
-        }
-        return groupChat;
-      });
+    const idUser = session!._id as any;
+    const updateListChats = [...listGroupChats].map((groupChat) => {
+      if (idGroupChat === groupChat._id) {
+        return {
+          ...groupChat,
+          latestReadBy: Array.from(new Set([...groupChat.latestReadBy, idUser])),
+        };
+      }
+      return groupChat;
     });
+    setListGroupChats(updateListChats);
   };
 
   const sortedListChats = useMemo(() => {

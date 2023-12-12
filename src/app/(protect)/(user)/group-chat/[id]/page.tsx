@@ -2,18 +2,21 @@
 
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
 
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import ChatItem from "@/components/chat-component/ChatItem";
 import InputBox from "@/components/chat-component/InputBox";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import chatService from "@/services/chat";
 import { convertObjectToFormData, showErrorToast } from "@/utils/functions";
+import About from "@/components/chat-component/About";
 
 type IResponse = {
   listChats: IChat[];
@@ -22,10 +25,11 @@ type IResponse = {
 };
 
 const GroupChat = ({ params }: { params: { id: string } }) => {
+  const { data: session } = useSession();
+
   const { socket, revalidate, updateLatestMessage, listGroupChats, appendToLatestRead } =
     useListGroupChatContext();
 
-  const { data: session } = useSession();
   const [listChats, setListChats] = useState<IChat[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState<number>(1);
@@ -40,18 +44,53 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
       socket?.on("receive chat", async (newChat: IChat) => {
         if (newChat.idGroupChat === params.id && newChat.sender._id !== session?._id) {
           handleAddNewChat(newChat);
+          appendToLatestRead(params.id);
           // call api update latest reader
           await axios.patch(`/api/user/group-chat/${params.id}/seen`);
         }
       });
-      appendToLatestRead(params.id);
     }
-  }, [session, listGroupChats]);
+  }, [session]);
 
+  // Exist in blocked members
+  const isBlocked = useMemo(() => {
+    if (session && listGroupChats) {
+      const idUser = session!._id;
+      const inforGroup = listGroupChats.find((groupChat) => groupChat._id === params.id);
+      return inforGroup?.blockedMembers.some((block) => block._id === idUser);
+    }
+    return false;
+  }, [listGroupChats, params, session]);
+
+  // Delete chat
+  const handleDeleteChat = useCallback(
+    async (idChat: string) => {
+      try {
+        await chatService.deleteChat(idChat);
+        setListChats((prev) => [...prev].filter((chat) => chat._id !== idChat));
+        // If deleted chat is latest chat will revalidate group chat to update latest message
+        const currentGroupChat = listGroupChats.find((groupChat) => groupChat._id === params.id);
+        const isLatestChat = currentGroupChat?.latestChat?._id === idChat;
+
+        isLatestChat && revalidate();
+        toast.success("Delete chat success");
+      } catch (error) {
+        showErrorToast(error);
+      }
+    },
+    [listGroupChats]
+  );
+
+  // Scroll latest new chat
   const scrollLatestChat = () => {
     if (frameChatRef.current) {
       frameChatRef.current.scrollTop = frameChatRef.current.scrollHeight;
     }
+  };
+
+  // On focus frame chat
+  const onFocusFrameChat = () => {
+    appendToLatestRead(params.id);
   };
 
   // Fetch list chat
@@ -88,7 +127,6 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
     setListChats((prev) => {
       const listChatIds = prev.map((chat) => chat._id);
       const isExist = listChatIds.includes(newChat._id);
-
       return isExist ? prev : [newChat, ...prev];
     });
     updateLatestMessage(newChat);
@@ -112,7 +150,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
         scrollLatestChat();
       }
     } catch (error) {
-      console.log("Error: ", error);
+      showErrorToast(error);
     }
   };
 
@@ -121,68 +159,76 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
     hasMore && fetchListChats();
   };
 
-  // Delete chat
-  const handleDeleteChat = useCallback(
-    async (idChat: string) => {
-      try {
-        await chatService.deleteChat(idChat);
-        setListChats((prev) => [...prev].filter((chat) => chat._id !== idChat));
-        // If deleted chat is latest chat will revalidate group chat to update latest message
-        const currentGroupChat = listGroupChats.find((groupChat) => groupChat._id === params.id);
-        const istLatestChat = currentGroupChat?.latestChat?._id === idChat;
-
-        istLatestChat && revalidate();
-        // revalidate();
-        toast.success("Delete chat success");
-      } catch (error) {
-        showErrorToast(error);
-      }
-    },
-    [listGroupChats]
-  );
-
   return (
-    <>
-      <Stack
-        ref={frameChatRef}
-        id="scrollableDiv"
-        p={1}
-        pb={2}
-        style={{
-          flex: "1 1 auto",
-          height: "100%",
-          overflowY: "auto",
-          overflowX: "hidden",
+    <Stack
+      flexDirection={"row"}
+      position={"relative"}
+      component={Paper}
+      elevation={5}
+      onFocus={onFocusFrameChat}
+    >
+      {/* About */}
+      <Box position={"absolute"} sx={{ top: 0, right: 0, left: 0, boxShadow: 1, zIndex: 10 }}>
+        <About />
+      </Box>
+
+      {/* Frame chat */}
+      <Box
+        flex={2}
+        sx={{
+          height: "100vh",
+          overflowY: "overlay",
+          pt: "50px",
           display: "flex",
-          flexDirection: "column-reverse",
+          flexDirection: "column",
         }}
       >
-        <InfiniteScroll
-          dataLength={listChats.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={
-            <Typography variant="subtitle2" textAlign={"center"}>
-              Loading...
-            </Typography>
-          }
-          endMessage={
-            <Typography variant="subtitle2" textAlign={"center"} fontWeight={600}>
-              Yay! You have seen it all
-            </Typography>
-          }
-          style={{ display: "flex", flexDirection: "column-reverse", gap: 8, height: "100%" }} //To put endMessage and loader to the top.
-          inverse={true}
-          scrollableTarget="scrollableDiv"
+        <Stack
+          ref={frameChatRef}
+          id="scrollableDiv"
+          p={1}
+          pb={2}
+          style={{
+            flex: "1 1 auto",
+            height: "100%",
+            overflow: "auto",
+            display: "flex",
+            flexDirection: "column-reverse",
+          }}
         >
-          {listChats.map((chat, index) => {
-            return <ChatItem key={chat._id} chat={chat} onDelete={handleDeleteChat} />;
-          })}
-        </InfiniteScroll>
-      </Stack>
-      {/* Box input new chat */}
-      <InputBox onSend={handleSendNewChat} />
-    </>
+          <InfiniteScroll
+            dataLength={listChats.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={
+              <Typography variant="subtitle2" textAlign={"center"}>
+                Loading...
+              </Typography>
+            }
+            endMessage={
+              <Typography variant="subtitle2" textAlign={"center"} fontWeight={600}>
+                Yay! You have seen it all
+              </Typography>
+            }
+            style={{ display: "flex", flexDirection: "column-reverse", gap: 8, height: "100%" }}
+            inverse={true}
+            scrollableTarget="scrollableDiv"
+          >
+            {listChats.map((chat, index) => {
+              return <ChatItem key={chat._id} chat={chat} onDelete={handleDeleteChat} />;
+            })}
+          </InfiniteScroll>
+        </Stack>
+        {/* Box input new chat */}
+        {isBlocked ? (
+          <Typography gutterBottom variant="body1" fontWeight={600} textAlign={"center"}>
+            You are blocked by host
+          </Typography>
+        ) : (
+          <InputBox onSend={handleSendNewChat} />
+        )}
+      </Box>
+    </Stack>
   );
 };
 

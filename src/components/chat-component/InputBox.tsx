@@ -50,15 +50,17 @@ const InputBox = ({ onSend }: IProps) => {
 
   //   Send new chat
   const handleSend = async () => {
-    setLoading(true);
-    await onSend({
-      ...newChat,
-      images: files?.map((item) => item.file),
-    });
-    setNewChat({ message: "" });
-    setLoading(false);
-    files.length > 0 && setFiles([]);
-    inputRef.current?.focus();
+    if (newChat.message.trim() || newChat.images) {
+      setLoading(true);
+      await onSend({
+        ...newChat,
+        images: files?.map((item) => item.file),
+      });
+      setNewChat({ message: "" });
+      setLoading(false);
+      files.length > 0 && setFiles([]);
+      inputRef.current?.focus();
+    }
   };
 
   //   on key down input message
@@ -148,7 +150,11 @@ const InputBox = ({ onSend }: IProps) => {
             />
           </IconButton>
 
-          <Button variant="outlined" disabled={loading} onClick={handleSend}>
+          <Button
+            variant="outlined"
+            disabled={loading || !(newChat.message.trim() || newChat.images)}
+            onClick={handleSend}
+          >
             Send
           </Button>
         </Stack>

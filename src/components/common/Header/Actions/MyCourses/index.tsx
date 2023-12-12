@@ -16,7 +16,9 @@ import Box from "@mui/material/Box";
 import Spinner from "@/components/custom/Spinner";
 
 export const fetcherMyCourses: Fetcher<IRegisterCourse[], string> = (url: string) =>
-  fetch(url).then((res) => res.json());
+  fetch(url)
+    .then((res) => res.json())
+    .catch((err) => console.log("error: ", err));
 
 const MyCourses = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
