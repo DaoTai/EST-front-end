@@ -1,4 +1,5 @@
 "use client";
+import CameraIndoorIcon from "@mui/icons-material/CameraIndoor";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MenuIcon from "@mui/icons-material/Menu";
 import Accordion from "@mui/material/Accordion";
@@ -14,14 +15,15 @@ import Typography from "@mui/material/Typography";
 
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
-import { Drawer, IconButton } from "@mui/material";
+import { Drawer, IconButton, Tooltip } from "@mui/material";
 import { useSession } from "next-auth/react";
 import NextLink from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
+import MyDialog from "@/components/custom/Dialog";
 // import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
@@ -36,14 +38,20 @@ const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
 const About = () => {
   const params = useParams();
   const { data: session } = useSession();
-  const { appendToLatestRead } = useListGroupChatContext();
+  const router = useRouter();
+  const { appendToLatestRead, socket } = useListGroupChatContext();
   const [toggle, setToggle] = useState<boolean>(false);
-  const { data, mutate, isValidating } = useSWR("/api/user/group-chat/" + params.id, fetcher, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    onSuccess(data, key, config) {},
-  });
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false);
+  const { data, mutate, isValidating, error } = useSWR(
+    "/api/user/group-chat/" + params.id,
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      onSuccess(data, key, config) {},
+    }
+  );
 
   useEffect(() => {
     if (data && session) {
@@ -53,9 +61,30 @@ const About = () => {
     }
   }, [data, session]);
 
+  // Toggle display options
   const handleToggle = () => {
     setToggle(!toggle);
   };
+
+  const handleOpenConfirmJoinVideo = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleJoinRoom = () => {
+    router.push("/group-chat/" + params.id + "/video");
+  };
+
+  if (error) {
+    return (
+      <Typography variant="body1" textAlign={"center"}>
+        {String(error)}
+      </Typography>
+    );
+  }
 
   if (!data && isValidating) {
     return (
@@ -66,7 +95,7 @@ const About = () => {
   }
 
   if (!data) {
-    return <Typography textAlign={"center"}>No chat</Typography>;
+    return <Typography textAlign={"center"}>No information in group chat</Typography>;
   }
 
   return (
@@ -85,10 +114,20 @@ const About = () => {
         <Typography fontWeight={600} letterSpacing={0.5} variant="h5" ml={2}>
           {data.name}
         </Typography>
-        {/* Toggle display */}
-        <IconButton size="large" onClick={handleToggle}>
-          <MenuIcon />
-        </IconButton>
+
+        <Box>
+          {/* Icon join video room */}
+          <Tooltip title="Video room">
+            <IconButton className="bg-gradient" sx={{ mr: 2 }} onClick={handleOpenConfirmJoinVideo}>
+              <CameraIndoorIcon />
+            </IconButton>
+          </Tooltip>
+
+          {/* Toggle display options*/}
+          <IconButton size="large" onClick={handleToggle}>
+            <MenuIcon />
+          </IconButton>
+        </Box>
 
         {/* List edit */}
         <Drawer open={toggle} anchor="right" onClose={handleToggle}>
@@ -157,6 +196,9 @@ const About = () => {
               </Typography>
               <Stack gap={2}>
                 {data.members.map((member) => {
+                  // console.log("onlineIds: ", onlineIds);
+                  // console.log("Id member: ", member._id);
+
                   return (
                     <Stack
                       key={member._id}
@@ -191,6 +233,15 @@ const About = () => {
           </Paper>
         </Drawer>
       </Stack>
+
+      {openConfirm && (
+        <MyDialog
+          title="Confirm"
+          content="Do you want to join video room"
+          onClose={handleCloseConfirm}
+          onSubmit={handleJoinRoom}
+        />
+      )}
     </>
   );
 };

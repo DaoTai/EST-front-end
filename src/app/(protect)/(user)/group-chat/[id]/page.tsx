@@ -119,7 +119,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
           setPage(currentPage + 1);
         }
       })
-      .catch((err) => console.log("error: ", err));
+      .catch((err) => showErrorToast(err));
   };
 
   // Add new chat
@@ -164,7 +164,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
       flexDirection={"row"}
       position={"relative"}
       component={Paper}
-      elevation={5}
+      elevation={2}
       onFocus={onFocusFrameChat}
     >
       {/* About */}

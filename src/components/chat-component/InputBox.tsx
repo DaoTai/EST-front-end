@@ -1,7 +1,9 @@
 "use client";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
@@ -82,6 +84,15 @@ const InputBox = ({ onSend }: IProps) => {
     }
   };
 
+  // Reset
+  const handleReset = () => {
+    if (newChat.message)
+      setNewChat({
+        message: "",
+      });
+    if (files.length > 0) setFiles([]);
+  };
+
   return (
     <>
       {/* Preview */}
@@ -116,6 +127,16 @@ const InputBox = ({ onSend }: IProps) => {
         borderTop={1}
         borderColor={"divider"}
       >
+        {/* Reset message & files */}
+        <Tooltip title="Reset">
+          <IconButton
+            color="info"
+            disabled={!newChat.message && files.length === 0}
+            onClick={handleReset}
+          >
+            <RestartAltIcon />
+          </IconButton>
+        </Tooltip>
         {/* Input message */}
         <InputBase
           autoFocus
@@ -140,15 +161,17 @@ const InputBox = ({ onSend }: IProps) => {
 
         {/* Controls */}
         <Stack flexDirection={"row"} gap={1}>
-          <IconButton component="label">
-            <UploadFileIcon />
-            <VisuallyHiddenInput
-              accept="image/png, image/gif, image/jpeg"
-              multiple
-              type="file"
-              onChange={handleUploadFiles}
-            />
-          </IconButton>
+          <Tooltip title="Upload images">
+            <IconButton color="warning" component="label">
+              <UploadFileIcon />
+              <VisuallyHiddenInput
+                accept="image/png, image/gif, image/jpeg"
+                multiple
+                type="file"
+                onChange={handleUploadFiles}
+              />
+            </IconButton>
+          </Tooltip>
 
           <Button
             variant="outlined"

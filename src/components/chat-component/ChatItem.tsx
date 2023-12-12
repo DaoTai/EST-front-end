@@ -70,7 +70,12 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
           srcSet={chat.sender.avatar.uri}
           sx={{ width: 42, height: 42 }}
         />
-        <Box borderRadius={2} p={1} sx={{ bgcolor: (theme) => theme.palette.divider }}>
+        <Box
+          borderRadius={2}
+          p={1}
+          overflow={"hidden"}
+          sx={{ bgcolor: (theme) => theme.palette.divider }}
+        >
           <Typography variant="body1" fontWeight={500} gutterBottom>
             {chat.sender.username}
           </Typography>
