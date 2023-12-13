@@ -42,9 +42,8 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      revalidateOnMount: true,
       onSuccess(data, key, config) {
-        console.log("data: ", data);
-
         // Nếu bài học không có câu hỏi nào thì revalidate list lessons để enable next lesson
         if (data.lesson.questions.length === 0) {
           mutate(`/api/user/my-lessons?idRegisteredCourse=${idCourse}`);

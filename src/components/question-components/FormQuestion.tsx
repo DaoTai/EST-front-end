@@ -127,10 +127,13 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
   // Add correct answer
   const handleAddCorrectAnswer = () => {
     if (correctAnswer.trim()) {
-      const isExist = values?.correctAnswers?.includes(correctAnswer.trim());
+      const prevCorrectAnswers = values?.correctAnswers || [];
+      const prevAnswers = values?.answers || [];
+      const isExist =
+        prevCorrectAnswers.includes(correctAnswer.trim()) ||
+        prevAnswers.includes(correctAnswer.trim());
       if (!isExist) {
-        const prevAnswers = values?.correctAnswers || [];
-        setFieldValue("correctAnswers", [...prevAnswers, correctAnswer.trim()]);
+        setFieldValue("correctAnswers", [...prevCorrectAnswers, correctAnswer.trim()]);
         setFieldValue("answers", [...prevAnswers, correctAnswer.trim()]);
         setCorrectAnswer("");
         correctAnswerInputRef.current?.focus();

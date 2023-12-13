@@ -81,10 +81,11 @@ const CoursePage = () => {
   // List languages suggest
   const listLanguages = useMemo(() => {
     if (data) {
-      return data.courses.reduce((acc: string[], course) => {
+      const programmingLanguages = data.courses.reduce((acc: string[], course) => {
         const languages = course.programmingLanguages;
         return [...acc, ...languages];
       }, []);
+      return Array.from(new Set(programmingLanguages));
     }
     return [];
   }, [data]);

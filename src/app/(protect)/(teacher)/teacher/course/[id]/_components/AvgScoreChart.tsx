@@ -23,7 +23,10 @@ const AvgScoreChart = ({ id }: { id: string }) => {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    revalidateOnMount: true,
     onSuccess(data, key, config) {
+      console.log("data: ", data);
+
       const usernames = data.map((item) => item.user.username);
       const scores = data.map((item) => item.avgScore);
       const options = {
@@ -73,14 +76,6 @@ const AvgScoreChart = ({ id }: { id: string }) => {
     return (
       <Typography variant="body1" textAlign={"center"}>
         Having errors
-      </Typography>
-    );
-  }
-
-  if (data && data?.length > 0) {
-    return (
-      <Typography variant="body1" textAlign={"center"}>
-        No any average scores
       </Typography>
     );
   }

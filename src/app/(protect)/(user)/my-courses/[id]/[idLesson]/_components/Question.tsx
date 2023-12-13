@@ -25,6 +25,7 @@ type Props = {
 
 const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
   const params = useParams();
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [completed, setCompleted] = useState(isCompleted);
   const [linkCode, setLinkCode] = useState<string>("");
   const [answers, setAnswers] = useState<string[]>([]);
@@ -83,6 +84,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const res = await axios.post<IAnswerRecord>("/api/user/questions/" + question._id, {
         userAnswers: question.category === "code" ? [linkCode] : answers,
@@ -98,6 +100,8 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
         theme: "colored",
         position: "bottom-right",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -207,7 +211,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
               <Button
                 variant="contained"
                 size="small"
-                disabled={disabledButton}
+                disabled={disabledButton || isLoading}
                 onClick={handleSubmit}
               >
                 Submit
