@@ -16,7 +16,7 @@ import InputBox from "@/components/chat-component/InputBox";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import chatService from "@/services/chat";
 import { convertObjectToFormData, showErrorToast } from "@/utils/functions";
-import About from "@/components/chat-component/About";
+import About from "@/components/group-chat-components/About";
 
 type IResponse = {
   listChats: IChat[];

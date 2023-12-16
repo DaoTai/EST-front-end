@@ -18,8 +18,6 @@ export const PATCH = async (
     });
   } catch (error) {
     if (error instanceof AxiosError) {
-      console.log("error: ", error);
-
       return NextResponse.json(error.response?.data, {
         status: error.response?.status,
       });
@@ -35,7 +33,7 @@ export const DELETE = async (
   try {
     const idGroupChat = params.id;
     const idMember = params.idMember;
-    await serverAxios.delete(`/group-chat/${idGroupChat}/members/${idMember}?`);
+    await serverAxios.delete(`/group-chat/${idGroupChat}/members/${idMember}`);
     return NextResponse.json("OK", {
       status: 200,
     });

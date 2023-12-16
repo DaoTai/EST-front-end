@@ -8,9 +8,11 @@ import Typography from "@mui/material/Typography";
 import Spinner from "@/components/custom/Spinner";
 import { memo, useMemo, useState } from "react";
 import BlockedMember from "./BlockedMember";
-import PrepareBlockMember from "./PrepareBlockMember";
 import { Divider } from "@mui/material";
 import { useSession } from "next-auth/react";
+import ListMembers from "./ListMembers";
+import groupChatService from "@/services/group-chat";
+import { showErrorToast } from "@/utils/functions";
 
 type IHandleStatusMember = {
   idMember: string;
@@ -22,10 +24,18 @@ type IProps = {
   groupChat: IGroupChat;
   onClose: () => void;
   onEditName: (val: string) => Promise<void>;
+  onDeleteMember: (idMember: string) => Promise<void>;
   onHandleStatus: ({ idMember, option }: IHandleStatusMember) => Promise<void>;
 };
 
-const EditGroupChat = ({ loading, groupChat, onClose, onEditName, onHandleStatus }: IProps) => {
+const EditGroupChat = ({
+  loading,
+  groupChat,
+  onClose,
+  onEditName,
+  onDeleteMember,
+  onHandleStatus,
+}: IProps) => {
   const { data: session } = useSession();
 
   const { name, members, blockedMembers, host } = groupChat;
@@ -53,6 +63,11 @@ const EditGroupChat = ({ loading, groupChat, onClose, onEditName, onHandleStatus
   // Handle unblock member
   const handleUnBlockMember = async (idMember: string) => {
     await onHandleStatus({ idMember, option: "unblock" });
+  };
+
+  // Handle delete member
+  const handleDeleteMember = async (idMember: string) => {
+    await onDeleteMember(idMember);
   };
 
   return (
@@ -117,11 +132,12 @@ const EditGroupChat = ({ loading, groupChat, onClose, onEditName, onHandleStatus
             const isDisabled = isHost || host._id === mem._id || isBlocked;
 
             return (
-              <PrepareBlockMember
+              <ListMembers
                 key={mem._id}
                 member={mem}
                 disalbed={isDisabled}
                 onBlock={handleBlockMember}
+                onDelete={handleDeleteMember}
               />
             );
           })}

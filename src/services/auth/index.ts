@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { InferType } from "yup";
 import { BACK_END_URI } from "@/utils/constants/common";
 import { signOut } from "next-auth/react";
+import { showErrorToast } from "@/utils/functions";
 
 type ISignUpWithProvider = {
   email: string;
@@ -113,7 +114,9 @@ export const sendNewPasswordToEmail = async (email: string) => {
     const result = await authRouteAxios.post<boolean>("/forgot-password", { email });
     toast.success("Let's check your email");
     return result.data;
-  } catch (error) {}
+  } catch (error) {
+    showErrorToast(error);
+  }
 };
 
 export const refreshToken = async (refreshToken: string) => {

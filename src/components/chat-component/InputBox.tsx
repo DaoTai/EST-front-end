@@ -129,13 +129,15 @@ const InputBox = ({ onSend }: IProps) => {
       >
         {/* Reset message & files */}
         <Tooltip title="Reset">
-          <IconButton
-            color="info"
-            disabled={!newChat.message && files.length === 0}
-            onClick={handleReset}
-          >
-            <RestartAltIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              color="info"
+              disabled={!newChat.message && files.length === 0}
+              onClick={handleReset}
+            >
+              <RestartAltIcon />
+            </IconButton>
+          </span>
         </Tooltip>
         {/* Input message */}
         <InputBase

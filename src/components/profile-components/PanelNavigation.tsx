@@ -11,7 +11,6 @@ const PanelNavigation = async () => {
       mt={2}
       pb={1}
       gap={1}
-      justifyContent={"end"}
       flexWrap={"wrap"}
       sx={{
         a: {

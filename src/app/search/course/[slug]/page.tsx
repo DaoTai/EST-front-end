@@ -83,8 +83,8 @@ const DetailCourse = ({ params }: { params: { slug: string } }) => {
           </Grid>
 
           {/* About course */}
-          <Grid item md={8} sm={12} p={1}>
-            <Paper elevation={3} sx={{ pl: 1, pr: 1 }}>
+          <Grid item md={8} sm={12}>
+            <Paper elevation={3} sx={{ p: 1, overflow: "hidden" }}>
               {/* Banner */}
               <Suspense fallback="Loading...">
                 <Banner course={detail} mode="visitor" />

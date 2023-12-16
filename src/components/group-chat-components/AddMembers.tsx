@@ -80,7 +80,7 @@ const AddMembers = ({ existUsers, onAdd }: IProps) => {
                     p={1}
                   >
                     <Box display={"flex"} alignItems={"center"} gap={1}>
-                      <Avatar src={user.avatar.uri} />
+                      <Avatar src={user?.avatar?.uri} />
                       <Typography variant="body1" textAlign={"center"}>
                         {user.username}
                       </Typography>

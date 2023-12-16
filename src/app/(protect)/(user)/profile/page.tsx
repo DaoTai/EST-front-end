@@ -25,14 +25,14 @@ const Profile = async () => {
       <Divider />
       {session && (
         <Grid container mt={1} spacing={2}>
-          <Grid item md={3} xs={12}>
+          <Grid item md={4} xs={12}>
             <Paper elevation={2} sx={{ p: 1 }}>
               <Suspense fallback={<p>Loading</p>}>
                 <Intro user={session} />
               </Suspense>
             </Paper>
           </Grid>
-          <Grid item md={9} xs={12}>
+          <Grid item md={8} xs={12}>
             <RegisteredCourses />
           </Grid>
         </Grid>

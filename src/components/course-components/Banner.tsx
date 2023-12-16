@@ -33,7 +33,6 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           width: "100%",
           transition: "all linear 0.2s",
           borderRadius: 2,
-          filter: "contrast(110%)",
         },
       }}
     >

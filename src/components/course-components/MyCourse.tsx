@@ -46,13 +46,13 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
                 : "/default-fallback-image.png"
             }
             width={100}
-            height={100}
+            height={200}
             alt="thumbnail"
             style={{
               width: direction === "row" ? "100px" : "100%",
-              height: direction === "row" ? "100px" : "200px",
-              borderTopLeftRadius: 3,
-              borderTopRightRadius: 3,
+              height: direction === "row" ? "100px" : "280px",
+              borderRadius: 3,
+              boxShadow: "1px 1px 4px rgba(0,0,0,0.3)",
               flex: "1 1 auto",
             }}
           />

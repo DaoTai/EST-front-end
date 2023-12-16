@@ -13,16 +13,17 @@ import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { KeyedMutator } from "swr";
 import { useCallback, useMemo, useState } from "react";
+import { KeyedMutator } from "swr";
 
 import MyDialog from "@/components/custom/Dialog";
 import MyModal from "@/components/custom/Modal";
 import Spinner from "@/components/custom/Spinner";
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import { showErrorToast } from "@/utils/functions";
 import AddNewMembers from "./Add";
 import EditGroupChat from "./Edit";
-import useListGroupChatContext from "@/hooks/useListGroupChatContext";
+import groupChatService from "@/services/group-chat";
 
 type IProps = {
   groupChat: IGroupChat;
@@ -66,6 +67,7 @@ const Actions = ({ groupChat, mutate }: IProps) => {
 
   //   Handle exit group
   const handleExit = async () => {
+    if (!session) return;
     setLoading(true);
     try {
       await axios.delete("/api/user/group-chat/" + groupChat._id + "/cancel");
@@ -151,6 +153,22 @@ const Actions = ({ groupChat, mutate }: IProps) => {
     []
   );
 
+  // Handle delete member
+  const handleDeleteMember = useCallback(async (idMember: string) => {
+    setLoading(true);
+    try {
+      await groupChatService.deleteMember({
+        idGroupChat: groupChat._id,
+        idMember: idMember,
+      });
+      mutate();
+    } catch (error) {
+      showErrorToast(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <>
       {/* Actions */}
@@ -228,6 +246,7 @@ const Actions = ({ groupChat, mutate }: IProps) => {
               onClose={onCloseModal}
               onEditName={handleEditName}
               onHandleStatus={handleStatusMember}
+              onDeleteMember={handleDeleteMember}
             />
           </Box>
         </MyModal>
