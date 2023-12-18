@@ -12,7 +12,7 @@ const FriendVideo = ({ peer, friend }: Pick<IFriendVideo, "friend" | "peer">) =>
     });
 
     peer.on("error", (err) => {
-      console.log("Peer error: ", err);
+      console.log("Peer error friend video: ", err);
     });
   }, [peer]);
 
