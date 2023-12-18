@@ -6,7 +6,6 @@ import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import { useSession } from "next-auth/react";
 import { memo, useState } from "react";
 
 type IProps = {
@@ -16,8 +15,6 @@ type IProps = {
 };
 
 const ControlMedia: React.FC<IProps> = ({ stream, openCamera, handleToggleCamera }) => {
-  const { data: session } = useSession();
-
   const [openMic, setOpenMic] = useState<boolean>(true);
 
   // Toggle mic
