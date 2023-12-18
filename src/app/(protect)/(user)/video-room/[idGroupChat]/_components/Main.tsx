@@ -64,6 +64,7 @@ export type IFriendVideo = {
 
 const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
   const { data: session } = useSession();
+  const [shareScreen, setShareScreen] = useState<boolean>(false);
   const [openCamera, setOpenCamera] = useState<boolean>(true);
   const [listFriends, setListFriends] = useState<IFriendVideo[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -230,12 +231,6 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
 
           if (deletedPeer) {
             deletedPeer.peer.destroy();
-            // peersRef.current.forEach((peerItem) => {
-            //   if (peerItem.socketId === friendSocketId) {
-            //     peerItem.peer.destroy();
-            //   }
-            // });
-
             peersRef.current = [...peersRef.current].filter(
               (peer) => peer.socketId !== friendSocketId
             );
@@ -251,7 +246,6 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
       });
 
     return () => {
-      socket.current?.emit("leave");
       const videoTracks = localStream?.getVideoTracks();
       videoTracks?.forEach((track) => {
         track.stop();
@@ -278,7 +272,7 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
       <Heading />
       <Box position={"relative"} height={"100vh"} boxShadow={2} p={1} style={{ paddingTop: 60 }}>
         {/* List videos */}
-        <Typography gutterBottom>Total: {listFriends.length}</Typography>
+        <Typography gutterBottom>Total friends joined: {listFriends.length}</Typography>
         <Grid container spacing={1}>
           {/* My video */}
           <Grid item md={4} sm={6} xs={6}>

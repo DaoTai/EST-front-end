@@ -75,8 +75,8 @@ const About = () => {
   };
 
   const handleJoinRoom = () => {
-    // router.push("/group-chat/" + params.id + "/video");
     router.push("/video-room/" + params.id);
+    // window.open("/video-room/" + params.id, "_blank", "width=500,height=500");
   };
 
   if (error) {
