@@ -3,15 +3,11 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import { memo, useState } from "react";
 import { useSession } from "next-auth/react";
+import { memo, useState } from "react";
 
 type IProps = {
   stream: MediaStream;
