@@ -21,7 +21,7 @@ const PageVideo = async ({ params }: { params: { idGroupChat: string } }) => {
       );
     } else {
       return (
-        <Stack>
+        <Stack gap={2}>
           <Typography textAlign={"center"}>You dont have permission to join this room</Typography>
           <Link href="/">Back</Link>
         </Stack>

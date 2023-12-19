@@ -1,10 +1,8 @@
 "use client";
-import { getDistanceTimeToNow } from "@/utils/functions";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AvatarGroup from "@mui/material/AvatarGroup";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
-
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -14,6 +12,7 @@ import { grey } from "@mui/material/colors";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { memo, useEffect, useState } from "react";
+import { getDistanceTimeToNow } from "@/utils/functions";
 
 type IProps = {
   groupChat: IGroupChat;
@@ -43,7 +42,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         display: "flex",
         p: 1,
         justifyContent: "space-between",
-        gap: 2,
+        gap: 1,
         border: 0.5,
         overflow: "hidden",
         borderColor: "divider",
@@ -72,20 +71,31 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
       {/* Name, latest msg, latest reader */}
       <Box flexGrow={2} display={"block"} overflow={"hidden"}>
         <Typography
+          gutterBottom
           overflow={"hidden"}
           textOverflow={"ellipsis"}
           whiteSpace={"nowrap"}
-          variant="subtitle1"
+          variant="body1"
           fontWeight={500}
+          lineHeight={1.6}
+          sx={{
+            borderRadius: 12,
+            bgcolor: "rgba(255,255,255,0.3)",
+            border: 1,
+            borderColor: "divider",
+            width: "fit-content",
+            pl: 2,
+            pr: 2,
+          }}
         >
           {groupChat.name}
         </Typography>
 
         {/* Latest message */}
-        <Stack flexDirection={"row"} gap={0.5} alignItems={"baseline"}>
+        <Stack alignItems={"baseline"}>
           {groupChat.latestChat && (
-            <Typography variant="body1" component={"span"} fontWeight={500}>
-              {ownerLatestChat ? "You: " : groupChat.latestChat?.sender.username + ": "}
+            <Typography variant="body2" component={"span"} fontWeight={600}>
+              {ownerLatestChat ? "You" : groupChat.latestChat?.sender.username}
             </Typography>
           )}
           {groupChat.latestChat?.attachments && groupChat.latestChat?.attachments.length > 0 ? (
@@ -93,7 +103,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
               overflow={"hidden"}
               textOverflow={"ellipsis"}
               whiteSpace={"nowrap"}
-              variant="body1"
+              variant="body2"
               sx={{ color: isActive ? "inherit" : grey[500] }}
             >
               {groupChat.latestChat?.attachments.length + "attachment"}

@@ -39,8 +39,6 @@ const Heading = () => {
               onClick={handleToggleConfirm}
               color="error"
               sx={{
-                backgroundColor: (theme) => theme.palette.error.dark,
-                color: (theme) => theme.palette.common.white,
                 alignSelf: "end",
                 border: 1,
                 borderColor: "currentColor",

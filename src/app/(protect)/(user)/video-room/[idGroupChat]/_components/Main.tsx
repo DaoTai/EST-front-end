@@ -64,7 +64,6 @@ export type IFriendVideo = {
 
 const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
   const { data: session } = useSession();
-  const [shareScreen, setShareScreen] = useState<boolean>(false);
   const [openCamera, setOpenCamera] = useState<boolean>(true);
   const [listFriends, setListFriends] = useState<IFriendVideo[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -74,7 +73,7 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
   const myVideoRef = useRef<HTMLVideoElement | any>();
   const peersRef = useRef<PeerRef[]>([]);
 
-  // Tạo kết nối ngang hàng
+  // Tạo một peer initiator để gửi tín hiệu và thông tin cá nhân đến friend (Khi room đã có người vào trước đó)
   /*
  - userId: id của friend
  - user: thông tin của mình
@@ -84,10 +83,11 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
   const createPeer = ({ friendSocketId, callerId, stream, user }: ICreatePeerParams) => {
     const peer = new SimplePeer({
       initiator: true,
-      trickle: false, // đảm bảo rằng không có dữ liệu nào được gửi đi trước khi kết nối hoàn chỉnh, và toàn bộ dữ liệu sẽ được gửi một lần duy nhất sau khi kết nối đã sẵn sàng
+      trickle: false, // đảm bảo rằng không có dữ liệu nào được gửi đi trước khi kết nối hoàn chỉnh, và toàn bộ dữ liệu sẽ được gửi một lần duy nhất sau khi kết nối đã sẵn sàng (ngăn chặn việc gửi dữ liệu từ từ và liên tục)
       stream,
     });
 
+    // Khi được thiết lập sẽ gửi tín hiệu (signal) tới friend thông qua socket
     peer.on("signal", (signal) => {
       socket.current?.emit("send signal", {
         friendSocketId,
@@ -100,17 +100,17 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
     return peer;
   };
 
-  // Thêm kết nối ngang hàng
+  // Tạo một peer không phải là initiator để xử lý tín hiệu từ friend. (Khi friend vô sau)
   // Caller id: socket id của friend
   // Signal: tín hiệu từ friend
   const addPeer = ({ signal, callerId, stream }: IAddPeerParams) => {
     const peer = new SimplePeer({
-      initiator: false,
+      initiator: false, //Peer không khởi tạo việc kết nối, mà chờ để nhận tín hiệu từ peer khác.
       trickle: false,
       stream,
     });
 
-    // Khi có tín hiệu
+    // Khi có tín hiệu từ friend
     peer.on("signal", (signal) => {
       socket.current?.emit("return signal", {
         signal,
@@ -118,18 +118,11 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
       });
     });
 
-    // Khi đóng kết nối (rời video call)
-    peer.on("close", () => {
-      const currentPeer = { ...peer } as PeerInstance;
-      const newPeers = [...listFriends].filter(({ peer }) => peer._id !== currentPeer._id);
-      setListFriends(newPeers);
-    });
-
     // Khi xảy ra lỗi
     peer.on("error", (err) => {
-      console.log("Error: ", err);
+      console.log("Peer error: ", err);
     });
-
+    // Sử dụng tín hiệu (signal) nhận được từ peer bên friend, mình sẽ phản hồi tới WEB RTC để bắt đầu quá trình thiết lập kết nối tới peer friend
     peer.signal(signal);
     return peer;
   };
@@ -160,9 +153,9 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
         socket.current?.on("all users", (listFriends: IPayload[]) => {
           const newFriendVideos = [] as IFriendVideo[];
           // Tạo các peer tương ứng với từng friend
-          listFriends.forEach((user) => {
+          listFriends.forEach((friend) => {
             const peer = createPeer({
-              friendSocketId: user.socketId,
+              friendSocketId: friend.socketId,
               callerId: socket.current!.id,
               stream: stream,
               user: {
@@ -172,14 +165,14 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
             });
 
             peersRef.current.push({
-              socketId: user.socketId,
+              socketId: friend.socketId,
               peer,
             });
 
             newFriendVideos.push({
-              peer: peer,
-              friend: { ...user },
-              socketId: user.socketId,
+              socketId: friend.socketId,
+              peer,
+              friend,
             });
           });
           setListFriends(newFriendVideos);
@@ -207,11 +200,13 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
           ]);
         });
 
-        // Establish connect: send signal to peers
+        // Tín hiệu từ friend đã vào trước đó
+        // Khi một friend (đã vào trước đó) gửi lại tín hiệu (signal) để thiết lập kết nối
         socket.current?.on(
           "receive returned signal",
           (payload: { socketId: string; signal: SimplePeer.SignalData }) => {
             const { socketId, signal } = payload;
+            // Tìm peer của friend để thực hiện kết nối từ bên friend với mình bằng method signal
             const item = peersRef.current.find((peer) => {
               return peer.socketId === socketId;
             });
