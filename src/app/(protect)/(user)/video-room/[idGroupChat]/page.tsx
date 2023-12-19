@@ -16,7 +16,7 @@ const PageVideo = async ({ params }: { params: { idGroupChat: string } }) => {
     if (isMember) {
       return (
         <>
-          <VideoRoom idGroupChat={params.idGroupChat} />
+          <VideoRoom groupChat={groupChat} />
         </>
       );
     } else {

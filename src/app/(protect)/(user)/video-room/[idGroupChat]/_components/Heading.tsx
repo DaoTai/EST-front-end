@@ -1,13 +1,15 @@
 "use client";
 import MyDialog from "@/components/custom/Dialog";
 import PhoneDisabledIcon from "@mui/icons-material/PhoneDisabled";
+import { Box } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-const Heading = () => {
+import { memo, useCallback, useState } from "react";
+
+const Heading = ({ groupChat }: { groupChat: IGroupChat }) => {
   const router = useRouter();
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const handleExitRoom = useCallback(() => {
@@ -22,24 +24,28 @@ const Heading = () => {
     <>
       <Stack
         p={1}
-        position={"fixed"}
-        top={0}
-        left={0}
-        right={0}
-        height={60}
+        minHeight={60}
+        boxShadow={2}
         sx={{
           background: (theme) => theme.palette.white.main,
           zIndex: 999,
         }}
       >
-        <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"center"}>
-          <Typography>Video call</Typography>
+        <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"start"}>
+          <Box>
+            <Typography variant="h6" lineHeight={1.8} fontWeight={500}>
+              {groupChat.name}
+            </Typography>
+            <Typography variant="body1" lineHeight={1.8} fontWeight={500} gutterBottom>
+              Host: {groupChat.host.username}
+            </Typography>
+          </Box>
+
           <Tooltip title="Exit video room" arrow>
             <IconButton
               onClick={handleToggleConfirm}
               color="error"
               sx={{
-                alignSelf: "end",
                 border: 1,
                 borderColor: "currentColor",
               }}
@@ -63,4 +69,4 @@ const Heading = () => {
   );
 };
 
-export default Heading;
+export default memo(Heading);

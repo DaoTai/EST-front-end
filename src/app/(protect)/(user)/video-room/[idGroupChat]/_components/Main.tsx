@@ -9,12 +9,13 @@ import Typography from "@mui/material/Typography";
 
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import SimplePeer from "simple-peer";
 import { Socket, io } from "socket.io-client";
 import ControlMedia from "./ControlMedia";
 import FriendVideo from "./FriendVideo";
-import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
 const Heading = dynamic(() => import("./Heading"), {
   ssr: false,
@@ -62,11 +63,13 @@ export type IFriendVideo = {
   socketId: string;
 };
 
-const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
+const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
   const { data: session } = useSession();
+  const [isSharingScreen, setSharingScreen] = useState<boolean>(false);
   const [openCamera, setOpenCamera] = useState<boolean>(true);
   const [listFriends, setListFriends] = useState<IFriendVideo[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [idSocketSharingScreen, setIdSocketSharingScreen] = useState<string | null>(null);
 
   const socket = useRef<Socket>();
 
@@ -122,8 +125,9 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
     peer.on("error", (err) => {
       console.log("Peer error: ", err);
     });
-    // Sử dụng tín hiệu (signal) nhận được từ peer bên friend, mình sẽ phản hồi tới WEB RTC để bắt đầu quá trình thiết lập kết nối tới peer friend
+
     if (!peer.destroyed) {
+      // Sử dụng tín hiệu (signal) nhận được từ peer bên friend, mình sẽ phản hồi tới WEB RTC để bắt đầu quá trình thiết lập kết nối tới peer friend
       peer.signal(signal);
     }
     return peer;
@@ -143,7 +147,7 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
         myVideoRef.current.srcObject = stream;
         setStream(stream);
         socket.current?.emit("join video", {
-          idGroupChat: idGroupChat,
+          idGroupChat: groupChat._id,
           user: {
             username: session.username,
             avatar: session.avatar,
@@ -236,6 +240,13 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
             );
           }
         });
+
+        // Event sharing screen in room
+        socket.current?.on("socket id sharing", (idSocket) => {
+          console.log("id socket sharing: ", idSocket);
+
+          setIdSocketSharingScreen(idSocket);
+        });
       })
       .catch((err) => {
         console.error("Error accessing media devices:", err);
@@ -263,17 +274,114 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
     }
   }, [openCamera, stream]);
 
+  // share screen
+  const handleShareScreen = async () => {
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(screenStream);
+      if (myVideoRef.current) {
+        myVideoRef.current.srcObject = screenStream;
+      }
+
+      // Notify peers about the screen sharing
+      peersRef.current.forEach((peerRef) => {
+        if (!peerRef.peer.destroyed) {
+          peerRef.peer.replaceTrack(
+            peerRef.peer.streams[0].getVideoTracks()[0],
+            screenStream.getVideoTracks()[0],
+            peerRef.peer.streams[0]
+          );
+        }
+      });
+
+      // Emit
+    } catch (error) {
+      toast.warn("Denied accessing screen for video call");
+    }
+  };
+
+  // using webcam
+  const handleUsingMediaStream = async () => {
+    try {
+      const videoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(videoStream);
+      !openCamera && setOpenCamera(true);
+      if (myVideoRef.current) {
+        myVideoRef.current.srcObject = videoStream;
+      }
+      // Notfify peers about returning to video call
+      peersRef.current.forEach((peerRef) => {
+        if (!peerRef.peer.destroyed) {
+          peerRef.peer.replaceTrack(
+            peerRef.peer.streams[0].getVideoTracks()[0],
+            videoStream.getVideoTracks()[0],
+            peerRef.peer.streams[0]
+          );
+        }
+      });
+    } catch (error) {
+      toast.error("Error accessing media devices");
+    }
+  };
+
+  // Toggle share screen
+  const handleToggleShareScreen = useCallback(async () => {
+    if (isSharingScreen) {
+      await handleUsingMediaStream();
+      socket.current?.emit("off sharing screen", {
+        idGroupChat: groupChat._id,
+        socketId: socket.current.id,
+      });
+    } else {
+      // Nếu có ai đó đang share hoặc mình đang share màn hình
+      const disabledShare = !!(
+        idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id
+      );
+      if (disabledShare) return;
+      await handleShareScreen();
+      socket.current?.emit("on sharing screen", {
+        idGroupChat: groupChat._id,
+        socketId: socket.current.id,
+      });
+    }
+    setSharingScreen(!isSharingScreen);
+  }, [isSharingScreen]);
+
+  if (!groupChat) {
+    return redirect("/");
+  }
+
   return (
-    <>
+    <Box display={"flex"} flexDirection={"column"} height={"100vh"} overflow={"hidden"}>
       {/* Heading room */}
-      <Heading />
-      <Box position={"relative"} height={"100vh"} boxShadow={2} p={1} style={{ paddingTop: 60 }}>
+      <Heading groupChat={groupChat} />
+      <Box
+        position={"relative"}
+        height={"100%"}
+        boxShadow={2}
+        p={1}
+        sx={{ flex: "2 1 auto", overflow: "scroll" }}
+      >
         {/* List videos */}
         <Typography gutterBottom>Total friends joined: {listFriends.length}</Typography>
         <Grid container spacing={1}>
           {/* My video */}
           <Grid item md={4} sm={6} xs={6}>
-            <Box sx={{ width: "100%", position: "relative" }}>
+            <Stack
+              gap={1}
+              border={socket.current?.id === idSocketSharingScreen ? 3 : 0}
+              pb={2}
+              borderRadius={2}
+              height={"100%"}
+              sx={{ width: "100%", position: "relative" }}
+              borderColor={socket.current?.id === idSocketSharingScreen ? "red" : "divider"}
+            >
               <video
                 ref={myVideoRef}
                 autoPlay
@@ -281,39 +389,49 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  borderRadius: 12,
-                  maxHeight: 250,
+                  borderRadius: "inherit",
+                  maxHeight: 280,
                 }}
               />
 
               {/* Display avatar & name when off camera */}
               {openCamera ? (
-                <Typography textAlign={"center"}>{session?.username}</Typography>
-              ) : (
-                <Stack
-                  position={"absolute"}
-                  sx={{ inset: "0 0 0 0" }}
-                  justifyContent={"space-around"}
-                  alignItems={"center"}
-                  width={"100%"}
-                  overflow={"hidden"}
-                >
-                  <Avatar alt="avatar" src={session?.avatar.uri} sx={{ width: 150, height: 150 }} />
-                  <Chip
-                    className="bg-gradient"
-                    label={session?.username}
-                    style={{ color: "#fff" }}
-                  />
+                <Stack flexDirection={"row"} justifyContent={"center"}>
+                  <Chip className="bg-gradient" label={session?.username} />
                 </Stack>
+              ) : (
+                !isSharingScreen && (
+                  <Stack
+                    gap={2}
+                    position={"absolute"}
+                    sx={{ inset: "0 0 0 0" }}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    width={"100%"}
+                    overflow={"hidden"}
+                  >
+                    <Avatar
+                      alt="avatar"
+                      src={session?.avatar.uri}
+                      sx={{ width: 150, height: 150 }}
+                    />
+                    <Chip
+                      className="bg-gradient"
+                      label={session?.username}
+                      style={{ color: "#fff" }}
+                    />
+                  </Stack>
+                )
               )}
-            </Box>
+            </Stack>
           </Grid>
 
           {/* Friend's videos */}
           {listFriends.map((item, index) => {
+            const isSharing = idSocketSharingScreen === item.socketId;
             return (
               <Grid key={index} item md={4} sm={6} xs={6}>
-                <FriendVideo peer={item.peer} friend={item.friend} />
+                <FriendVideo isSharing={isSharing} peer={item.peer} friend={item.friend} />
               </Grid>
             );
           })}
@@ -324,11 +442,16 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
       {stream && (
         <ControlMedia
           stream={stream}
+          isSharingScreen={isSharingScreen}
           openCamera={openCamera}
+          disabledSharing={
+            !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id)
+          }
           handleToggleCamera={handleToggleCamera}
+          handleToggleShareScreen={handleToggleShareScreen}
         />
       )}
-    </>
+    </Box>
   );
 };
 

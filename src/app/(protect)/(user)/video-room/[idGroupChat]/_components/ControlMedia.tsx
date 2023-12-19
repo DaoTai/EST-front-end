@@ -1,4 +1,5 @@
 "use client";
+import PresentToAllIcon from "@mui/icons-material/PresentToAll";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
@@ -7,14 +8,25 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { memo, useState } from "react";
+import { Tooltip } from "@mui/material";
 
 type IProps = {
   stream: MediaStream;
   openCamera: boolean;
+  isSharingScreen: boolean;
+  disabledSharing: boolean;
   handleToggleCamera: () => void;
+  handleToggleShareScreen: () => Promise<void>;
 };
 
-const ControlMedia: React.FC<IProps> = ({ stream, openCamera, handleToggleCamera }) => {
+const ControlMedia: React.FC<IProps> = ({
+  isSharingScreen,
+  stream,
+  disabledSharing,
+  openCamera,
+  handleToggleCamera,
+  handleToggleShareScreen,
+}) => {
   const [openMic, setOpenMic] = useState<boolean>(true);
 
   // Toggle mic
@@ -33,10 +45,10 @@ const ControlMedia: React.FC<IProps> = ({ stream, openCamera, handleToggleCamera
     <>
       <Stack
         p={1}
-        position={"absolute"}
-        bottom={0}
-        left={0}
-        right={0}
+        // position={"absolute"}
+        // bottom={0}
+        // left={0}
+        // right={0}
         flexDirection={"row"}
         justifyContent={"space-between"}
         alignItems={"center"}
@@ -51,8 +63,26 @@ const ControlMedia: React.FC<IProps> = ({ stream, openCamera, handleToggleCamera
         }}
       >
         <Box flex={2} display={"flex"} gap={2} width={"100%"} justifyContent={"center"}>
+          {/* Share screen */}
+          <Tooltip title={isSharingScreen ? "Turn off share sreen" : "Share screen"}>
+            <span>
+              <IconButton
+                disabled={disabledSharing}
+                className={disabledSharing || isSharingScreen ? "" : "bg-gradient"}
+                onClick={handleToggleShareScreen}
+              >
+                <PresentToAllIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+
           {/* Camera */}
-          <IconButton color="secondary" className="icon-control" onClick={handleToggleCamera}>
+          <IconButton
+            disabled={isSharingScreen}
+            color="secondary"
+            className="icon-control"
+            onClick={handleToggleCamera}
+          >
             {openCamera ? <CameraAltIcon /> : <NoPhotographyIcon />}
           </IconButton>
 
