@@ -123,7 +123,9 @@ const VideoRoom = ({ idGroupChat }: { idGroupChat: string }) => {
       console.log("Peer error: ", err);
     });
     // Sử dụng tín hiệu (signal) nhận được từ peer bên friend, mình sẽ phản hồi tới WEB RTC để bắt đầu quá trình thiết lập kết nối tới peer friend
-    peer.signal(signal);
+    if (!peer.destroyed) {
+      peer.signal(signal);
+    }
     return peer;
   };
 

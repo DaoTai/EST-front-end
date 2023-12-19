@@ -19,7 +19,9 @@ const SignIn = () => {
   const router = useRouter();
   const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
     initialValues: {
-      email: "daoductai24102001@gmail.com",
+      // email: "daoductai24102001@gmail.com",
+      // password: "123123",
+      email: "",
       password: "123123",
     },
     validationSchema: SignInSchema,
