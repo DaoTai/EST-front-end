@@ -13,10 +13,10 @@ const PageVideo = async ({ params }: { params: { idGroupChat: string } }) => {
     const res = await serverAxios.get<IGroupChat>("/group-chat/" + params.idGroupChat);
     const groupChat = res.data;
     const isMember = groupChat.members.some((member) => member._id === session?._id);
-    if (isMember) {
+    if (isMember && session) {
       return (
         <>
-          <VideoRoom groupChat={groupChat} />
+          <VideoRoom groupChat={groupChat} profile={session} />
         </>
       );
     } else {

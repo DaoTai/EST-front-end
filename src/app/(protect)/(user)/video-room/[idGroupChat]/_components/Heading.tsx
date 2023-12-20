@@ -1,4 +1,5 @@
 "use client";
+import ToggleModeTheme from "@/components/common/ToggleModeTheme";
 import MyDialog from "@/components/custom/Dialog";
 import PhoneDisabledIcon from "@mui/icons-material/PhoneDisabled";
 import { Box } from "@mui/material";
@@ -41,18 +42,21 @@ const Heading = ({ groupChat }: { groupChat: IGroupChat }) => {
             </Typography>
           </Box>
 
-          <Tooltip title="Exit video room" arrow>
-            <IconButton
-              onClick={handleToggleConfirm}
-              color="error"
-              sx={{
-                border: 1,
-                borderColor: "currentColor",
-              }}
-            >
-              <PhoneDisabledIcon />
-            </IconButton>
-          </Tooltip>
+          <Stack flexDirection={"row"} gap={2}>
+            <ToggleModeTheme />
+            <Tooltip title="Exit video room" arrow>
+              <IconButton
+                onClick={handleToggleConfirm}
+                color="error"
+                sx={{
+                  border: 1,
+                  borderColor: "currentColor",
+                }}
+              >
+                <PhoneDisabledIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
         </Stack>
       </Stack>
 

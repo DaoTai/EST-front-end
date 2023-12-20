@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { memo, useEffect, useState } from "react";
 import { getDistanceTimeToNow } from "@/utils/functions";
+import Image from "next/image";
 
 type IProps = {
   groupChat: IGroupChat;
@@ -40,7 +41,10 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
       sx={{
         cursor: "pointer",
         display: "flex",
-        p: 1,
+        flexWrap: "wrap",
+        p: 0.5,
+        pl: 1,
+        pr: 1,
         justifyContent: "space-between",
         gap: 1,
         border: 0.5,
@@ -57,9 +61,22 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
       }}
     >
       {/* Avatar members */}
-      <AvatarGroup max={2}>
+      <AvatarGroup
+        max={2}
+        sx={{
+          img: {
+            width: 42,
+            height: 42,
+            borderRadius: 99,
+          },
+        }}
+      >
         <Tooltip arrow placement="top" title="Host">
-          <Avatar src={groupChat.host.avatar.uri} alt="avatar" sx={{ width: 42, height: 42 }} />
+          {groupChat.host.avatar.uri ? (
+            <Image src={groupChat.host.avatar.uri} alt="avatar" width={42} height={42} />
+          ) : (
+            <Avatar src={groupChat.host.avatar.uri} alt="avatar" />
+          )}
         </Tooltip>
         {groupChat.members
           .filter((mem) => mem._id !== groupChat.host._id)
@@ -84,8 +101,8 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
             border: 1,
             borderColor: "divider",
             width: "fit-content",
-            pl: 2,
-            pr: 2,
+            pl: 1,
+            pr: 1,
           }}
         >
           {groupChat.name}

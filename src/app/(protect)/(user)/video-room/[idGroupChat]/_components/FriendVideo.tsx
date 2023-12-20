@@ -1,24 +1,25 @@
 "use client";
-import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import { IFriendVideo } from "@/types/VideoRoom";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { useEffect, useRef, useState } from "react";
-import { IFriendVideo } from "./Main";
-
+import Typography from "@mui/material/Typography";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 interface IProps extends Pick<IFriendVideo, "friend" | "peer"> {
   isSharing?: boolean;
+  setStreamShare: Dispatch<SetStateAction<MediaStream | null>>;
 }
 
-const FriendVideo = ({ isSharing = false, peer, friend }: IProps) => {
+const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps) => {
   const [isError, setError] = useState<boolean>(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
   useEffect(() => {
     peer.on("stream", (stream: MediaStream) => {
-      // console.log("Friend có kết nối");
       isError && setError(false);
       if (videoRef.current) videoRef.current.srcObject = stream;
+      setStream(stream);
     });
 
     peer.on("error", (err) => {
@@ -26,29 +27,37 @@ const FriendVideo = ({ isSharing = false, peer, friend }: IProps) => {
       console.log("Friend lỗi kết nối");
       console.log("Peer error friend video: ", err);
     });
-    peer.on("connect", () => {
-      // console.log("Friend connect");
-    });
   }, [peer]);
+
+  useEffect(() => {
+    if (isSharing) {
+      setStreamShare(stream);
+    }
+  }, [isSharing, stream]);
 
   return (
     <Stack
       gap={1}
-      border={isSharing ? 3 : 0}
-      pb={2}
+      border={isSharing ? 3 : 1}
+      p={1}
       borderRadius={2}
       width={"100%"}
       height={"100%"}
       position={"relative"}
       sx={{ width: "100%", position: "relative" }}
-      borderColor={isSharing ? "red" : "divider"}
+      borderColor={isSharing ? "cyan" : "divider"}
     >
       <Box
         position="relative"
         borderRadius={"inherit"}
-        maxHeight={280}
-        height={"100%"}
         overflow={"hidden"}
+        sx={{
+          video: {
+            "&::-webkit-media-controls-panel": {
+              display: "none !important",
+            },
+          },
+        }}
       >
         <video
           ref={videoRef}
@@ -56,47 +65,18 @@ const FriendVideo = ({ isSharing = false, peer, friend }: IProps) => {
           playsInline
           style={{
             width: "100%",
-            height: "100%",
+            height: 280,
             objectFit: "cover",
             borderRadius: "inherit",
           }}
         />
-        <Stack
-          position={"absolute"}
-          bottom={0}
-          left={0}
-          right={0}
-          flexDirection={"row"}
-          justifyContent={"end"}
-          width={"100%"}
-          overflow={"hidden"}
-          sx={{ bgcolor: "rgba(0,0,0,0.2)" }}
-          zIndex={10}
-          p={1}
-        >
-          <FullscreenIcon style={{ color: "#fff" }} />
-        </Stack>
       </Box>
-      <Stack mt={1} gap={1} flexDirection={"row"} justifyContent={"center"} alignItems={"center"}>
+      <Stack gap={1} flexDirection={"row"} justifyContent={"center"} alignItems={"center"}>
         <Chip color="info" label={friend?.username} />
         <Typography component={"span"} variant="body1">
           {isError && "is having error connection"}
         </Typography>
       </Stack>
-
-      {/* Full screen */}
-
-      {/* <Stack
-        position={"absolute"}
-        sx={{ inset: "0 0 0 0" }}
-        justifyContent={"space-around"}
-        alignItems={"center"}
-        width={"100%"}
-        overflow={"hidden"}
-      >
-        <Avatar alt="avatar" src={friend?.avatar.uri} sx={{ width: 150, height: 150 }} />
-        <Chip label={friend?.username} style={{ color: "#fff" }} />
-      </Stack> */}
     </Stack>
   );
 };

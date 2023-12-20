@@ -64,7 +64,7 @@ const ControlMedia: React.FC<IProps> = ({
       >
         <Box flex={2} display={"flex"} gap={2} width={"100%"} justifyContent={"center"}>
           {/* Share screen */}
-          <Tooltip title={isSharingScreen ? "Turn off share sreen" : "Share screen"}>
+          <Tooltip title={isSharingScreen ? "Stop sharing sreen" : "Share screen"}>
             <span>
               <IconButton
                 disabled={disabledSharing}

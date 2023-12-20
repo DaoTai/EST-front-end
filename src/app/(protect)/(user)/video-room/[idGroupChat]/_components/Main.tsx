@@ -7,74 +7,95 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import SimplePeer from "simple-peer";
 import { Socket, io } from "socket.io-client";
 import ControlMedia from "./ControlMedia";
 import FriendVideo from "./FriendVideo";
-import { redirect } from "next/navigation";
+import {
+  IAddPeerParams,
+  ICreatePeerParams,
+  IEventUserJoinParams,
+  IFriendVideo,
+  IPayload,
+  PeerRef,
+} from "@/types/VideoRoom";
 
 const Heading = dynamic(() => import("./Heading"), {
   ssr: false,
 });
 
-export interface PeerInstance extends SimplePeer.Instance {
-  _id?: string;
-  user?: IProfile;
-  socketId?: string | undefined;
-}
-
-interface PeerRef {
-  socketId: string;
-  peer: PeerInstance;
-}
-
-type ICreatePeerParams = {
-  friendSocketId: string;
-  callerId: string;
-  stream: MediaStream;
-  user: Pick<IProfile, "avatar" | "username">;
-};
-
-type IAddPeerParams = {
-  signal: SimplePeer.SignalData;
-  callerId: string;
-  stream: MediaStream;
-};
-
-type IEventUserJoinParams = {
-  signal: SimplePeer.SignalData;
-  callerId: string;
-  user: Pick<IProfile, "avatar" | "username">;
-};
-
-type IPayload = {
-  socketId: string;
-  username: string;
-  avatar: IProfile["avatar"];
-};
-
-export type IFriendVideo = {
-  peer: PeerInstance;
-  friend?: Pick<IProfile, "avatar" | "username">;
-  socketId: string;
-};
-
-const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
-  const { data: session } = useSession();
+const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IProfile }) => {
   const [isSharingScreen, setSharingScreen] = useState<boolean>(false);
   const [openCamera, setOpenCamera] = useState<boolean>(true);
   const [listFriends, setListFriends] = useState<IFriendVideo[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [streamShare, setStreamShare] = useState<MediaStream | null>(null);
   const [idSocketSharingScreen, setIdSocketSharingScreen] = useState<string | null>(null);
 
   const socket = useRef<Socket>();
-
   const myVideoRef = useRef<HTMLVideoElement | any>();
+  const largeScreenRef = useRef<HTMLVideoElement | null>(null);
   const peersRef = useRef<PeerRef[]>([]);
+
+  // share screen
+  const handleShareScreen = async () => {
+    try {
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(screenStream);
+      if (myVideoRef.current) {
+        myVideoRef.current.srcObject = screenStream;
+      }
+
+      // Notify peers about the screen sharing
+      peersRef.current.forEach((peerRef) => {
+        if (!peerRef.peer.destroyed) {
+          peerRef.peer.replaceTrack(
+            peerRef.peer.streams[0].getVideoTracks()[0],
+            screenStream.getVideoTracks()[0],
+            peerRef.peer.streams[0]
+          );
+        }
+      });
+
+      // Emit
+    } catch (error) {
+      toast.warn("Denied accessing screen for video call");
+    }
+  };
+
+  // using webcam
+  const handleUsingMediaStream = async () => {
+    try {
+      const videoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setStream(videoStream);
+      !openCamera && setOpenCamera(true);
+      if (myVideoRef.current) {
+        myVideoRef.current.srcObject = videoStream;
+      }
+      // Notfify peers about returning to video call
+      peersRef.current.forEach((peerRef) => {
+        if (!peerRef.peer.destroyed) {
+          peerRef.peer.replaceTrack(
+            peerRef.peer.streams[0].getVideoTracks()[0],
+            videoStream.getVideoTracks()[0],
+            peerRef.peer.streams[0]
+          );
+        }
+      });
+    } catch (error) {
+      toast.error("Error accessing media devices");
+    }
+  };
 
   // Tạo một peer initiator để gửi tín hiệu và thông tin cá nhân đến friend (Khi room đã có người vào trước đó)
   /*
@@ -133,8 +154,9 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
     return peer;
   };
 
+  // Establish socket & connect to peers
   useEffect(() => {
-    if (!session) return;
+    if (!profile) return;
     socket.current = io(process.env.BACK_END_URI as string);
     let localStream: MediaStream;
     navigator.mediaDevices
@@ -149,8 +171,8 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
         socket.current?.emit("join video", {
           idGroupChat: groupChat._id,
           user: {
-            username: session.username,
-            avatar: session.avatar,
+            username: profile.username,
+            avatar: profile.avatar,
           },
         });
 
@@ -165,8 +187,8 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
               callerId: socket.current!.id,
               stream: stream,
               user: {
-                username: session.username,
-                avatar: session.avatar,
+                username: profile.username,
+                avatar: profile.avatar,
               },
             });
 
@@ -243,8 +265,6 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
 
         // Event sharing screen in room
         socket.current?.on("socket id sharing", (idSocket) => {
-          console.log("id socket sharing: ", idSocket);
-
           setIdSocketSharingScreen(idSocket);
         });
       })
@@ -260,7 +280,32 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
       });
       socket.current?.close();
     };
-  }, [session]);
+  }, [profile]);
+
+  // Friend turn on share screen: display stream on video share
+  useEffect(() => {
+    if (idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id) {
+      // Friend chia sẻ màn hình
+      if (largeScreenRef.current) largeScreenRef.current.srcObject = streamShare;
+    } else {
+      if (isSharingScreen) {
+        // Đang chia sẻ màn hình
+        if (largeScreenRef.current && stream) largeScreenRef.current.srcObject = stream.clone();
+      }
+    }
+  }, [streamShare, idSocketSharingScreen, isSharingScreen, stream]);
+
+  // Friend turn off share screen: turn off stream video
+  useEffect(() => {
+    if (!idSocketSharingScreen) {
+      streamShare && setStreamShare(null);
+      if (largeScreenRef.current) largeScreenRef.current.srcObject = null;
+    }
+  }, [idSocketSharingScreen]);
+
+  const diableShareScreen = useMemo<boolean>(() => {
+    return !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id);
+  }, [socket.current, idSocketSharingScreen]);
 
   // Toggle camera
   const handleToggleCamera = useCallback(() => {
@@ -273,62 +318,6 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
       }
     }
   }, [openCamera, stream]);
-
-  // share screen
-  const handleShareScreen = async () => {
-    try {
-      const screenStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true,
-      });
-      setStream(screenStream);
-      if (myVideoRef.current) {
-        myVideoRef.current.srcObject = screenStream;
-      }
-
-      // Notify peers about the screen sharing
-      peersRef.current.forEach((peerRef) => {
-        if (!peerRef.peer.destroyed) {
-          peerRef.peer.replaceTrack(
-            peerRef.peer.streams[0].getVideoTracks()[0],
-            screenStream.getVideoTracks()[0],
-            peerRef.peer.streams[0]
-          );
-        }
-      });
-
-      // Emit
-    } catch (error) {
-      toast.warn("Denied accessing screen for video call");
-    }
-  };
-
-  // using webcam
-  const handleUsingMediaStream = async () => {
-    try {
-      const videoStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      setStream(videoStream);
-      !openCamera && setOpenCamera(true);
-      if (myVideoRef.current) {
-        myVideoRef.current.srcObject = videoStream;
-      }
-      // Notfify peers about returning to video call
-      peersRef.current.forEach((peerRef) => {
-        if (!peerRef.peer.destroyed) {
-          peerRef.peer.replaceTrack(
-            peerRef.peer.streams[0].getVideoTracks()[0],
-            videoStream.getVideoTracks()[0],
-            peerRef.peer.streams[0]
-          );
-        }
-      });
-    } catch (error) {
-      toast.error("Error accessing media devices");
-    }
-  };
 
   // Toggle share screen
   const handleToggleShareScreen = useCallback(async () => {
@@ -368,36 +357,45 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
         p={1}
         sx={{ flex: "2 1 auto", overflow: "scroll" }}
       >
-        {/* List videos */}
         <Typography gutterBottom>Total friends joined: {listFriends.length}</Typography>
+
+        {/* Share screen */}
+        {idSocketSharingScreen && (
+          <Box boxShadow={2} p={1} mb={4} border={1} overflow={"hidden"} width={"100%"}>
+            <Typography gutterBottom>Video share screen</Typography>
+            <video ref={largeScreenRef} autoPlay style={{ width: "100%", height: "100%" }} />
+          </Box>
+        )}
+        {/* List videos */}
         <Grid container spacing={1}>
           {/* My video */}
-          <Grid item md={4} sm={6} xs={6}>
+          <Grid item md={4} sm={6} xs={12}>
             <Stack
+              p={1}
               gap={1}
-              border={socket.current?.id === idSocketSharingScreen ? 3 : 0}
-              pb={2}
+              border={socket.current?.id === idSocketSharingScreen ? 3 : 1}
               borderRadius={2}
+              borderColor={socket.current?.id === idSocketSharingScreen ? "cyan" : "divider"}
               height={"100%"}
-              sx={{ width: "100%", position: "relative" }}
-              borderColor={socket.current?.id === idSocketSharingScreen ? "red" : "divider"}
+              width={"100%"}
+              justifyContent={"space-between"}
+              position={"relative"}
             >
               <video
                 ref={myVideoRef}
                 autoPlay
                 style={{
                   width: "100%",
-                  height: "100%",
                   objectFit: "cover",
                   borderRadius: "inherit",
-                  maxHeight: 280,
+                  height: 280,
                 }}
               />
 
               {/* Display avatar & name when off camera */}
               {openCamera ? (
                 <Stack flexDirection={"row"} justifyContent={"center"}>
-                  <Chip className="bg-gradient" label={session?.username} />
+                  <Chip className="bg-gradient" label={profile.username} />
                 </Stack>
               ) : (
                 !isSharingScreen && (
@@ -412,12 +410,12 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
                   >
                     <Avatar
                       alt="avatar"
-                      src={session?.avatar.uri}
+                      src={profile.avatar.uri}
                       sx={{ width: 150, height: 150 }}
                     />
                     <Chip
                       className="bg-gradient"
-                      label={session?.username}
+                      label={profile.username}
                       style={{ color: "#fff" }}
                     />
                   </Stack>
@@ -430,8 +428,13 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
           {listFriends.map((item, index) => {
             const isSharing = idSocketSharingScreen === item.socketId;
             return (
-              <Grid key={index} item md={4} sm={6} xs={6}>
-                <FriendVideo isSharing={isSharing} peer={item.peer} friend={item.friend} />
+              <Grid key={index} item md={4} sm={6} xs={12}>
+                <FriendVideo
+                  isSharing={isSharing}
+                  peer={item.peer}
+                  friend={item.friend}
+                  setStreamShare={setStreamShare}
+                />
               </Grid>
             );
           })}
@@ -444,9 +447,7 @@ const VideoRoom = ({ groupChat }: { groupChat: IGroupChat }) => {
           stream={stream}
           isSharingScreen={isSharingScreen}
           openCamera={openCamera}
-          disabledSharing={
-            !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id)
-          }
+          disabledSharing={diableShareScreen}
           handleToggleCamera={handleToggleCamera}
           handleToggleShareScreen={handleToggleShareScreen}
         />
