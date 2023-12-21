@@ -92,7 +92,6 @@ const MyCourses = () => {
                     }
                   >
                     <MyCourse data={course} direction="row" />
-                    <Divider />
                   </Box>
                 );
               })

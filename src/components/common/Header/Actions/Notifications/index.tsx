@@ -4,7 +4,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Avatar from "@mui/material/Avatar";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
@@ -13,8 +12,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Fetcher } from "swr";
@@ -24,6 +23,7 @@ import MyList from "@/components/custom/MyList";
 import clientSideAxios from "@/config/axios/client-side";
 import notfiyService from "@/services/notification";
 import { showErrorToast } from "@/utils/functions";
+import { Tooltip } from "@mui/material";
 type IResponse = {
   maxPage: number;
   totalUnRead: number;
@@ -99,6 +99,9 @@ const Notifications = () => {
         case "approved-course":
           router.push("/teacher/course/" + notification.endpoint);
           break;
+        case "answer-code-question":
+          router.push("/teacher/lessons/" + notification.endpoint);
+          break;
       }
     }
     handleCloseNotify();
@@ -160,7 +163,9 @@ const Notifications = () => {
         <Paper
           sx={{
             p: 1,
-            minWidth: "25vw",
+            minWidth: "20vw",
+            maxWidth: "25vw",
+            overflow: "hidden",
             bgcolor: "background.paper",
             border: "1px solid rgba(0,0,0,0.1)",
           }}
@@ -208,10 +213,17 @@ const Notifications = () => {
                       <ListItemAvatar>
                         <Avatar src={notification?.avatar?.uri || "/logo.png"} alt="avatar" />
                       </ListItemAvatar>
-                      <ListItemText
-                        primary={notification.content}
-                        secondary={dayjs(notification.createdAt).format("DD/MM/YYYY")}
-                      />
+                      <Tooltip arrow title={notification.content} placement="left">
+                        <ListItemText
+                          primary={notification.content}
+                          sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                          secondary={dayjs(notification.createdAt).format("DD/MM/YYYY")}
+                        />
+                      </Tooltip>
                     </ListItem>
                   );
                 })}

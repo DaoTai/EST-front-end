@@ -23,7 +23,8 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
       spacing={1}
       flexDirection={"row"}
       flexWrap={"wrap"}
-      boxShadow={4}
+      border={1}
+      borderColor={"divider"}
       overflow={"hidden"}
       sx={{
         color: "text.primary",
@@ -131,10 +132,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
             {}
             <Chip
-              label={
-                String(course?.totalLessons) + " lesson" ||
-                String(course?.lessons?.length) + " lesson"
-              }
+              label={(course?.totalLessons || course?.lessons?.length) + " lesson"}
               className="bg-gradient"
               size="small"
             />

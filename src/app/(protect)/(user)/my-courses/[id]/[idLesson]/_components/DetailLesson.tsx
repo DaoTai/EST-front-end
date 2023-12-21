@@ -88,7 +88,7 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
       <>
         {response?.lesson?.video && <VideoPlayer uri={response?.lesson?.video.uri} />}
         <Box pr={1} pl={1}>
-          <Box mb={1} sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box mt={1} mb={1} border={1} borderColor={"divider"}>
             <Tabs
               value={tab}
               onChange={handleChangeTab}

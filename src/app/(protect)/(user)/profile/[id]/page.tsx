@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import HeadingProfile from "@/components/profile-components/Heading";
 import Intro from "@/components/profile-components/Intro";
 import serverAxios from "@/config/axios/server-side";
+import dayjs from "dayjs";
 // Check log back-end to see this page be cached
 const getData = async (
   id: string
@@ -75,18 +76,23 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                           />
 
                           {/* Texts */}
-                          <Stack alignItems={"start"} gap={1} pl={1} pr={1}>
+                          <Stack alignItems={"start"} gap={0.5} pl={1} pr={1}>
                             <Typography variant="h6">{register.course.name}</Typography>
+                            <Typography variant="subtitle2">
+                              Joined time:
+                              {dayjs(register.createdAt).format("DD/MM/YYYY")}
+                            </Typography>
                             <Chip
                               size="small"
                               label={register.course.type}
                               color={register.course.type === "private" ? "info" : "success"}
                               sx={{ textTransform: "capitalize" }}
                             />
-                            <Stack flexDirection={"row"} flexWrap={"wrap"} gap={1}>
+                            <Stack mt={1} flexDirection={"row"} flexWrap={"wrap"} gap={1}>
                               {register.course.programmingLanguages?.map((lang, i) => (
                                 <Chip
                                   key={i}
+                                  className="bg-gradient"
                                   size="small"
                                   label={lang}
                                   sx={{ textTransform: "capitalize" }}

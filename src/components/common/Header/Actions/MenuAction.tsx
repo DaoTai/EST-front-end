@@ -1,7 +1,6 @@
 "use client";
-
+import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -59,6 +58,14 @@ const MenuAction = ({ onClose }: { onClose: () => void }) => {
           <ListItemText>Training</ListItemText>
           <ListItemIcon>
             <EmojiEventsIcon color="warning" />
+          </ListItemIcon>
+        </ListItem>
+
+        {/* Predict */}
+        <ListItem component={Link} href="/predict-jobs" divider onClick={onClose}>
+          <ListItemText>Predict</ListItemText>
+          <ListItemIcon>
+            <OnlinePredictionIcon color="primary" />
           </ListItemIcon>
         </ListItem>
 

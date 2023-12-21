@@ -234,8 +234,8 @@ const TableQuestions = ({ questions = [], setListQuestion, readOnly = false }: P
       {/* Detail list answers */}
       {question && (
         <Dialog open={openListAnswers} fullScreen onClose={() => setOpenListAnswers(false)}>
-          <Box>
-            <IconButton onClick={() => setOpenListAnswers(false)}>
+          <Box p={1}>
+            <IconButton style={{ marginBottom: 4 }} onClick={() => setOpenListAnswers(false)}>
               <ArrowBackIos />
             </IconButton>
             <ListAnswerRecords question={question} />

@@ -27,27 +27,28 @@ const RegisteredCourses = () => {
   if (listCourses) {
     if (listCourses.length > 0) {
       return (
-        <>
-          <Grid container spacing={2}>
-            {listCourses.map((course) => (
-              <Grid item key={course._id} sm={6} xs={12}>
-                <Paper
-                  component={Link}
-                  href={
-                    "/my-courses/" +
-                    (course.passedLessons.length > 0
-                      ? course._id + "/" + course.passedLessons[course.passedLessons.length - 1]
-                      : course._id)
-                  }
-                  elevation={4}
-                  sx={{ borderRadius: 2 }}
-                >
-                  <MyCourse data={course} />
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
-        </>
+        <Grid container spacing={1}>
+          {listCourses.map((course) => (
+            <Grid
+              item
+              key={course._id}
+              md={6}
+              sm={6}
+              xs={12}
+              mb={1}
+              borderRadius={2}
+              component={Link}
+              href={
+                "/my-courses/" +
+                (course.passedLessons.length > 0
+                  ? course._id + "/" + course.passedLessons[course.passedLessons.length - 1]
+                  : course._id)
+              }
+            >
+              <MyCourse data={course} />
+            </Grid>
+          ))}
+        </Grid>
       );
     }
     return (

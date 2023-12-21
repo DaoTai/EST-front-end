@@ -28,9 +28,10 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
     return (
       <Grid
         container
-        columnSpacing={1}
         alignItems={direction === "row" ? "center" : "start"}
         borderRadius={"inherit"}
+        p={1}
+        sx={{ border: 1, borderColor: "divider" }}
       >
         <Grid
           item
@@ -52,7 +53,6 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
               width: direction === "row" ? "100px" : "100%",
               height: direction === "row" ? "100px" : "280px",
               borderRadius: 3,
-              boxShadow: "1px 1px 4px rgba(0,0,0,0.3)",
               flex: "1 1 auto",
             }}
           />

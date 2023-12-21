@@ -11,7 +11,7 @@ interface ICourse {
   createdAt: string;
   updatedAt: string;
   members?: IProfile[];
-  lessons?: Lesson[];
+  lessons?: ILesson[];
   totalLessons: number;
   programmingLanguages: string[];
   intro: string;

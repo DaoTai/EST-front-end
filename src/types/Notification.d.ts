@@ -2,7 +2,13 @@ interface INotification {
   _id: string;
   content: string;
   avatar?: IAttachment;
-  field: "lesson-comment" | "lesson-comment" | "my-course" | "others" | "approved-course";
+  field:
+    | "lesson-comment"
+    | "lesson-comment"
+    | "my-course"
+    | "others"
+    | "approved-course"
+    | "answer-code-question";
   sender: string | IProfile;
   receiver: string | IProfile;
   isRead: boolean;
