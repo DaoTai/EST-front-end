@@ -1,7 +1,5 @@
 "use client";
-import Banner from "@/components/course-components/Banner";
-import Spinner from "@/components/custom/Spinner";
-import serverAxios from "@/config/axios/server-side";
+
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -10,10 +8,11 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher } from "swr";
+import Banner from "@/components/course-components/Banner";
+import Spinner from "@/components/custom/Spinner";
 
 const fetcher: Fetcher<ICourse[], string> = (url: string) =>
   fetch(url).then((res) => {

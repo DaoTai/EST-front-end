@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
 import useSWR, { Fetcher } from "swr";
+import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<ICourse, string> = (url: string) =>
   fetch(url).then((res) => {

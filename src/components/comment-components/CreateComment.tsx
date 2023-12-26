@@ -6,17 +6,15 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
 import { memo, useState } from "react";
 import { toast } from "react-toastify";
 
-const CreateComment = ({
-  idLesson,
-  handleAddComment,
-}: {
+type IProps = {
   idLesson: string;
   handleAddComment: () => void;
-}) => {
+};
+
+const CreateComment = ({ idLesson, handleAddComment }: IProps) => {
   const { data: session } = useSession();
   const [comment, setComment] = useState<string>("");
 

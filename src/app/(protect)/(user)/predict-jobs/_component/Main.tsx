@@ -1,8 +1,10 @@
 "use client";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import predictService from "@/services/user/predictJobs";
 import { showErrorToast } from "@/utils/functions";
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
 
 type IPercentage = {
   job: string;
@@ -61,29 +63,31 @@ const Main = () => {
         Predict
       </Button>
       {loading && <Typography variant="body1">Predicting...</Typography>}
-      <Stack
-        className="bg-gradient"
-        boxShadow={5}
-        borderRadius={1}
-        p={2}
-        border={1}
-        flexDirection="row"
-        gap={2}
-        flexWrap={"wrap"}
-      >
-        {jobPercentTages.map((jobPercent, index) => {
-          return (
-            <Stack key={index} flexDirection={"row"} gap={2} width={"100%"}>
-              <Typography variant="body1" fontWeight={500} gutterBottom>
-                {jobPercent.job}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {jobPercent.percentage}
-              </Typography>
-            </Stack>
-          );
-        })}
-      </Stack>
+      {jobPercentTages.length > 0 && (
+        <Stack
+          className="bg-gradient"
+          boxShadow={5}
+          borderRadius={1}
+          p={2}
+          border={1}
+          flexDirection="row"
+          gap={2}
+          flexWrap={"wrap"}
+        >
+          {jobPercentTages.map((jobPercent, index) => {
+            return (
+              <Stack key={index} flexDirection={"row"} gap={2} width={"100%"}>
+                <Typography variant="body1" fontWeight={500} gutterBottom>
+                  {jobPercent.job}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {jobPercent.percentage}
+                </Typography>
+              </Stack>
+            );
+          })}
+        </Stack>
+      )}
     </Stack>
   );
 };

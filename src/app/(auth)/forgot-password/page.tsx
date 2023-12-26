@@ -26,7 +26,7 @@ const ForgotPassword = () => {
   return (
     <>
       <Box component={"form"} width={"100%"} onSubmit={handleSubmit}>
-        <Typography variant="h2" textAlign={"center"} gutterBottom>
+        <Typography variant="h3" textAlign={"center"} gutterBottom>
           Forgot password
         </Typography>
         <TextField
@@ -70,7 +70,6 @@ const ForgotPassword = () => {
           padding: 0,
           a: {
             color: "#fff",
-            padding: 1.5,
             display: "block",
             width: "100%",
           },

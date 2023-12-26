@@ -1,5 +1,4 @@
 "use client";
-
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
@@ -8,6 +7,7 @@ import Typography from "@mui/material/Typography";
 
 import Link from "next/link";
 import useSWR from "swr";
+import { Helmet } from "react-helmet";
 import Spinner from "@/components/custom/Spinner";
 import { fetcherMyCourses } from "@/components/common/Header/Actions/MyCourses";
 import MainLayout from "@/components/common/MainLayout";
@@ -25,6 +25,9 @@ const MyCourses = () => {
 
   return (
     <MainLayout>
+      <Helmet>
+        <title>EST Edu | My courses</title>
+      </Helmet>
       <Container>
         <Divider>
           <Typography variant="h4" fontWeight={600} gutterBottom marginTop={1}>

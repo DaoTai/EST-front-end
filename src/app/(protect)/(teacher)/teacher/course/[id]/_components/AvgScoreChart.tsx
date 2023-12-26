@@ -25,8 +25,6 @@ const AvgScoreChart = ({ id }: { id: string }) => {
     revalidateOnReconnect: false,
     revalidateOnMount: true,
     onSuccess(data, key, config) {
-      console.log("data: ", data);
-
       const usernames = data.map((item) => item.user.username);
       const scores = data.map((item) => item.avgScore);
       const options = {

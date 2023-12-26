@@ -27,7 +27,9 @@ export const verifyEmail = async (email: string) => {
     const res = await authRouteAxios.post<string>("/verify-email", { email });
     toast("We have sent captchat to your email \n Please check your email");
     return res.data;
-  } catch (err) {}
+  } catch (err) {
+    showErrorToast(err);
+  }
 };
 
 export const signUp = async (values: ISignUp) => {

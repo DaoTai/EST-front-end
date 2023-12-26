@@ -21,6 +21,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import ListCorrectAnswers from "./_components/ListCorrectAnswers";
 import ListQuestions from "./_components/ListQuestions";
+import { Helmet } from "react-helmet";
 
 const SelfTraining = () => {
   const [type, setType] = useState<string>("byFavouriteProgrammingLanguages");
@@ -83,6 +84,9 @@ const SelfTraining = () => {
 
   return (
     <Box>
+      <Helmet>
+        <title>EST Edu | Training</title>
+      </Helmet>
       <NormalHeader />
       <Typography gutterBottom variant="h4" fontWeight={500} textAlign={"center"}>
         Quizzes

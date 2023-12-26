@@ -20,6 +20,7 @@ const ProviderAuthButton = () => {
             callbackUrl: "/",
           })
         }
+        sx={{ border: 1, borderColor: "divider" }}
       >
         Continue with Google
       </Button>
@@ -32,6 +33,7 @@ const ProviderAuthButton = () => {
             callbackUrl: "/",
           })
         }
+        sx={{ border: 1, borderColor: "divider" }}
       >
         Continue with Github
       </Button>

@@ -24,6 +24,7 @@ import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
 import MyDialog from "@/components/custom/Dialog";
+import { Helmet } from "react-helmet";
 // import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
@@ -101,9 +102,9 @@ const About = () => {
 
   return (
     <>
-      {/* <Helmet>
-          <title>{data.name}</title>
-        </Helmet> */}
+      <Helmet>
+        <title>Group chat | {data.name}</title>
+      </Helmet>
       <Stack
         flexDirection={"row"}
         justifyContent={"space-between"}

@@ -17,23 +17,22 @@ const CardMember = ({ data }: { data: IProfile }) => {
         justifyContent: "space-between",
       }}
     >
-      {/* <CardMedia component="img" alt="card member" height="240" image={data?.avatar.uri} /> */}
       <CardContent sx={{ flexGrow: 2 }}>
         <Avatar
           alt="Avatar"
           src={data?.avatar.uri}
-          sx={{ width: 220, height: 220, margin: "auto" }}
+          sx={{ width: 220, height: 220, margin: "auto", filter: "drop-shadow(0px 0px 4px #999)" }}
         />
         <Typography variant="h6">{data.username}</Typography>
         {data.school && (
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" fontWeight={500} gutterBottom>
             {data.school}
           </Typography>
         )}
 
         <Stack flexDirection="row" gap={1}>
           {data?.favouriteProrammingLanguages.map((lang, i) => (
-            <Chip key={i} label={lang} />
+            <Chip size="small" className="bg-gradient" key={i} label={lang} />
           ))}
         </Stack>
       </CardContent>
@@ -41,11 +40,17 @@ const CardMember = ({ data }: { data: IProfile }) => {
       <CardActions
         sx={{
           justifyContent: "end",
+          a: {
+            border: 1,
+            borderColor: "primary.main",
+            p: 0.5,
+            pl: 2,
+            pr: 2,
+            borderRadius: 1,
+          },
         }}
       >
-        <Link href={"/profile/" + data._id} className="btn-link">
-          More
-        </Link>
+        <Link href={"/profile/" + data._id}>View</Link>
       </CardActions>
     </Card>
   );

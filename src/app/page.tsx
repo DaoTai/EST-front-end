@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { Slider } from "@/components/about-components";
+import { AmountInfor, Slider } from "@/components/about-components";
 import Footer from "@/components/common/Footer";
 import MainLayout from "@/components/common/MainLayout";
 import Divider from "@mui/material/Divider";
@@ -18,7 +18,7 @@ export default function Home() {
             </Typography>
           </Divider>
           <Slider />
-          {/* <AmountInfor /> */}
+          <AmountInfor />
           <Footer />
         </Stack>
       </Stack>

@@ -2,10 +2,16 @@ import ListGroupChatProvider from "@/providers/ListGroupChatContext";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import React, { Suspense } from "react";
+import { Metadata } from "next";
 
 type IProps = {
   children: React.ReactNode;
   groupChats: React.ReactNode;
+};
+
+export const metadata: Metadata = {
+  title: "EST Edu | Group chat",
+  description: "Group chat in EST Edu",
 };
 
 const RootLayout = ({ children, groupChats }: IProps) => {

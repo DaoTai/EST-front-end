@@ -3,9 +3,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-import MyList from "@/components/custom/MyList";
-import { getDistanceTimeToNow } from "@/utils/functions";
-import { Button, ListItem, ListItemIcon, ListItemText, TextField, Tooltip } from "@mui/material";
+import Button from "@mui/material/Button";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Popover from "@mui/material/Popover";
@@ -19,6 +22,8 @@ import { IResponseFetchComments } from "./ListComments";
 import axios from "axios";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import MyList from "@/components/custom/MyList";
+import { getDistanceTimeToNow } from "@/utils/functions";
 
 interface IProps {
   idLesson: string;
@@ -100,6 +105,8 @@ const Comment = ({ idLesson, comment, mutate }: IProps) => {
             <Stack
               mt={1}
               gap={2}
+              pt={1}
+              pb={1}
               flexDirection={"row"}
               justifyContent={"end"}
               sx={{

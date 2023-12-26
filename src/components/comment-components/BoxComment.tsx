@@ -18,7 +18,6 @@ import { useSearchParams } from "next/navigation";
 
 const BoxComments = ({ idLesson }: { idLesson: string }) => {
   const searchParams = useSearchParams();
-
   const theme = useTheme();
   const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(!!searchParams.get("openComment"));

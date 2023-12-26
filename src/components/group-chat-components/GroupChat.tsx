@@ -86,7 +86,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
       </AvatarGroup>
 
       {/* Name, latest msg, latest reader */}
-      <Box flexGrow={2} display={"block"} overflow={"hidden"}>
+      <Box flex={"2 1 0"} display={"flex"} flexDirection={"column"} overflow={"hidden"}>
         <Typography
           gutterBottom
           overflow={"hidden"}

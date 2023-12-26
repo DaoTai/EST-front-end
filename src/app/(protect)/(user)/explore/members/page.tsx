@@ -67,7 +67,7 @@ const ExplorePage = () => {
       <Search ref={SearchBarRef} totalResult={totalResult.current} onSearch={onSearch} />
 
       {/* List member */}
-      <Grid container sx={{ mt: 2 }} spacing={2}>
+      <Grid container mt={1} spacing={2}>
         {listMember.map((member, i) => (
           <Grid key={i} item lg={3} md={6} sm={6} xs={12}>
             <CardMember data={member} />

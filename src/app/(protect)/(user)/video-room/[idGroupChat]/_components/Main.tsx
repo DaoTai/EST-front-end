@@ -23,6 +23,7 @@ import {
   IPayload,
   PeerRef,
 } from "@/types/VideoRoom";
+import { Helmet } from "react-helmet";
 
 const Heading = dynamic(() => import("./Heading"), {
   ssr: false,
@@ -347,112 +348,117 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   }
 
   return (
-    <Box display={"flex"} flexDirection={"column"} height={"100vh"} overflow={"hidden"}>
-      {/* Heading room */}
-      <Heading groupChat={groupChat} />
-      <Box
-        position={"relative"}
-        height={"100%"}
-        boxShadow={2}
-        p={1}
-        sx={{ flex: "2 1 auto", overflow: "scroll" }}
-      >
-        <Typography gutterBottom>Total friends joined: {listFriends.length}</Typography>
+    <>
+      <Helmet>
+        <title>Video room | {groupChat.name}</title>
+      </Helmet>
+      <Box display={"flex"} flexDirection={"column"} height={"100vh"} overflow={"hidden"}>
+        {/* Heading room */}
+        <Heading groupChat={groupChat} />
+        <Box
+          position={"relative"}
+          height={"100%"}
+          boxShadow={2}
+          p={1}
+          sx={{ flex: "2 1 auto", overflow: "scroll" }}
+        >
+          <Typography gutterBottom>Total friends joined: {listFriends.length}</Typography>
 
-        {/* Share screen */}
-        {idSocketSharingScreen && (
-          <Box boxShadow={2} p={1} mb={4} border={1} overflow={"hidden"} width={"100%"}>
-            <Typography gutterBottom>Video share screen</Typography>
-            <video ref={largeScreenRef} autoPlay style={{ width: "100%", height: "100%" }} />
-          </Box>
-        )}
-        {/* List videos */}
-        <Grid container spacing={1}>
-          {/* My video */}
-          <Grid item md={4} sm={6} xs={12}>
-            <Stack
-              p={1}
-              gap={1}
-              border={socket.current?.id === idSocketSharingScreen ? 3 : 1}
-              borderRadius={2}
-              borderColor={socket.current?.id === idSocketSharingScreen ? "cyan" : "divider"}
-              height={"100%"}
-              width={"100%"}
-              justifyContent={"space-between"}
-              position={"relative"}
-            >
-              <video
-                ref={myVideoRef}
-                autoPlay
-                style={{
-                  width: "100%",
-                  objectFit: "cover",
-                  borderRadius: "inherit",
-                  height: 280,
-                }}
-              />
-
-              {/* Display avatar & name when off camera */}
-              {openCamera ? (
-                <Stack flexDirection={"row"} justifyContent={"center"}>
-                  <Chip className="bg-gradient" label={profile.username} />
-                </Stack>
-              ) : (
-                !isSharingScreen && (
-                  <Stack
-                    gap={2}
-                    position={"absolute"}
-                    sx={{ inset: "0 0 0 0" }}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    width={"100%"}
-                    overflow={"hidden"}
-                  >
-                    <Avatar
-                      alt="avatar"
-                      src={profile.avatar.uri}
-                      sx={{ width: 150, height: 150 }}
-                    />
-                    <Chip
-                      className="bg-gradient"
-                      label={profile.username}
-                      style={{ color: "#fff" }}
-                    />
-                  </Stack>
-                )
-              )}
-            </Stack>
-          </Grid>
-
-          {/* Friend's videos */}
-          {listFriends.map((item, index) => {
-            const isSharing = idSocketSharingScreen === item.socketId;
-            return (
-              <Grid key={index} item md={4} sm={6} xs={12}>
-                <FriendVideo
-                  isSharing={isSharing}
-                  peer={item.peer}
-                  friend={item.friend}
-                  setStreamShare={setStreamShare}
+          {/* Share screen */}
+          {idSocketSharingScreen && (
+            <Box boxShadow={2} p={1} mb={4} border={1} overflow={"hidden"} width={"100%"}>
+              <Typography gutterBottom>Video share screen</Typography>
+              <video ref={largeScreenRef} autoPlay style={{ width: "100%", height: "100%" }} />
+            </Box>
+          )}
+          {/* List videos */}
+          <Grid container spacing={1}>
+            {/* My video */}
+            <Grid item md={4} sm={6} xs={12}>
+              <Stack
+                p={1}
+                gap={1}
+                border={socket.current?.id === idSocketSharingScreen ? 3 : 1}
+                borderRadius={2}
+                borderColor={socket.current?.id === idSocketSharingScreen ? "cyan" : "divider"}
+                height={"100%"}
+                width={"100%"}
+                justifyContent={"space-between"}
+                position={"relative"}
+              >
+                <video
+                  ref={myVideoRef}
+                  autoPlay
+                  style={{
+                    width: "100%",
+                    objectFit: "cover",
+                    borderRadius: "inherit",
+                    height: 280,
+                  }}
                 />
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Box>
 
-      {/* Control camera & mic*/}
-      {stream && (
-        <ControlMedia
-          stream={stream}
-          isSharingScreen={isSharingScreen}
-          openCamera={openCamera}
-          disabledSharing={diableShareScreen}
-          handleToggleCamera={handleToggleCamera}
-          handleToggleShareScreen={handleToggleShareScreen}
-        />
-      )}
-    </Box>
+                {/* Display avatar & name when off camera */}
+                {openCamera ? (
+                  <Stack flexDirection={"row"} justifyContent={"center"}>
+                    <Chip className="bg-gradient" label={profile.username} />
+                  </Stack>
+                ) : (
+                  !isSharingScreen && (
+                    <Stack
+                      gap={2}
+                      position={"absolute"}
+                      sx={{ inset: "0 0 0 0" }}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      width={"100%"}
+                      overflow={"hidden"}
+                    >
+                      <Avatar
+                        alt="avatar"
+                        src={profile.avatar.uri}
+                        sx={{ width: 150, height: 150 }}
+                      />
+                      <Chip
+                        className="bg-gradient"
+                        label={profile.username}
+                        style={{ color: "#fff" }}
+                      />
+                    </Stack>
+                  )
+                )}
+              </Stack>
+            </Grid>
+
+            {/* Friend's videos */}
+            {listFriends.map((item, index) => {
+              const isSharing = idSocketSharingScreen === item.socketId;
+              return (
+                <Grid key={index} item md={4} sm={6} xs={12}>
+                  <FriendVideo
+                    isSharing={isSharing}
+                    peer={item.peer}
+                    friend={item.friend}
+                    setStreamShare={setStreamShare}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Box>
+
+        {/* Control camera & mic*/}
+        {stream && (
+          <ControlMedia
+            stream={stream}
+            isSharingScreen={isSharingScreen}
+            openCamera={openCamera}
+            disabledSharing={diableShareScreen}
+            handleToggleCamera={handleToggleCamera}
+            handleToggleShareScreen={handleToggleShareScreen}
+          />
+        )}
+      </Box>
+    </>
   );
 };
 

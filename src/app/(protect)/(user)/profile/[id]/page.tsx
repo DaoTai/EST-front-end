@@ -10,6 +10,7 @@ import HeadingProfile from "@/components/profile-components/Heading";
 import Intro from "@/components/profile-components/Intro";
 import serverAxios from "@/config/axios/server-side";
 import dayjs from "dayjs";
+import { Metadata } from "next";
 // Check log back-end to see this page be cached
 const getData = async (
   id: string
@@ -21,6 +22,22 @@ const getData = async (
     notFound();
   }
 };
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  // read route params
+
+  // fetch data
+  const data = await getData(params.id);
+  const profile = data.profile;
+  const image = profile?.avatar.uri;
+  return {
+    title: profile?.username,
+    description: profile?.bio,
+    openGraph: {
+      images: image ? [image] : [],
+    },
+  };
+}
 
 const DetailProfile = async ({ params }: { params: { id: string } }) => {
   const data = await getData(params.id);

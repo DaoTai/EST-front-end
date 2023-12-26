@@ -132,7 +132,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
             {}
             <Chip
-              label={(course?.totalLessons || course?.lessons?.length) + " lesson"}
+              label={((course?.totalLessons || course?.lessons?.length) ?? 0) + " lesson"}
               className="bg-gradient"
               size="small"
             />

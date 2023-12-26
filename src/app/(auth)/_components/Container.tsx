@@ -20,7 +20,12 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
       sx={{
         height: "100vh",
         overflow: "auto",
-        background: theme.palette.backgroundGradient.main,
+        // background: theme.palette.backgroundGradient.main,
+        backgroundImage:
+          'linear-gradient(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.1)), url("./intro-1.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -51,8 +56,9 @@ const LayoutAuth = ({ children }: { children: React.ReactNode }) => {
         alignItems={"center"}
         justifyContent={"center"}
         sx={{
-          backgroundColor: "rgba(255,255,255,0.2)",
+          backgroundColor: (theme) => theme.palette.white.main,
           height: isMobile ? "100%" : "auto",
+          boxShadow: "1px 1px 8px rgba(0,0,0,0.3)",
           ".MuiTypography-root": {
             fontWeight: 700,
             color: "white",
