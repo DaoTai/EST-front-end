@@ -92,7 +92,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
       });
       setCompleted(true);
       res.data.question?.correctAnswers && setCorrectAnswers(res.data.question.correctAnswers);
-      res.data?.score && setScore(res.data.score);
+      typeof res.data?.score === "number" && setScore(res.data.score);
       // Revalidate list lessons
       mutate("/api/user/my-lessons?idRegisteredCourse=" + params.id);
     } catch (error) {
@@ -123,7 +123,7 @@ const Question = ({ question, index, isCompleted, answerRecord }: Props) => {
               fontWeight={600}
               sx={{ color: (theme) => theme.palette.error.light, ml: 1 }}
             >
-              {score ?? "Pending"}
+              {typeof score === "number" ? score : "Pending"}
             </Typography>
           </Typography>
           {answerRecord?.comment && (
