@@ -33,7 +33,7 @@ const ChangePwd = () => {
       </Typography>
 
       {/* Inputs */}
-      <Stack mt={3}>
+      <Stack mt={1}>
         <TextField
           fullWidth
           type="password"

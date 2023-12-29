@@ -3,7 +3,7 @@ import SignIn from "./_component/Page";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EST Edu |Sign in ",
+  title: "EST Edu | Sign in ",
   description: "Sign in EST Edu",
 };
 

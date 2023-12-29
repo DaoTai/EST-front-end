@@ -13,11 +13,6 @@ const Rules = async () => {
         Hi <b>{session?.fullName}</b>, if you want to become <b>teacher</b> of EST Edu, please send
         CV for us.
       </Typography>
-      <Typography variant="body1">
-        When writing an IT CV (Curriculum Vitae), there are several key elements that you should
-        include to effectively showcase your skills, experience, and qualifications. Here are some
-        essential components to consider:
-      </Typography>
       <Stack component={"ul"}>
         <Typography variant="body1" component={"li"}>
           <b> Contact Information:</b> Include your full name, professional title, phone number,

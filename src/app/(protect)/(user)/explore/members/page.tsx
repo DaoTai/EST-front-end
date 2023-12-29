@@ -76,7 +76,7 @@ const ExplorePage = () => {
       </Grid>
 
       {/* Pagination */}
-      <Stack mt={4} flexDirection={"row"} justifyContent={"center"}>
+      <Stack mt={4} pb={2} flexDirection={"row"} justifyContent={"center"}>
         <Pagination
           count={maxPageRef.current}
           page={page}

@@ -78,7 +78,7 @@ const Lesson = ({ params }: { params: { id: string } }) => {
 
   return (
     <Box pt={0} p={2}>
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item md={12} xs={12}>
           {data?.video && (
             <VideoPlayer uri={data?.video?.uri} thumbnail={data.course?.thumbnail?.uri} />

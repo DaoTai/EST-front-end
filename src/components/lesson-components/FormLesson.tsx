@@ -11,6 +11,9 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import useTheme from "@mui/material/styles/useTheme";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -23,7 +26,6 @@ import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
 import { IFormLesson } from "@/types/ILesson";
 import { initFormLesson } from "@/utils/initialValues";
 import { FormLessonSchema } from "@/utils/validation/lesson";
-import { FormControl, FormHelperText } from "@mui/material";
 import TextEditor from "../custom/TextEditor";
 import Rules from "./Rules";
 
@@ -114,23 +116,25 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
 
   return (
     <Box>
-      <Typography
-        variant="h3"
-        textAlign={"center"}
-        textTransform={"capitalize"}
-        fontWeight={500}
-        margin={"0 auto 16px"}
-        gutterBottom
-      >
-        {type} lesson
-      </Typography>
+      <Divider>
+        <Typography
+          variant="h4"
+          textAlign={"center"}
+          textTransform={"capitalize"}
+          fontWeight={500}
+          margin={"0 auto"}
+          gutterBottom
+        >
+          {type} lesson
+        </Typography>
+      </Divider>
 
       <Rules />
 
       {/* Form lesson*/}
       <Grid
         container
-        spacing={1}
+        spacing={2}
         component={"form"}
         encType="multipart/form-data"
         onSubmit={handleSubmit}
@@ -207,6 +211,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
           {type === "watch" ? (
             <Typography
               variant="body1"
+              textAlign={"justify"}
               dangerouslySetInnerHTML={{ __html: values.theory }}
             ></Typography>
           ) : (

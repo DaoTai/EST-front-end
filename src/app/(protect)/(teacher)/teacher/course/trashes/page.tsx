@@ -23,6 +23,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
 import Spinner from "@/components/custom/Spinner";
+import { Divider } from "@mui/material";
 
 type IRow = ICourse & { id: string; order: number };
 
@@ -232,17 +233,19 @@ const TrashedCourses = () => {
   if (!isLoading && rows.length === 0) {
     return (
       <Box pt={1} pl={2} pr={2}>
-        <Typography
-          variant="h3"
-          className="underline-gradient"
-          textAlign={"center"}
-          ml={"auto"}
-          mr={"auto"}
-          display={"block"}
-          gutterBottom
-        >
-          Trash courses
-        </Typography>
+        <Divider>
+          <Typography
+            variant="h4"
+            textAlign={"center"}
+            ml={"auto"}
+            mr={"auto"}
+            display={"block"}
+            fontWeight={500}
+            gutterBottom
+          >
+            Trash courses
+          </Typography>
+        </Divider>
         <Stack alignItems={"center"}>
           <Typography variant="body1" gutterBottom>
             No trash course

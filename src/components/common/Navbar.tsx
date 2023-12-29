@@ -74,7 +74,7 @@ const Navbar = () => {
       {
         href: "/search/course",
         Icon: StoreIcon,
-        title: "Courses",
+        title: "Courses Shop",
       },
       {
         href: "/explore/members",
@@ -154,8 +154,8 @@ const Navbar = () => {
             color: pathName.startsWith(href) ? "#fff !important" : "inherit",
           }}
         >
-          <Icon fontSize="medium" />
-          {!isMobile && <Typography variant="subtitle2">{title}</Typography>}
+          <Icon fontSize="medium" style={{ marginBottom: 4 }} />
+          {!isMobile && <Typography variant="caption">{title}</Typography>}
         </IconButton>
       ))}
     </Stack>

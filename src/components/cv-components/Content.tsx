@@ -92,7 +92,7 @@ const Content = () => {
         sx={{
           mb: 1,
           ".ql-editor": {
-            minHeight: "50vh",
+            minHeight: "10vh",
           },
         }}
       >
@@ -122,13 +122,13 @@ const Content = () => {
           Loading...
         </Typography>
       ) : (
-        <Stack mt={2} pb={2} flexDirection={"row"} justifyContent={"end"} gap={2}>
+        <Stack pb={2} flexDirection={"row"} justifyContent={"end"} gap={2}>
           {data ? (
             <>
-              <Button variant="contained" onClick={() => setShowDialog(true)}>
-                Cancel
+              <Button variant="contained" color="error" onClick={() => setShowDialog(true)}>
+                Delete
               </Button>
-              <Button variant="contained" onClick={handleUpdate}>
+              <Button variant="contained" color="info" onClick={handleUpdate}>
                 Update
               </Button>
             </>

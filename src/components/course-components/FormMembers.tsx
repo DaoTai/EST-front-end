@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { mutate } from "swr";
 import MyDialog from "../custom/Dialog";
 import AddMembers from "../group-chat-components/AddMembers";
+import { Divider, Typography } from "@mui/material";
 
 type IProps = {
   course: ICourse;
@@ -47,14 +48,19 @@ const FormMembers = ({ course, visitor = "teacher" }: IProps) => {
 
   return (
     <div>
-      {visitor === "teacher" && (
-        <AddMembers existUsers={members as IProfile[]} onAdd={handleOpenConfirm as any} />
-      )}
+      <Divider>
+        <Typography textAlign={"center"} variant="h4" fontWeight={500}>
+          Members
+        </Typography>
+      </Divider>
       <Stack flexDirection={"row"} flexWrap={"wrap"} gap={2} mt={2}>
         {members.map((member, i) => (
           <Chip key={i} label={member.username} avatar={<Avatar src={member.avatar.uri} />} />
         ))}
       </Stack>
+      {visitor === "teacher" && (
+        <AddMembers existUsers={members as IProfile[]} onAdd={handleOpenConfirm as any} />
+      )}
 
       {newMember && (
         <MyDialog

@@ -80,9 +80,9 @@ const Main = () => {
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   {jobPercent.job}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+                {/* <Typography variant="body1" gutterBottom>
                   {jobPercent.percentage}
-                </Typography>
+                </Typography> */}
               </Stack>
             );
           })}

@@ -22,6 +22,7 @@ import { memo, useEffect, useMemo, useRef, useState } from "react";
 
 import { initFormQuestion } from "@/utils/initialValues";
 import { FormQuestionSchema } from "@/utils/validation/question";
+import { Divider } from "@mui/material";
 
 type QuestionProps = {
   type?: "create" | "edit";
@@ -157,9 +158,11 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
 
   return (
     <Container>
-      <Typography variant="h3" textAlign={"center"} gutterBottom>
-        Question
-      </Typography>
+      <Divider>
+        <Typography variant="h4" textAlign={"center"} gutterBottom>
+          Question
+        </Typography>
+      </Divider>
 
       {/* Form question */}
       <Grid

@@ -248,9 +248,11 @@ const Courses = () => {
 
   return (
     <Box>
-      <Typography gutterBottom variant="h3" textAlign={"center"}>
-        Courses
-      </Typography>
+      <Divider>
+        <Typography gutterBottom variant="h4" textAlign={"center"}>
+          Courses
+        </Typography>
+      </Divider>
 
       <>
         {/* Filter */}

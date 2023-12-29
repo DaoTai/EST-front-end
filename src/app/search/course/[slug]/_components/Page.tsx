@@ -98,7 +98,7 @@ const DetailCourse = ({ slug }: { slug: string }) => {
               </Box>
 
               {/* Introduce */}
-              <Box>
+              <Box mt={1}>
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   Created time: {dayjs(detail.createdAt).format("DD/MM/YYYY")}
                 </Typography>

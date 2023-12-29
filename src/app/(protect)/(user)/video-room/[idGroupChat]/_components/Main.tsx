@@ -110,6 +110,33 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       initiator: true,
       trickle: false, // đảm bảo rằng không có dữ liệu nào được gửi đi trước khi kết nối hoàn chỉnh, và toàn bộ dữ liệu sẽ được gửi một lần duy nhất sau khi kết nối đã sẵn sàng (ngăn chặn việc gửi dữ liệu từ từ và liên tục)
       stream,
+      config: {
+        iceServers: [
+          {
+            urls: "stun:stun.relay.metered.ca:80",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:80",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:80?transport=tcp",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:443",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:443?transport=tcp",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+        ],
+      },
     });
 
     // Khi được thiết lập sẽ gửi tín hiệu (signal) tới friend thông qua socket
@@ -133,6 +160,33 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       initiator: false, //Peer không khởi tạo việc kết nối, mà chờ để nhận tín hiệu từ peer khác.
       trickle: false,
       stream,
+      config: {
+        iceServers: [
+          {
+            urls: "stun:stun.relay.metered.ca:80",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:80",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:80?transport=tcp",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:443",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+          {
+            urls: "turn:standard.relay.metered.ca:443?transport=tcp",
+            username: "d0c5a4640898b8117995f5e2",
+            credential: "ib24hh3Skyth8h8s",
+          },
+        ],
+      },
     });
 
     // Khi có tín hiệu từ friend

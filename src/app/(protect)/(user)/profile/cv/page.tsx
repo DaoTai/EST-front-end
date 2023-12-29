@@ -16,7 +16,7 @@ const CreateCV = () => {
     <Container>
       <Divider>
         <Typography variant="h4" letterSpacing={2} fontWeight={600} gutterBottom>
-          CV
+          Curriculum Vitae
         </Typography>
       </Divider>
       <Suspense fallback="Loading ...">
