@@ -7,15 +7,16 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
+  const regexRemoveHTMLTags = /<\/?[^>]+(>|$)/g;
   const slug = params.slug;
-
   // fetch data
   const res = await serverAxios.get<ICourse>("/search/courses/" + slug);
   const course = res.data;
   const thumbnail = course.thumbnail?.uri;
   return {
     title: course.name,
-    description: course.intro + course.suitableJob,
+    description: course.intro.replace(regexRemoveHTMLTags, "") + "for job: " + course.suitableJob,
+
     openGraph: {
       images: thumbnail ? [thumbnail] : [],
     },

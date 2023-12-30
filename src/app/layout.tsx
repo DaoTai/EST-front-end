@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "EST Edu",
-  description: "EST Edu",
+  description: "EST Education",
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
