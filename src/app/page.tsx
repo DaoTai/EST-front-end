@@ -5,6 +5,7 @@ import { AmountInfor, Slider } from "@/components/about-components";
 import Footer from "@/components/common/Footer";
 import MainLayout from "@/components/common/MainLayout";
 import Divider from "@mui/material/Divider";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -18,7 +19,9 @@ export default function Home() {
             </Typography>
           </Divider>
           <Slider />
-          <AmountInfor />
+          <Suspense fallback={<p>Loading...</p>}>
+            <AmountInfor />
+          </Suspense>
           <Footer />
         </Stack>
       </Stack>
