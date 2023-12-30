@@ -85,7 +85,7 @@ const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) =>
       video.current?.pause();
     }
     setPlay(!isPlay);
-    duration.current = video.current!.duration;
+    duration.current = video.current!.duration ?? 0;
     containerVideo.current?.classList.remove("show-controls");
   };
 
@@ -150,8 +150,7 @@ const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) =>
   // Handle error video
   const handleVideoLoadedMetadata = () => {
     if (isError) {
-      console.log("Having error");
-
+      console.log("Having error video loaded meta data");
       video.current!.currentTime = currentTime;
       video.current?.play();
     }
@@ -160,7 +159,6 @@ const VideoPlayer = ({ uri, thumbnail }: { uri: string; thumbnail?: string }) =>
     <ContainerVideo ref={containerVideo} width={"100%"} position={"relative"}>
       <video
         ref={video as any}
-        // poster={thumbnail}
         controls={false}
         muted={!volume}
         onTimeUpdate={handleTimeUpdate}

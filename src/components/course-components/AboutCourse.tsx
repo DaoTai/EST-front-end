@@ -60,8 +60,8 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
           <Image
             src={course.thumbnail.uri}
             alt="thumb-nail"
-            width={300}
-            height={300}
+            width={280}
+            height={250}
             style={{ borderRadius: 12 }}
           />
         )}

@@ -13,12 +13,12 @@ type Props = {
 
 export default function Error({ error, reset }: Props) {
   useEffect(() => {
-    console.error(error);
+    console.log(error);
   }, [error]);
 
   return (
     <Container>
-      <Typography variant="h6">Page happened errors</Typography>
+      <Typography variant="h6">Page happened errors: {String(error)}</Typography>
       <Button variant="text" onClick={reset}>
         Back
       </Button>

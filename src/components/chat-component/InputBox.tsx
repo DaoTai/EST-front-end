@@ -69,7 +69,7 @@ const InputBox = ({ onSend }: IProps) => {
   const handleKeyDown = async (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      await handleSend();
+      !loading && (await handleSend());
     }
   };
 

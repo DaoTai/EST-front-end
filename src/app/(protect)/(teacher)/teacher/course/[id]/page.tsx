@@ -7,6 +7,7 @@ import About from "@/components/course-components/About";
 import CreateLesson from "@/components/lesson-components/CreateLesson";
 import ListLessons from "@/components/lesson-components/ListLessons";
 import { Suspense } from "react";
+import AvgScoreChart from "./_components/AvgScoreChart";
 
 const getCourseById = async (id: string): Promise<ICourse | undefined> => {
   const res = await serverAxios.get("/courses/" + id);
@@ -34,6 +35,12 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
             </Divider>
             <Suspense fallback="Loading lessons ...">
               <ListLessons idCourse={params.id} />
+            </Suspense>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Suspense fallback={<p>Loading ...</p>}>
+              <AvgScoreChart id={params.id} />
             </Suspense>
           </Grid>
         </Grid>
