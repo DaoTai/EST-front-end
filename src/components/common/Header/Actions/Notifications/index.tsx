@@ -117,6 +117,10 @@ const Notifications = () => {
     }
   };
 
+  if (error) {
+    return <Typography>Having issue in notification</Typography>;
+  }
+
   return (
     <>
       {/* Notifycation */}
@@ -195,7 +199,7 @@ const Notifications = () => {
 
             <Box mt={1}>
               <Stack gap={0.5}>
-                {listNotifications.map((notification) => {
+                {listNotifications?.map((notification) => {
                   return (
                     <ListItem
                       key={notification._id}

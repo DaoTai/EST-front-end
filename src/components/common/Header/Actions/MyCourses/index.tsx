@@ -77,7 +77,7 @@ const MyCourses = () => {
           <Typography variant="subtitle1">Loading...</Typography>
         ) : (
           <Stack gap={1} p={1} minWidth={350}>
-            {listCourses && listCourses?.length > 0 ? (
+            {Array.isArray(listCourses) && listCourses?.length > 0 ? (
               listCourses?.map((course) => {
                 return (
                   <Box
