@@ -17,6 +17,8 @@ import { mutate } from "swr";
 import { IFormLesson } from "@/types/ILesson";
 import { convertObjectToFormData } from "@/utils/functions";
 import FormLesson from "./FormLesson";
+import axios from "axios";
+import teacherLessonService from "@/services/teacher/lesson";
 
 const CreateModal = () => {
   const theme = useTheme();
@@ -29,21 +31,31 @@ const CreateModal = () => {
   // Handle add lesson
   const handleAddLesson = async (value: IFormLesson) => {
     const formData = convertObjectToFormData(value);
-
-    await fetch("/api/teacher/lessons/" + params.id, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then(() => {
-        setOpen(false);
-        mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
-        toast.success("Create lesson successfully");
-        // Buộc phải dùng method refresh nếu muốn quay lại route /teacher dữ liệu đồng bộ vì sẽ ko
-        // sync data bởi SSR
-        router.refresh();
-      })
-      .catch((err) => toast.error("Create lesson failed"));
+    const idCourse = params.id as string;
+    try {
+      // const res = await axios.post("/api/teacher/lessons/" + params.id, formData);
+      const data = await teacherLessonService.create(idCourse, formData);
+      setOpen(false);
+      mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
+      toast.success("Create lesson successfully");
+      router.refresh();
+    } catch (error) {
+      toast.error("Create lesson failed");
+    }
+    // await fetch("/api/teacher/lessons/" + params.id, {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((res) => res.json())
+    //   .then(() => {
+    //     setOpen(false);
+    //     mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
+    //     toast.success("Create lesson successfully");
+    //     // Buộc phải dùng method refresh nếu muốn quay lại route /teacher dữ liệu đồng bộ vì sẽ ko
+    //     // sync data bởi SSR
+    //     router.refresh();
+    //   })
+    //   .catch((err) => toast.error("Create lesson failed"));
   };
 
   return (

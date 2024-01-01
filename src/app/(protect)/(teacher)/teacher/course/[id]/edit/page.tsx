@@ -1,13 +1,12 @@
 "use client";
+import FormCourse from "@/components/course-components/FormCourse";
 import { IFormCourse } from "@/types/ICourse";
 import { convertObjectToFormData } from "@/utils/functions";
 import Container from "@mui/material/Container";
-import { redirect, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { useCallback } from "react";
 import { toast } from "react-toastify";
-import FormCourse from "@/components/course-components/FormCourse";
 import useSWR, { Fetcher } from "swr";
-import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<ICourse, string> = (url: string) =>
   fetch(url).then((res) => {

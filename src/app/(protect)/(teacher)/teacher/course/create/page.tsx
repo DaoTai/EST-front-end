@@ -1,6 +1,6 @@
 "use client";
 import { IFormCourse } from "@/types/ICourse";
-import { convertObjectToFormData } from "@/utils/functions";
+import { convertObjectToFormData, showErrorToast } from "@/utils/functions";
 import { Container } from "@mui/material";
 import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
@@ -15,7 +15,7 @@ const CreateCourse = () => {
       });
       toast.success("Created new course");
     } catch (error) {
-      toast.error("Create course failed");
+      showErrorToast(error);
     }
   };
   return (

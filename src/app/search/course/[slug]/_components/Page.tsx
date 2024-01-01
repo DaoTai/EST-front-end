@@ -21,9 +21,15 @@ import Intro from "@/components/profile-components/Intro";
 import clientSideAxios from "@/config/axios/client-side";
 import useSWR, { Fetcher } from "swr";
 import RegisterButton from "./RegisterButton";
+import Image from "next/image";
 
 const fetcher: Fetcher<ICourse, string> = (url: string) => {
-  return clientSideAxios.get(url).then((res) => res.data);
+  return clientSideAxios
+    .get(url)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw new Error("Error fetch course");
+    });
 };
 
 const DetailCourse = ({ slug }: { slug: string }) => {
@@ -98,14 +104,39 @@ const DetailCourse = ({ slug }: { slug: string }) => {
               </Box>
 
               {/* Introduce */}
-              <Box mt={1}>
+              <Box mt={1} mb={1}>
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   Created time: {dayjs(detail.createdAt).format("DD/MM/YYYY")}
                 </Typography>
                 <Typography
                   variant="body1"
                   dangerouslySetInnerHTML={{ __html: detail.intro }}
+                  p={1}
+                  border={1}
+                  borderRadius={2}
+                  gutterBottom
                 ></Typography>
+                {detail?.roadmap && (
+                  <>
+                    <Typography variant="body1" fontWeight={500} gutterBottom>
+                      Roadmap:
+                    </Typography>
+                    <Image
+                      unoptimized
+                      src={detail.roadmap.uri}
+                      alt="roadmap"
+                      width={280}
+                      height={250}
+                      style={{
+                        borderRadius: 4,
+                        width: "100%",
+                        objectFit: "contain",
+                        objectPosition: "left center",
+                      }}
+                    />
+                  </>
+                )}
+
                 <Divider />
               </Box>
 

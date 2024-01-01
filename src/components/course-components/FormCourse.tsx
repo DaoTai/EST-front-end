@@ -18,10 +18,9 @@ import { DateTimeValidationError } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
-import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
-import { IFormCourse } from "@/types/ICourse";
+import { IFormCourse, IUploadImage } from "@/types/ICourse";
 import { getChangedValuesObject } from "@/utils/functions";
 import { initFormCourse } from "@/utils/initialValues";
 import { FormCourseSchema } from "@/utils/validation/course";
@@ -31,9 +30,10 @@ import TextEditor from "../custom/TextEditor";
 import AboutCourse from "./AboutCourse";
 import { selectFields, textFields } from "./_fields";
 import DateTime from "./form-course-components/DateTime";
+import ImageUploader from "./form-course-components/ImageUploader";
 import LanguagesBox from "./form-course-components/LanguagesBox";
 import SuitableJob from "./form-course-components/SuitableJob";
-import UploadThumbnail from "./form-course-components/UploadThumbnail";
+
 interface IPropsFormCourse {
   action: "create" | "edit" | "watch";
   course?: ICourse;
@@ -60,8 +60,8 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
         let payload = {
           ...values,
         } as IFormCourse;
-        if (thumbnail?.file) payload["thumbnail"] = thumbnail?.file;
-        if (roadmap) payload["roadmap"] = roadmap;
+        if (thumbnail?.file) payload["thumbnail"] = thumbnail.file;
+        if (roadmap?.file) payload["roadmap"] = roadmap.file;
 
         if (payload.type === "private") {
           const formatOpenDate = dayjs(openDate).toISOString();
@@ -93,8 +93,8 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
     },
   });
 
-  const [thumbnail, setThumbnail] = useState<{ file: File | null; preview: string }>();
-  const [roadmap, setRoadmap] = useState<File | null>();
+  const [thumbnail, setThumbnail] = useState<IUploadImage>();
+  const [roadmap, setRoadmap] = useState<IUploadImage>();
   const [openDate, setOpenDate] = useState<string | null | dayjs.Dayjs>(null);
   const [closeDate, setCloseDate] = useState<string | null | dayjs.Dayjs>(null);
   const [errorOpenDate, setErrorOpenDate] = useState<DateTimeValidationError | null>(null);
@@ -121,10 +121,6 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
   }, [values.type]);
 
   // On change field roadmap
-  const onChangeRoadmap = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file) setRoadmap(file);
-  };
 
   // On change programming languages
   const handleChangeLanguages = useCallback((programmingLanguages: string[]) => {
@@ -237,18 +233,12 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
           <>
             {/* Upload files */}
             <Grid item md={6} xs={12}>
-              <FormControl fullWidth sx={{ overflow: "hidden" }}>
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
-                  Upload roadmap
-                  <VisuallyHiddenInput type="file" onChange={onChangeRoadmap} />
-                </Button>
-                <FormHelperText>{roadmap?.name}</FormHelperText>
-              </FormControl>
+              <ImageUploader image={roadmap} setImage={setRoadmap} label="Upload roadmap" />
             </Grid>
 
             {/* Upload thumbnail */}
             <Grid item md={6} xs={12}>
-              <UploadThumbnail thumbnail={thumbnail} setThumbnail={setThumbnail} />
+              <ImageUploader image={thumbnail} setImage={setThumbnail} />
             </Grid>
           </>
         )}

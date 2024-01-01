@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import FormCourse from "@/components/course-components/FormCourse";
 import Spinner from "@/components/custom/Spinner";
 import { Divider } from "@mui/material";
+import { showErrorToast } from "@/utils/functions";
 
 type IRow = ICourse & { id: string; order: number };
 
@@ -211,7 +212,7 @@ const TrashedCourses = () => {
       setLoading(false);
       router.refresh();
     } catch (error) {
-      toast.success("Restore course failed!");
+      showErrorToast(error);
     }
   };
 
@@ -226,7 +227,7 @@ const TrashedCourses = () => {
         return prev.filter((course) => course.id !== selectedRow!.id);
       });
     } catch (error) {
-      toast.success("Delete course failed!");
+      showErrorToast(error);
     }
   };
 

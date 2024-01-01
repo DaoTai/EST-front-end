@@ -1,5 +1,6 @@
 "use client";
 import VisuallyHiddenInput from "@/components/custom/VisuallyHiddenInput";
+import { IUploadImage } from "@/types/ICourse";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
@@ -11,42 +12,35 @@ import Image from "next/image";
 import { ChangeEvent, Dispatch, SetStateAction, memo, useEffect, useRef } from "react";
 
 type IProps = {
-  thumbnail: { file: File | null; preview: string } | undefined;
-  setThumbnail: Dispatch<
-    SetStateAction<
-      | {
-          file: File | null;
-          preview: string;
-        }
-      | undefined
-    >
-  >;
+  image: { file: File | null; preview: string } | undefined;
+  setImage: Dispatch<SetStateAction<IUploadImage | undefined>>;
+  label?: string;
 };
 
-const UploadThumbnail = ({ thumbnail, setThumbnail }: IProps) => {
-  const thumbnailInputRef = useRef<HTMLInputElement>(null);
-  // Peview thumbnail
+const ImageUploader = ({ image, setImage, label = "Upload image*" }: IProps) => {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  // Peview image
   const onPreviewThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file && file.type.includes("image"))
-      setThumbnail({
+      setImage({
         file,
         preview: URL.createObjectURL(file),
       });
-    thumbnailInputRef.current!.value = "";
+    imageInputRef.current!.value = "";
   };
   useEffect(() => {
     return () => {
-      thumbnail?.preview && URL.revokeObjectURL(thumbnail.preview);
+      image?.preview && URL.revokeObjectURL(image.preview);
     };
-  }, [thumbnail]);
+  }, [image]);
 
   return (
     <FormControl fullWidth>
-      {thumbnail?.preview && (
+      {image?.preview && (
         <Box position={"relative"} mb={2}>
           <Image
-            src={thumbnail.preview}
+            src={image.preview}
             alt="thumb-nail"
             width={300}
             height={300}
@@ -58,9 +52,10 @@ const UploadThumbnail = ({ thumbnail, setThumbnail }: IProps) => {
           />
           <IconButton
             size="small"
-            sx={{ position: "absolute", top: 5, right: 5, bgcolor: "rgba(0,0,0,.3)" }}
+            className="bg-gradient"
+            sx={{ position: "absolute", top: 5, right: 5 }}
             onClick={() =>
-              setThumbnail({
+              setImage({
                 file: null,
                 preview: "",
               })
@@ -76,11 +71,12 @@ const UploadThumbnail = ({ thumbnail, setThumbnail }: IProps) => {
         color="info"
         startIcon={<AddPhotoAlternateIcon />}
       >
-        Upload thumbnail*
+        {label}
+
         <VisuallyHiddenInput
           type="file"
-          accept="image/png, image/gif, image/jpeg"
-          ref={thumbnailInputRef}
+          accept="image/png, image/jpeg"
+          ref={imageInputRef}
           onChange={onPreviewThumbnail}
         />
       </Button>
@@ -91,4 +87,4 @@ const UploadThumbnail = ({ thumbnail, setThumbnail }: IProps) => {
   );
 };
 
-export default memo(UploadThumbnail);
+export default memo(ImageUploader);

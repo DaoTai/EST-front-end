@@ -1,4 +1,3 @@
-import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -53,15 +52,14 @@ const AboutCourse = ({ course }: { course: ICourse }) => {
         <Typography variant="body1">
           <b>Updated time:</b> {dayjs(course.updatedAt).format("MMMM D, YYYY h:mm A")}
         </Typography>
-        <Button
-          fullWidth
-          component={Link}
+
+        <Link
           href={`/teacher/course/${course._id}/edit`}
           className="btn-link bg-gradient"
-          sx={{ color: "#fff" }}
+          style={{ width: "100%", textAlign: "center" }}
         >
           Edit
-        </Button>
+        </Link>
       </Stack>
     </Paper>
   );

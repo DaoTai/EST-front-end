@@ -59,7 +59,7 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
         {course.thumbnail && (
           <Image
             src={course.thumbnail.uri}
-            alt="thumb-nail"
+            alt="thumbnail"
             width={280}
             height={250}
             style={{ borderRadius: 12 }}
@@ -80,12 +80,24 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
             Members: {course?.members?.length}
           </Typography>
           {course.roadmap && (
-            <Typography component={"li"} variant="body1" gutterBottom>
-              Roadmap:
-              <a href={course.roadmap?.uri} download target="_blank" style={{ marginLeft: 4 }}>
-                Download
-              </a>
-            </Typography>
+            <Box component={"li"}>
+              <Typography variant="body1" gutterBottom>
+                Roadmap:
+              </Typography>
+              <Image
+                unoptimized
+                src={course.roadmap.uri}
+                alt="roadmap"
+                width={280}
+                height={250}
+                style={{
+                  borderRadius: 4,
+                  width: "100%",
+                  objectFit: "contain",
+                  objectPosition: "left center",
+                }}
+              />
+            </Box>
           )}
         </Box>
 

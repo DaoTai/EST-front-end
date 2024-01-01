@@ -9,3 +9,8 @@ export interface IFormCourse extends IEditFormCouse {
   openDate?: string;
   closeDate?: string;
 }
+
+export type IUploadImage = {
+  file: File | null;
+  preview: string;
+};
