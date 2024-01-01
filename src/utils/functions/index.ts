@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { ToastOptions, toast } from "react-toastify";
@@ -79,3 +79,20 @@ export const showErrorToast = (error: unknown, option?: ToastOptions) => {
 // Fetchers SWR
 export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
   fetch(url).then((res) => res.json());
+
+// Get TURN Credential
+export const fetchTURNCredential = async (): Promise<any> => {
+  const env = process.env.NODE_ENV;
+  if (env == "development") {
+    console.log("Đang ở mode dev ko cần");
+
+    return [];
+  } else if (env == "production") {
+    console.log("Mode production");
+
+    const res = await axios.get(
+      "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=ae7f71b5dd4068008d178d5761fc927adafc"
+    );
+    return res.data;
+  }
+};

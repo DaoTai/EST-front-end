@@ -94,6 +94,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   // Handle update latest reader
   // Chỉ khi đang mounting tại group chat thì mới thêm vào
   const appendToLatestRead = (idGroupChat: string) => {
+    if (!session) return;
     const idUser = session!._id as any;
     const updateListChats = [...listGroupChats].map((groupChat) => {
       if (idGroupChat === groupChat._id) {

@@ -24,6 +24,7 @@ import {
   PeerRef,
 } from "@/types/VideoRoom";
 import { Helmet } from "react-helmet";
+import { fetchTURNCredential, showErrorToast } from "@/utils/functions";
 
 const Heading = dynamic(() => import("./Heading"), {
   ssr: false,
@@ -36,7 +37,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [streamShare, setStreamShare] = useState<MediaStream | null>(null);
   const [idSocketSharingScreen, setIdSocketSharingScreen] = useState<string | null>(null);
-
+  const [iceServers, setIceServers] = useState<any[]>([]);
   const socket = useRef<Socket>();
   const myVideoRef = useRef<HTMLVideoElement | any>();
   const largeScreenRef = useRef<HTMLVideoElement | null>(null);
@@ -111,31 +112,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       trickle: false, // đảm bảo rằng không có dữ liệu nào được gửi đi trước khi kết nối hoàn chỉnh, và toàn bộ dữ liệu sẽ được gửi một lần duy nhất sau khi kết nối đã sẵn sàng (ngăn chặn việc gửi dữ liệu từ từ và liên tục)
       stream,
       config: {
-        iceServers: [
-          {
-            urls: "stun:stun.relay.metered.ca:80",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:80",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:80?transport=tcp",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:443",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:443?transport=tcp",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-        ],
+        iceServers,
       },
     });
 
@@ -161,31 +138,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       trickle: false,
       stream,
       config: {
-        iceServers: [
-          {
-            urls: "stun:stun.relay.metered.ca:80",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:80",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:80?transport=tcp",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:443",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-          {
-            urls: "turn:standard.relay.metered.ca:443?transport=tcp",
-            username: "d0c5a4640898b8117995f5e2",
-            credential: "ib24hh3Skyth8h8s",
-          },
-        ],
+        iceServers,
       },
     });
 
@@ -357,6 +310,15 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       if (largeScreenRef.current) largeScreenRef.current.srcObject = null;
     }
   }, [idSocketSharingScreen]);
+
+  // Get TURN credential in production mode
+  useEffect(() => {
+    fetchTURNCredential()
+      .then((data: unknown) => {
+        if (Array.isArray(data)) setIceServers(data);
+      })
+      .catch((err) => showErrorToast(err));
+  }, []);
 
   const diableShareScreen = useMemo<boolean>(() => {
     return !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id);
