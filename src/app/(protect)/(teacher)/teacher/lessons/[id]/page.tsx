@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-import { convertObjectToFormData, fetcherLessons } from "@/utils/functions";
+import { convertObjectToFormData, fetcherLessons, showErrorToast } from "@/utils/functions";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
@@ -22,6 +22,7 @@ import VideoPlayer from "@/components/custom/VideoPlayer";
 import FormLesson from "@/components/lesson-components/FormLesson";
 import { IFormLesson } from "@/types/ILesson";
 import dayjs from "dayjs";
+import teacherLessonService from "@/services/teacher/lesson";
 
 const Lesson = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -41,21 +42,17 @@ const Lesson = ({ params }: { params: { id: string } }) => {
   const handleEditLesson = useCallback(async (value: IFormLesson & { file?: File }) => {
     const formData = convertObjectToFormData(value);
     setLoading(true);
-    fetch("/api/teacher/lessons/detail/" + params.id, {
-      method: "PUT",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((value) => {
-        mutate(value);
-        toast.success("Edit lesson successfully");
-        mutateSWR(`/api/teacher/lessons/${value.course}?page=1`);
-        router.back();
-      })
-      .catch(() => toast.error("Edit lesson failed"))
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const data = await teacherLessonService.edit(params.id, formData);
+      mutate(data);
+      toast.success("Edit lesson successfully");
+      mutateSWR(`/api/teacher/lessons/${data.course}?page=1`);
+      router.back();
+    } catch (error) {
+      showErrorToast(error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   if (error) {
