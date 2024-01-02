@@ -13,31 +13,33 @@ import Link from "next/link";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import ProviderAuthButton from "../../_components/ProviderAuthButtons";
+import Spinner from "@/components/custom/Spinner";
 const SignIn = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { values, errors, touched, isValid, handleSubmit, handleBlur, handleChange } = useFormik({
-    initialValues: {
-      // email: "daoductai24102001@gmail.com",
-      // password: "123123",
-      email: "",
-      password: "123123",
-    },
-    validationSchema: SignInSchema,
-    onSubmit: async (values) => {
-      // Nếu dùng axios thì ko update đc session => Chỉ update đc session khi session !== null
-      try {
-        const login = await signIn("credentials", {
-          email: values.email,
-          password: values.password,
-          redirect: false,
-        });
-        login?.error ? toast.error(login?.error) : router.replace("/");
-      } catch (err) {
-        console.log("Error: ", err);
-      }
-    },
-  });
+  const { values, errors, touched, isValid, isSubmitting, handleSubmit, handleBlur, handleChange } =
+    useFormik({
+      initialValues: {
+        // email: "daoductai24102001@gmail.com",
+        // password: "123123",
+        email: "",
+        password: "123123",
+      },
+      validationSchema: SignInSchema,
+      onSubmit: async (values) => {
+        // Nếu dùng axios thì ko update đc session => Chỉ update đc session khi session !== null
+        try {
+          const login = await signIn("credentials", {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+          });
+          login?.error ? toast.error(login?.error) : router.replace("/");
+        } catch (err) {
+          console.log("Error: ", err);
+        }
+      },
+    });
 
   // Trong case: đăng nhập bằng next-provider(google, github) nhưng thất bại (có thể do bị khoá account) thì clear searchParams
   // tránh gây bug khi đăng nhập account khác bị lỗi
@@ -98,7 +100,7 @@ const SignIn = () => {
           <Button
             fullWidth
             variant="contained"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             type="submit"
             sx={{ mt: 1, mb: 1 }}
           >
@@ -132,6 +134,8 @@ const SignIn = () => {
           Sign up
         </Button>
       </Box>
+
+      {isSubmitting && <Spinner />}
     </>
   );
 };

@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -23,7 +24,6 @@ import MyList from "@/components/custom/MyList";
 import clientSideAxios from "@/config/axios/client-side";
 import notfiyService from "@/services/notification";
 import { showErrorToast } from "@/utils/functions";
-import { Tooltip } from "@mui/material";
 type IResponse = {
   maxPage: number;
   totalUnRead: number;
@@ -118,7 +118,7 @@ const Notifications = () => {
   };
 
   if (error) {
-    return <Typography>Having issue in notification</Typography>;
+    return <Typography variant="body1">Having issue in notification</Typography>;
   }
 
   return (
