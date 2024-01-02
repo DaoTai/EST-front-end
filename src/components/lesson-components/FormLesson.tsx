@@ -189,7 +189,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
             </IconButton>
           </Stack>
 
-          {values.references.length > 0 && (
+          {values?.references?.length > 0 && (
             <Stack mt={1} mb={1} gap={1} flexDirection={"row"} flexWrap={"wrap"}>
               {values.references.map((ref) => (
                 <Chip

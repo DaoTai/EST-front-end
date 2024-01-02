@@ -19,11 +19,11 @@ export const GET = async (req: NextRequest, { params }: { params: { id: string }
   }
 };
 
-export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const id = params.id;
     const body = await req.formData();
-    const res = await serverAxios.patch("/lessons/detail/" + id, body, {
+    const res = await serverAxios.put("/lessons/detail/" + id, body, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

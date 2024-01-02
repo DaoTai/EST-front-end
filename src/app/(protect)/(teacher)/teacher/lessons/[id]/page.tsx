@@ -42,7 +42,7 @@ const Lesson = ({ params }: { params: { id: string } }) => {
     const formData = convertObjectToFormData(value);
     setLoading(true);
     fetch("/api/teacher/lessons/detail/" + params.id, {
-      method: "PATCH",
+      method: "PUT",
       body: formData,
     })
       .then((res) => res.json())
