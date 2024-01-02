@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 
 import { convertObjectToFormData, fetcherLessons } from "@/utils/functions";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { mutate as mutateSWR } from "swr";
 
@@ -25,6 +25,7 @@ import dayjs from "dayjs";
 
 const Lesson = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { data, error, isLoading, mutate } = useSWR(
     "/api/teacher/lessons/detail/" + params.id,
     fetcherLessons,
@@ -39,6 +40,7 @@ const Lesson = ({ params }: { params: { id: string } }) => {
   // Edit lesson
   const handleEditLesson = useCallback(async (value: IFormLesson & { file?: File }) => {
     const formData = convertObjectToFormData(value);
+    setLoading(true);
     fetch("/api/teacher/lessons/detail/" + params.id, {
       method: "PATCH",
       body: formData,
@@ -50,7 +52,10 @@ const Lesson = ({ params }: { params: { id: string } }) => {
         mutateSWR(`/api/teacher/lessons/${value.course}?page=1`);
         router.back();
       })
-      .catch(() => toast.error("Edit lesson failed"));
+      .catch(() => toast.error("Edit lesson failed"))
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   if (error) {
@@ -113,6 +118,7 @@ const Lesson = ({ params }: { params: { id: string } }) => {
           <FormLesson type="edit" lesson={data} onSubmit={handleEditLesson} />
         </Grid>
       </Grid>
+      {loading && <Spinner />}
     </Box>
   );
 };

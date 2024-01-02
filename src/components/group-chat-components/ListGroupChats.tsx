@@ -9,7 +9,10 @@ import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
 import NewGroup from "@/components/group-chat-components/NewGroupIcon";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
-import { Divider, IconButton } from "@mui/material";
+import { Divider, IconButton, useMediaQuery } from "@mui/material";
+
+import useTheme from "@mui/material/styles/useTheme";
+
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 
@@ -20,6 +23,8 @@ const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeThem
 const ListGroupChats = () => {
   const params = useParams();
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
     useListGroupChatContext();
 

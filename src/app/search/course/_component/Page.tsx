@@ -6,6 +6,9 @@ import IconButton from "@mui/material/IconButton";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Drawer from "@mui/material/Drawer";
+import Divider from "@mui/material/Divider";
 import { useCallback, useMemo, useState } from "react";
 
 import SearchBox from "@/components/common/SearchBox";
@@ -14,7 +17,6 @@ import FilterSearch from "@/components/course-components/FilterSearch";
 import ListSkeletons from "@/components/course-components/ListSkeletons";
 import Spinner from "@/components/custom/Spinner";
 import { BACK_END_URI } from "@/utils/constants/common";
-import { Button, Divider, Drawer } from "@mui/material";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import useSWR, { Fetcher } from "swr";

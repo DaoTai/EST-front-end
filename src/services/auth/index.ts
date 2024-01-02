@@ -101,14 +101,12 @@ export const signInByFetch = async ({ email, password }: { email: string; passwo
 };
 
 export const checkExistEmailAndProvider = async (email: string, provider: string) => {
-  try {
-    const res = await authRouteAxios.post("/exist-email-and-provider", {
-      email,
-      provider,
-    });
+  const res = await authRouteAxios.post("/exist-email-and-provider", {
+    email,
+    provider,
+  });
 
-    return res.data;
-  } catch (error) {}
+  return res.data;
 };
 
 export const sendNewPasswordToEmail = async (email: string) => {

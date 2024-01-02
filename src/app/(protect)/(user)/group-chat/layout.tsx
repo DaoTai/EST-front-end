@@ -27,15 +27,16 @@ const RootLayout = ({ children, groupChats }: IProps) => {
           <Grid
             item
             md={3}
-            xs={3}
+            xs={4}
             sx={{
               maxHeight: "100vh",
               overflowY: "auto",
+              width: "100%",
             }}
           >
             <Suspense fallback={<p>Loading ...</p>}>{groupChats}</Suspense>
           </Grid>
-          <Grid item md={9} xs={9}>
+          <Grid item md={9} xs={8}>
             <Suspense fallback={<p>Loading ...</p>}>{children}</Suspense>
           </Grid>
         </Grid>

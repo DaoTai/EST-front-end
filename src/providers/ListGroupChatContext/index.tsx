@@ -133,7 +133,9 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   if (error) {
-    router.back();
+    console.log("Error: ", error);
+
+    throw new Error("Get list group chats failed!");
   }
 
   return <ListGroupChatContext.Provider value={value}>{children}</ListGroupChatContext.Provider>;
