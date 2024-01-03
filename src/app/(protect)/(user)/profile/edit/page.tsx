@@ -176,7 +176,7 @@ const EditProfile = () => {
           <Button
             type="submit"
             variant="contained"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             style={{ marginLeft: "auto" }}
           >
             {isSubmitting ? "Submitting" : "Save"}

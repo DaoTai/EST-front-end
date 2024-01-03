@@ -168,7 +168,6 @@ const Notifications = () => {
           sx={{
             p: 1,
             minWidth: "20vw",
-            maxWidth: "25vw",
             overflow: "hidden",
             bgcolor: "background.paper",
             border: "1px solid rgba(0,0,0,0.1)",

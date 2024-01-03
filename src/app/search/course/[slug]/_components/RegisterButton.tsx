@@ -24,15 +24,15 @@ const RegisterButton = ({ _id, name, type }: IProps) => {
   const { data: session } = useSession();
   const [confirm, setConfirm] = useState<boolean>(false);
   // Sẽ được caching khi đã từng đc gọi từ 1 file khác => SWR sẽ dựa vào key (ở đây là url api) để thay đổi việc cache
-  const { data: listMyCourses } = useSWR(
-    session ? "/api/user/my-courses" : null,
-    fetcherMyCourses,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const {
+    data: listMyCourses,
+    isLoading,
+    isValidating,
+  } = useSWR(session ? "/api/user/my-courses" : null, fetcherMyCourses, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const isRegistered = useMemo(() => {
     if (listMyCourses) {
@@ -98,6 +98,7 @@ const RegisterButton = ({ _id, name, type }: IProps) => {
           }
           onClose={onCloseConfirm}
           onSubmit={onRegister}
+          loading={isLoading || isValidating}
         />
       )}
     </>

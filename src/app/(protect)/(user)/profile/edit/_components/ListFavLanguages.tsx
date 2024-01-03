@@ -1,27 +1,23 @@
 import AddIcon from "@mui/icons-material/Add";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import Typography from "@mui/material/Typography";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 
-const ListFavProgrammingLanguages = ({
-  value = [],
-  name,
-  setFieldValue,
-}: {
+type IProps = {
   value: string[];
   name: string;
   setFieldValue: (field: string, value: string[]) => void;
-}) => {
+};
+
+const ListFavProgrammingLanguages = ({ value = [], name, setFieldValue }: IProps) => {
   const [newLang, setNewLang] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +30,7 @@ const ListFavProgrammingLanguages = ({
   // Add lang
   const handleAddLanguage = () => {
     if (newLang.trim() && !value?.includes(newLang.trim()))
-      setFieldValue(name, [...value, newLang.trim()]);
+      setFieldValue(name, [...value, newLang.trim().toUpperCase()]);
     setNewLang("");
     inputRef.current?.focus();
   };

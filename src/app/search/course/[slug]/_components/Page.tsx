@@ -108,14 +108,16 @@ const DetailCourse = ({ slug }: { slug: string }) => {
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   Created time: {dayjs(detail.createdAt).format("DD/MM/YYYY")}
                 </Typography>
-                <Typography
-                  variant="body1"
-                  dangerouslySetInnerHTML={{ __html: detail.intro }}
-                  p={1}
-                  border={1}
-                  borderRadius={2}
-                  gutterBottom
-                ></Typography>
+                {detail.intro && (
+                  <Typography
+                    variant="body1"
+                    dangerouslySetInnerHTML={{ __html: detail.intro }}
+                    p={1}
+                    border={1}
+                    borderRadius={2}
+                    gutterBottom
+                  ></Typography>
+                )}
                 {detail?.roadmap && (
                   <>
                     <Typography variant="body1" fontWeight={500} gutterBottom>

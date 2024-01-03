@@ -37,7 +37,11 @@ const MyDialog = ({ title, content, loading = false, onClose, onSubmit }: IProps
       </DialogContent>
       <Divider />
       <DialogActions>
-        <Button variant="outlined" onClick={onClose}>
+        <Button
+          variant="outlined"
+          sx={{ color: (theme) => theme.palette.text.primary, borderColor: "currentcolor" }}
+          onClick={onClose}
+        >
           Close
         </Button>
         <Button

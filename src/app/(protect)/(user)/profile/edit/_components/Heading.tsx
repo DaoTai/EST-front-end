@@ -19,6 +19,8 @@ const Heading = () => {
     file?: File;
   }>();
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     return () => {
       previewAvatar && URL.revokeObjectURL(previewAvatar.url);
@@ -39,9 +41,11 @@ const Heading = () => {
   // Save avatar
   const onSaveAvatar = async () => {
     if (!previewAvatar?.file) return;
+    setLoading(true);
     const data = await editProfile({ avatar: previewAvatar.file });
     update(data);
     setPreviewAvatar({ url: "", file: undefined });
+    setLoading(false);
   };
 
   return (
@@ -74,17 +78,23 @@ const Heading = () => {
         {/* Controls */}
         {previewAvatar?.url && (
           <Stack flexDirection={"row"} gap={1}>
-            <Button variant="outlined" onClick={() => setPreviewAvatar({ url: "" })}>
+            <Button
+              disabled={loading}
+              variant="outlined"
+              sx={{ color: (theme) => theme.palette.text.primary }}
+              onClick={() => setPreviewAvatar({ url: "" })}
+            >
               Cancel
             </Button>
-            <Button variant="contained" onClick={onSaveAvatar}>
-              Save
+            <Button disabled={loading} variant="contained" color="info" onClick={onSaveAvatar}>
+              {loading ? "Saving" : "Save"}
             </Button>
           </Stack>
         )}
 
         {/* Input file */}
         <Button
+          disabled={loading}
           variant="outlined"
           sx={{
             height: "fit-content",
