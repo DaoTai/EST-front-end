@@ -107,6 +107,8 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
  - stream: MediaStream của mình
   */
   const createPeer = ({ friendSocketId, callerId, stream, user }: ICreatePeerParams) => {
+    console.log("iceServers in create: ", iceServers);
+
     const peer = new SimplePeer({
       initiator: true,
       trickle: false, // đảm bảo rằng không có dữ liệu nào được gửi đi trước khi kết nối hoàn chỉnh, và toàn bộ dữ liệu sẽ được gửi một lần duy nhất sau khi kết nối đã sẵn sàng (ngăn chặn việc gửi dữ liệu từ từ và liên tục)
@@ -133,6 +135,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   // Caller id: socket id của friend
   // Signal: tín hiệu từ friend
   const addPeer = ({ signal, callerId, stream }: IAddPeerParams) => {
+    console.log("iceServers in add: ", iceServers);
     const peer = new SimplePeer({
       initiator: false, //Peer không khởi tạo việc kết nối, mà chờ để nhận tín hiệu từ peer khác.
       trickle: false,
@@ -176,17 +179,13 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
         // Get TURN credential in production mode
         fetchTURNCredential()
           .then((data: unknown) => {
-            console.log("credential: ", data);
-
             if (Array.isArray(data)) setIceServers(data);
-          })
-          .catch((err) => showErrorToast(err))
-          .then(() => {
-            console.log("hi stream: ", stream);
 
             localStream = stream;
             myVideoRef.current.srcObject = stream;
             setStream(stream);
+            console.log("Hi stream");
+
             socket.current?.emit("join video", {
               idGroupChat: groupChat._id,
               user: {
@@ -286,7 +285,8 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
             socket.current?.on("socket id sharing", (idSocket) => {
               setIdSocketSharingScreen(idSocket);
             });
-          });
+          })
+          .catch((err) => showErrorToast(err));
       })
 
       .catch((err) => {
