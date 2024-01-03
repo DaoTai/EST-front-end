@@ -88,8 +88,6 @@ export const fetchTURNCredential = async (): Promise<any> => {
 
     return [];
   } else if (env == "production") {
-    console.log("Mode production");
-
     const res = await axios.get(
       "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=ae7f71b5dd4068008d178d5761fc927adafc"
     );

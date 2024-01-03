@@ -173,109 +173,122 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
         audio: true,
       })
       .then((stream) => {
-        localStream = stream;
-        myVideoRef.current.srcObject = stream;
-        setStream(stream);
-        socket.current?.emit("join video", {
-          idGroupChat: groupChat._id,
-          user: {
-            username: profile.username,
-            avatar: profile.avatar,
-          },
-        });
+        // Get TURN credential in production mode
+        fetchTURNCredential()
+          .then((data: unknown) => {
+            console.log("credential: ", data);
 
-        // Event get all user in this room
-        // Các friends đã vào trước đó
-        socket.current?.on("all users", (listFriends: IPayload[]) => {
-          const newFriendVideos = [] as IFriendVideo[];
-          // Tạo các peer tương ứng với từng friend
-          listFriends.forEach((friend) => {
-            const peer = createPeer({
-              friendSocketId: friend.socketId,
-              callerId: socket.current!.id,
-              stream: stream,
+            if (Array.isArray(data)) setIceServers(data);
+          })
+          .catch((err) => showErrorToast(err))
+          .then(() => {
+            console.log("hi stream: ", stream);
+
+            localStream = stream;
+            myVideoRef.current.srcObject = stream;
+            setStream(stream);
+            socket.current?.emit("join video", {
+              idGroupChat: groupChat._id,
               user: {
                 username: profile.username,
                 avatar: profile.avatar,
               },
             });
 
-            peersRef.current.push({
-              socketId: friend.socketId,
-              peer,
+            // Event get all user in this room
+            // Các friends đã vào trước đó
+            socket.current?.on("all users", (listFriends: IPayload[]) => {
+              const newFriendVideos = [] as IFriendVideo[];
+              // Tạo các peer tương ứng với từng friend
+              listFriends.forEach((friend) => {
+                const peer = createPeer({
+                  friendSocketId: friend.socketId,
+                  callerId: socket.current!.id,
+                  stream: stream,
+                  user: {
+                    username: profile.username,
+                    avatar: profile.avatar,
+                  },
+                });
+
+                peersRef.current.push({
+                  socketId: friend.socketId,
+                  peer,
+                });
+
+                newFriendVideos.push({
+                  socketId: friend.socketId,
+                  peer,
+                  friend,
+                });
+              });
+              setListFriends(newFriendVideos);
             });
 
-            newFriendVideos.push({
-              socketId: friend.socketId,
-              peer,
-              friend,
+            // Event a user join
+            socket.current?.on("user join", ({ signal, callerId, user }: IEventUserJoinParams) => {
+              const newPeer = addPeer({
+                signal,
+                callerId,
+                stream,
+              });
+              peersRef.current.push({
+                socketId: callerId,
+                peer: newPeer,
+              });
+
+              setListFriends((prev) => [
+                ...prev,
+                {
+                  peer: newPeer,
+                  socketId: callerId,
+                  friend: user,
+                },
+              ]);
             });
-          });
-          setListFriends(newFriendVideos);
-        });
 
-        // Event a user join
-        socket.current?.on("user join", ({ signal, callerId, user }: IEventUserJoinParams) => {
-          const newPeer = addPeer({
-            signal,
-            callerId,
-            stream,
-          });
-          peersRef.current.push({
-            socketId: callerId,
-            peer: newPeer,
-          });
-
-          setListFriends((prev) => [
-            ...prev,
-            {
-              peer: newPeer,
-              socketId: callerId,
-              friend: user,
-            },
-          ]);
-        });
-
-        // Tín hiệu từ friend đã vào trước đó
-        // Khi một friend (đã vào trước đó) gửi lại tín hiệu (signal) để thiết lập kết nối
-        socket.current?.on(
-          "receive returned signal",
-          (payload: { socketId: string; signal: SimplePeer.SignalData }) => {
-            const { socketId, signal } = payload;
-            // Tìm peer của friend để thực hiện kết nối từ bên friend với mình bằng method signal
-            const item = peersRef.current.find((peer) => {
-              return peer.socketId === socketId;
-            });
-            if (item && !item.peer.destroyed) {
-              try {
-                item.peer.signal(signal);
-              } catch (error) {
-                console.log("Error: ", error);
+            // Tín hiệu từ friend đã vào trước đó
+            // Khi một friend (đã vào trước đó) gửi lại tín hiệu (signal) để thiết lập kết nối
+            socket.current?.on(
+              "receive returned signal",
+              (payload: { socketId: string; signal: SimplePeer.SignalData }) => {
+                const { socketId, signal } = payload;
+                // Tìm peer của friend để thực hiện kết nối từ bên friend với mình bằng method signal
+                const item = peersRef.current.find((peer) => {
+                  return peer.socketId === socketId;
+                });
+                if (item && !item.peer.destroyed) {
+                  try {
+                    item.peer.signal(signal);
+                  } catch (error) {
+                    console.log("Error: ", error);
+                  }
+                }
               }
-            }
-          }
-        );
-
-        // Event friend leaving
-        socket.current?.on("leaved friend", (friendSocketId: string) => {
-          const deletedPeer = peersRef.current.find((peer) => peer.socketId === friendSocketId);
-
-          if (deletedPeer) {
-            deletedPeer.peer.destroy();
-            peersRef.current = [...peersRef.current].filter(
-              (peer) => peer.socketId !== friendSocketId
             );
-            setListFriends((prev) =>
-              [...prev].filter((friend) => friend.socketId !== friendSocketId)
-            );
-          }
-        });
 
-        // Event sharing screen in room
-        socket.current?.on("socket id sharing", (idSocket) => {
-          setIdSocketSharingScreen(idSocket);
-        });
+            // Event friend leaving
+            socket.current?.on("leaved friend", (friendSocketId: string) => {
+              const deletedPeer = peersRef.current.find((peer) => peer.socketId === friendSocketId);
+
+              if (deletedPeer) {
+                deletedPeer.peer.destroy();
+                peersRef.current = [...peersRef.current].filter(
+                  (peer) => peer.socketId !== friendSocketId
+                );
+                setListFriends((prev) =>
+                  [...prev].filter((friend) => friend.socketId !== friendSocketId)
+                );
+              }
+            });
+
+            // Event sharing screen in room
+            socket.current?.on("socket id sharing", (idSocket) => {
+              setIdSocketSharingScreen(idSocket);
+            });
+          });
       })
+
       .catch((err) => {
         console.error("Error accessing media devices:", err);
         toast.error("Error accessing media devices");
@@ -310,15 +323,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       if (largeScreenRef.current) largeScreenRef.current.srcObject = null;
     }
   }, [idSocketSharingScreen]);
-
-  // Get TURN credential in production mode
-  useEffect(() => {
-    fetchTURNCredential()
-      .then((data: unknown) => {
-        if (Array.isArray(data)) setIceServers(data);
-      })
-      .catch((err) => showErrorToast(err));
-  }, []);
 
   const diableShareScreen = useMemo<boolean>(() => {
     return !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id);
