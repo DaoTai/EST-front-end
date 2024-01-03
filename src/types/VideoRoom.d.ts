@@ -16,12 +16,14 @@ interface ICreatePeerParams {
   callerId: string;
   stream: MediaStream;
   user: Pick<IProfile, "avatar" | "username">;
+  iceServers: any[];
 }
 
 interface IAddPeerParams {
   signal: SimplePeer.SignalData;
   callerId: string;
   stream: MediaStream;
+  iceServers: any[];
 }
 
 interface IEventUserJoinParams {

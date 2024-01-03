@@ -37,7 +37,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [streamShare, setStreamShare] = useState<MediaStream | null>(null);
   const [idSocketSharingScreen, setIdSocketSharingScreen] = useState<string | null>(null);
-  const [iceServers, setIceServers] = useState<any[]>([]);
   const socket = useRef<Socket>();
   const myVideoRef = useRef<HTMLVideoElement | any>();
   const largeScreenRef = useRef<HTMLVideoElement | null>(null);
@@ -106,7 +105,13 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
  - callerId: socket id của mình
  - stream: MediaStream của mình
   */
-  const createPeer = ({ friendSocketId, callerId, stream, user }: ICreatePeerParams) => {
+  const createPeer = ({
+    friendSocketId,
+    callerId,
+    stream,
+    user,
+    iceServers,
+  }: ICreatePeerParams) => {
     console.log("iceServers in create: ", iceServers);
 
     const peer = new SimplePeer({
@@ -134,7 +139,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   // Tạo một peer không phải là initiator để xử lý tín hiệu từ friend. (Khi friend vô sau)
   // Caller id: socket id của friend
   // Signal: tín hiệu từ friend
-  const addPeer = ({ signal, callerId, stream }: IAddPeerParams) => {
+  const addPeer = ({ signal, callerId, stream, iceServers }: IAddPeerParams) => {
     console.log("iceServers in add: ", iceServers);
     const peer = new SimplePeer({
       initiator: false, //Peer không khởi tạo việc kết nối, mà chờ để nhận tín hiệu từ peer khác.
@@ -179,13 +184,11 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
         // Get TURN credential in production mode
         fetchTURNCredential()
           .then((data: unknown) => {
-            if (Array.isArray(data)) setIceServers(data);
+            if (!Array.isArray(data)) return;
 
             localStream = stream;
             myVideoRef.current.srcObject = stream;
             setStream(stream);
-            console.log("Hi stream");
-
             socket.current?.emit("join video", {
               idGroupChat: groupChat._id,
               user: {
@@ -208,6 +211,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                     username: profile.username,
                     avatar: profile.avatar,
                   },
+                  iceServers: data,
                 });
 
                 peersRef.current.push({
@@ -230,6 +234,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                 signal,
                 callerId,
                 stream,
+                iceServers: data,
               });
               peersRef.current.push({
                 socketId: callerId,
