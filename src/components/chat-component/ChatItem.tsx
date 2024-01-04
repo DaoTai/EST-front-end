@@ -3,17 +3,18 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
+import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import { getDistanceTimeToNow } from "@/utils/functions";
 import Delete from "@mui/icons-material/Delete";
 import { memo, useMemo, useState } from "react";
@@ -27,6 +28,8 @@ type IProps = {
 
 const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
   const { data: session } = useSession();
+
+  const { socket } = useListGroupChatContext();
 
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<null | HTMLElement>(null);

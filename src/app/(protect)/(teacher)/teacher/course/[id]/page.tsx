@@ -1,21 +1,27 @@
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import serverAxios from "@/config/axios/server-side";
-import { redirect } from "next/navigation";
+"use client";
 import About from "@/components/course-components/About";
 import CreateLesson from "@/components/lesson-components/CreateLesson";
 import ListLessons from "@/components/lesson-components/ListLessons";
-import { Suspense } from "react";
+import clientSideAxios from "@/config/axios/client-side";
+import { showErrorToast } from "@/utils/functions";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import { redirect } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import AvgScoreChart from "./_components/AvgScoreChart";
 
-const getCourseById = async (id: string): Promise<ICourse | undefined> => {
-  const res = await serverAxios.get("/courses/" + id);
-  return res.data;
-};
+const DetailCourse = ({ params }: { params: { id: string } }) => {
+  const [course, setCourse] = useState<ICourse | undefined>();
 
-const DetailCourse = async ({ params }: { params: { id: string } }) => {
-  const course = await getCourseById(params.id);
+  useEffect(() => {
+    clientSideAxios
+      .get("/courses/" + params.id)
+      .then((res) => {
+        setCourse(res.data);
+      })
+      .catch((err) => showErrorToast(err));
+  }, [params]);
 
   if (course) {
     if (course.deleted) redirect("/");
@@ -50,8 +56,8 @@ const DetailCourse = async ({ params }: { params: { id: string } }) => {
     );
   }
   return (
-    <Typography variant="h3" textAlign={"center"}>
-      Loading
+    <Typography variant="h5" textAlign={"center"} p={2}>
+      Course is not found
     </Typography>
   );
 };

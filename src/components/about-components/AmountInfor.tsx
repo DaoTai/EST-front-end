@@ -26,13 +26,6 @@ const AmountInfor = async () => {
       container
       spacing={1}
       sx={{
-        ".MuiGrid-item": {
-          transition: "all 0.3s linear",
-          ":hover": {
-            transform: "translateY(-10px)",
-          },
-        },
-
         ".MuiCardContent-root": {
           position: "relative",
         },
@@ -43,7 +36,6 @@ const AmountInfor = async () => {
           display: "block",
           padding: "8px 16px",
           borderRadius: 2,
-          bgcolor: "primary.main",
           color: "#fff",
           textDecoration: "none",
           width: "fit-content",
@@ -54,7 +46,7 @@ const AmountInfor = async () => {
         },
       }}
     >
-      <Grid item md={3} sm={6} xs={12}>
+      <Grid item md={6} sm={6} xs={12}>
         <Paper sx={{ height: "100%" }}>
           <CardContent sx={{ height: "100%" }}>
             <Box pb={4}>
@@ -71,7 +63,7 @@ const AmountInfor = async () => {
           </CardContent>
         </Paper>
       </Grid>
-      <Grid item md={3} sm={6} xs={12}>
+      <Grid item md={6} sm={6} xs={12}>
         <Paper sx={{ height: "100%" }}>
           <CardContent sx={{ height: "100%" }}>
             <Box pb={4}>
@@ -88,7 +80,7 @@ const AmountInfor = async () => {
           </CardContent>
         </Paper>
       </Grid>
-      <Grid item md={3} sm={6} xs={12}>
+      <Grid item md={6} sm={6} xs={12}>
         <Paper sx={{ height: "100%" }}>
           <CardContent sx={{ height: "100%" }}>
             <Box pb={4}>
@@ -105,7 +97,7 @@ const AmountInfor = async () => {
           </CardContent>
         </Paper>
       </Grid>
-      <Grid item md={3} sm={6} xs={12}>
+      <Grid item md={6} sm={6} xs={12}>
         <Paper sx={{ height: "100%" }}>
           <CardContent sx={{ height: "100%" }}>
             <Box pb={4}>

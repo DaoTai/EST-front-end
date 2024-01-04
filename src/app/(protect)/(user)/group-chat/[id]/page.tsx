@@ -17,6 +17,8 @@ import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import chatService from "@/services/chat";
 import { convertObjectToFormData, showErrorToast } from "@/utils/functions";
 import About from "@/components/group-chat-components/About";
+import { Tooltip } from "@mui/material";
+import Image from "next/image";
 
 type IResponse = {
   listChats: IChat[];
@@ -51,6 +53,18 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
       });
     }
   }, [session]);
+
+  // List latest reader
+  const listLatestReaders = useMemo<IMemberGroupChat[]>(() => {
+    const groupChat = listGroupChats.find((groupChat) => groupChat._id === params.id);
+    if (groupChat) {
+      return groupChat.members.filter(
+        (member) =>
+          groupChat.latestReadBy.includes(member._id as any) && member._id !== session?._id
+      );
+    }
+    return [];
+  }, [params.id, listGroupChats, session]);
 
   // Exist in blocked members
   const isBlocked = useMemo(() => {
@@ -218,6 +232,23 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
               return <ChatItem key={chat._id} chat={chat} onDelete={handleDeleteChat} />;
             })}
           </InfiniteScroll>
+        </Stack>
+
+        {/*  List latest readers */}
+        <Stack flexDirection={"row"} alignItems={"center"} justifyContent={"end"} gap={1} p={1}>
+          {listLatestReaders.map((member) => {
+            return (
+              <Tooltip key={member._id} title={member.username}>
+                <Image
+                  src={member.avatar.uri}
+                  alt="avatar"
+                  width={20}
+                  height={20}
+                  style={{ borderRadius: 99 }}
+                />
+              </Tooltip>
+            );
+          })}
         </Stack>
         {/* Box input new chat */}
         {isBlocked ? (

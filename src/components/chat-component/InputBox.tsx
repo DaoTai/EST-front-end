@@ -163,7 +163,7 @@ const InputBox = ({ onSend }: IProps) => {
 
         {/* Controls */}
         <Stack flexDirection={"row"} gap={1}>
-          {/* <Tooltip title="Upload images">
+          <Tooltip title="Upload images">
             <IconButton color="warning" component="label">
               <UploadFileIcon />
               <VisuallyHiddenInput
@@ -173,7 +173,7 @@ const InputBox = ({ onSend }: IProps) => {
                 onChange={handleUploadFiles}
               />
             </IconButton>
-          </Tooltip> */}
+          </Tooltip>
 
           <Button
             variant="outlined"

@@ -65,9 +65,14 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         max={2}
         sx={{
           img: {
-            width: 42,
-            height: 42,
+            width: 32,
+            height: 32,
             borderRadius: 99,
+          },
+          ".MuiAvatar-root": {
+            width: 32,
+            height: 32,
+            fontSize: 14,
           },
         }}
       >
@@ -101,8 +106,8 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
             border: 1,
             borderColor: "divider",
             width: "fit-content",
-            pl: 1,
-            pr: 1,
+            pl: 1.5,
+            pr: 1.5,
           }}
         >
           {groupChat.name}
