@@ -65,7 +65,7 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
     try {
       await axios.delete("/api/teacher/lessons/detail/" + lesson?._id);
       mutate(`/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`);
-      router.refresh();
+      // router.refresh();
       toast.success("Delete lesson " + lesson?.name + " successfully");
     } catch (error) {
       toast.error("Delete lesson " + lesson?.name + " failed");

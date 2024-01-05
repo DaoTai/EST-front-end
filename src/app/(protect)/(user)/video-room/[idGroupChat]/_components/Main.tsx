@@ -116,8 +116,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     user,
     iceServers,
   }: ICreatePeerParams) => {
-    console.log("iceServers in create: ", iceServers);
-
     const peer = new SimplePeer({
       initiator: true,
       trickle: false, // đảm bảo rằng không có dữ liệu nào được gửi đi trước khi kết nối hoàn chỉnh, và toàn bộ dữ liệu sẽ được gửi một lần duy nhất sau khi kết nối đã sẵn sàng (ngăn chặn việc gửi dữ liệu từ từ và liên tục)
@@ -144,7 +142,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   // Caller id: socket id của friend
   // Signal: tín hiệu từ friend
   const addPeer = ({ signal, callerId, stream, iceServers }: IAddPeerParams) => {
-    console.log("iceServers in add: ", iceServers);
     const peer = new SimplePeer({
       initiator: false, //Peer không khởi tạo việc kết nối, mà chờ để nhận tín hiệu từ peer khác.
       trickle: false,

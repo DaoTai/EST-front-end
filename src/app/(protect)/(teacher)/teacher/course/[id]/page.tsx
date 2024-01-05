@@ -10,18 +10,26 @@ import Typography from "@mui/material/Typography";
 import { redirect } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import AvgScoreChart from "./_components/AvgScoreChart";
+import Spinner from "@/components/custom/Spinner";
 
 const DetailCourse = ({ params }: { params: { id: string } }) => {
+  const [loading, setLoading] = useState(false);
   const [course, setCourse] = useState<ICourse | undefined>();
 
   useEffect(() => {
+    setLoading(true);
     clientSideAxios
       .get("/courses/" + params.id)
       .then((res) => {
         setCourse(res.data);
       })
-      .catch((err) => showErrorToast(err));
+      .catch((err) => showErrorToast(err))
+      .finally(() => {
+        setLoading(false);
+      });
   }, [params]);
+
+  if (loading) return <Spinner />;
 
   if (course) {
     if (course.deleted) redirect("/");
@@ -55,6 +63,7 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
       </>
     );
   }
+
   return (
     <Typography variant="h5" textAlign={"center"} p={2}>
       Course is not found

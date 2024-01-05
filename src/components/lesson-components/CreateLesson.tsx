@@ -2,23 +2,22 @@
 import AddIcon from "@mui/icons-material/Add";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Dialog from "@mui/material/Dialog";
 import Fab from "@mui/material/Fab";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import Container from "@mui/material/Container";
-import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
 import useTheme from "@mui/material/styles/useTheme";
+import useMediaQuery from "@mui/material/useMediaQuery/useMediaQuery";
 
+import teacherLessonService from "@/services/teacher/lesson";
+import { IFormLesson } from "@/types/ILesson";
+import { convertObjectToFormData } from "@/utils/functions";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { mutate } from "swr";
-import { IFormLesson } from "@/types/ILesson";
-import { convertObjectToFormData } from "@/utils/functions";
 import FormLesson from "./FormLesson";
-import axios from "axios";
-import teacherLessonService from "@/services/teacher/lesson";
 
 const CreateModal = () => {
   const theme = useTheme();
@@ -33,29 +32,13 @@ const CreateModal = () => {
     const formData = convertObjectToFormData(value);
     const idCourse = params.id as string;
     try {
-      // const res = await axios.post("/api/teacher/lessons/" + params.id, formData);
       const data = await teacherLessonService.create(idCourse, formData);
       setOpen(false);
       mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
       toast.success("Create lesson successfully");
-      router.refresh();
     } catch (error) {
       toast.error("Create lesson failed");
     }
-    // await fetch("/api/teacher/lessons/" + params.id, {
-    //   method: "POST",
-    //   body: formData,
-    // })
-    //   .then((res) => res.json())
-    //   .then(() => {
-    //     setOpen(false);
-    //     mutate(`/api/teacher/lessons/${params.id}?page=${searchParams.get("page")}`);
-    //     toast.success("Create lesson successfully");
-    //     // Buộc phải dùng method refresh nếu muốn quay lại route /teacher dữ liệu đồng bộ vì sẽ ko
-    //     // sync data bởi SSR
-    //     router.refresh();
-    //   })
-    //   .catch((err) => toast.error("Create lesson failed"));
   };
 
   return (

@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import MyDialog from "@/components/custom/Dialog";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import ArrowBackIos from "@mui/icons-material/ArrowBackIos";
 import { Drawer, IconButton, Tooltip } from "@mui/material";
@@ -20,11 +21,10 @@ import { useSession } from "next-auth/react";
 import NextLink from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
-import MyDialog from "@/components/custom/Dialog";
-import { Helmet } from "react-helmet";
 // import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
