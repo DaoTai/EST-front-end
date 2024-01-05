@@ -48,6 +48,7 @@ const GroupChatBanner = ({ groupChat, isActive = false }: IProps) => {
         justifyContent: "space-between",
         gap: 1,
         border: 0.5,
+        height: "83px",
         overflow: "hidden",
         borderColor: "divider",
         background: (theme) => (isActive ? theme.palette.gradient.main : "initial"),

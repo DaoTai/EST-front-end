@@ -31,7 +31,7 @@ const Heading = dynamic(() => import("./Heading"), {
 });
 
 const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IProfile }) => {
-  const constraintAudioMedia: MediaTrackConstraints = {
+  const myConstraintAudioMedia: MediaTrackConstraints = {
     echoCancellation: true,
     noiseSuppression: true,
   };
@@ -51,7 +51,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     try {
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
-        audio: constraintAudioMedia,
+        audio: myConstraintAudioMedia,
       });
       setStream(screenStream);
       if (myVideoRef.current) {
@@ -80,7 +80,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     try {
       const videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: constraintAudioMedia,
+        audio: myConstraintAudioMedia,
       });
       setStream(videoStream);
       !openCamera && setOpenCamera(true);
@@ -182,7 +182,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: constraintAudioMedia,
+        audio: myConstraintAudioMedia,
       })
       .then((stream) => {
         // Get TURN credential in production mode
@@ -401,7 +401,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                 playsInline
                 ref={largeScreenRef}
                 autoPlay
-                muted
                 style={{ width: "100%", height: "100%" }}
               />
             </Box>
@@ -423,6 +422,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
               >
                 <video
                   ref={myVideoRef}
+                  muted
                   autoPlay
                   style={{
                     width: "100%",
