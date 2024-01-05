@@ -28,9 +28,14 @@ type IResponse = {
 
 const GroupChat = ({ params }: { params: { id: string } }) => {
   const { data: session } = useSession();
-
-  const { socket, revalidate, updateLatestMessage, listGroupChats, appendToLatestRead } =
-    useListGroupChatContext();
+  const {
+    socket,
+    revalidate,
+    updateLatestMessage,
+    listGroupChats,
+    appendToLatestRead,
+    setListGroupChats,
+  } = useListGroupChatContext();
 
   const [listChats, setListChats] = useState<IChat[]>([]);
   const [hasMore, setHasMore] = useState(true);
@@ -51,8 +56,28 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
           await axios.patch(`/api/user/group-chat/${params.id}/seen`);
         }
       });
+      socket?.on("delete chat", (idChat: string) => {
+        setListChats((prev) => [...prev].filter((chat) => chat._id !== idChat));
+        updateListGroupChats(idChat);
+      });
     }
   }, [session]);
+
+  // Update list group chats when delete
+  const updateListGroupChats = (idChat: string) => {
+    setListGroupChats((prev) => {
+      let newListGroupChats = [...prev];
+      return newListGroupChats.map((groupChat) => {
+        if (groupChat.latestChat?._id === idChat) {
+          return {
+            ...groupChat,
+            latestChat: undefined,
+          };
+        }
+        return groupChat;
+      });
+    });
+  };
 
   // List latest reader
   const listLatestReaders = useMemo<IMemberGroupChat[]>(() => {
@@ -82,11 +107,8 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
       try {
         await chatService.deleteChat(idChat);
         setListChats((prev) => [...prev].filter((chat) => chat._id !== idChat));
-        // If deleted chat is latest chat will revalidate group chat to update latest message
-        const currentGroupChat = listGroupChats.find((groupChat) => groupChat._id === params.id);
-        const isLatestChat = currentGroupChat?.latestChat?._id === idChat;
-
-        isLatestChat && revalidate();
+        updateListGroupChats(idChat);
+        socket?.emit("delete chat", { idGroup: params.id, idChat });
         toast.success("Delete chat success");
       } catch (error) {
         showErrorToast(error);

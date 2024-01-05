@@ -11,6 +11,8 @@ import Stack from "@mui/material/Stack";
 import Image from "next/image";
 
 import { ChangeEvent, KeyboardEvent, memo, useEffect, useRef, useState } from "react";
+import { Typography } from "@mui/material";
+import Close from "@mui/icons-material/Close";
 
 type IProps = {
   onSend: (newChat: any) => Promise<void>;
@@ -21,14 +23,12 @@ const InputBox = ({ onSend }: IProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [newChat, setNewChat] = useState<IFormChat>({ message: "" });
   const [files, setFiles] = useState<{ file: File | null; preview: string }[]>([]);
-
+  const urlRefs = useRef<string[]>([]);
   useEffect(() => {
     return () => {
-      files.forEach((file) => {
-        URL.revokeObjectURL(file.preview);
-      });
+      releaseObjectUrls();
     };
-  }, [files]);
+  }, []);
 
   // On change message
   const handleChangeMessage = (val: string) => {
@@ -42,17 +42,35 @@ const InputBox = ({ onSend }: IProps) => {
   const handleUploadFiles = (e: ChangeEvent<HTMLInputElement>) => {
     let files = e.target.files;
     if (files) {
-      const listFiles = Array.from(files).map((item) => ({
-        file: item,
-        preview: URL.createObjectURL(item),
-      }));
-      setFiles(listFiles);
+      const listFiles = Array.from(files).map((item) => {
+        const url = URL.createObjectURL(item);
+        urlRefs.current.push(url);
+        return {
+          file: item,
+          preview: url,
+        };
+      });
+
+      setFiles((prev) => [...prev, ...listFiles]);
     }
+  };
+
+  const releaseObjectUrls = () => {
+    urlRefs.current.forEach((url) => URL.revokeObjectURL(url));
+  };
+
+  // Remove file
+  const handleRemoveFile = (index: number) => {
+    const newFiles = [...files];
+    const deletedFile = newFiles.splice(index, 1)[0];
+    URL.revokeObjectURL(deletedFile.preview);
+    urlRefs.current = urlRefs.current.filter((url) => url !== deletedFile.preview);
+    setFiles(newFiles);
   };
 
   //   Send new chat
   const handleSend = async () => {
-    if (newChat.message.trim() || newChat.images) {
+    if (newChat.message.trim() || files.length > 0) {
       setLoading(true);
       await onSend({
         ...newChat,
@@ -90,34 +108,53 @@ const InputBox = ({ onSend }: IProps) => {
       setNewChat({
         message: "",
       });
-    if (files.length > 0) setFiles([]);
+    if (files.length > 0) {
+      releaseObjectUrls();
+      setFiles([]);
+    }
   };
 
   return (
     <>
       {/* Preview */}
       {files.length > 0 && (
-        <Stack
-          flexDirection={"row"}
-          gap={1}
+        <Box
           p={1}
-          flexWrap={"nowrap"}
+          pb={0}
           sx={{
-            width: "100%",
-            overflowX: "auto",
             border: 1,
             borderColor: "divider",
-            img: { borderRadius: 2 },
           }}
         >
-          {files?.map((file, i) => {
-            return (
-              <Box key={i}>
-                <Image src={file.preview} alt="File" width={120} height={120} />
-              </Box>
-            );
-          })}
-        </Stack>
+          <Stack
+            flexDirection={"row"}
+            gap={1}
+            flexWrap={"nowrap"}
+            sx={{
+              width: "100%",
+              overflowX: "auto",
+              img: { borderRadius: 2, border: 1, borderColor: "divider" },
+            }}
+          >
+            {files?.map((file, i) => {
+              return (
+                <Box key={i} position={"relative"}>
+                  <Image src={file.preview} alt="File" width={120} height={120} />
+                  <IconButton
+                    size="small"
+                    sx={{ position: "absolute", top: 5, right: 5, border: 1 }}
+                    onClick={() => handleRemoveFile(i)}
+                  >
+                    <Close fontSize="small" />
+                  </IconButton>
+                </Box>
+              );
+            })}
+          </Stack>
+          <Typography variant="caption" mt={1}>
+            {files.length} images
+          </Typography>
+        </Box>
       )}
       <Stack
         flexDirection={"row"}
@@ -143,6 +180,7 @@ const InputBox = ({ onSend }: IProps) => {
         <InputBase
           autoFocus
           multiline
+          spellCheck={false}
           placeholder="New chat"
           inputRef={inputRef}
           value={newChat.message}
@@ -177,7 +215,7 @@ const InputBox = ({ onSend }: IProps) => {
 
           <Button
             variant="outlined"
-            disabled={loading || !(newChat.message.trim() || newChat.images)}
+            disabled={loading || (files.length === 0 && !newChat.message.trim())}
             onClick={handleSend}
           >
             Send

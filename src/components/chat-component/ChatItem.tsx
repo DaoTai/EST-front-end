@@ -14,7 +14,6 @@ import Typography from "@mui/material/Typography";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import useListGroupChatContext from "@/hooks/useListGroupChatContext";
 import { getDistanceTimeToNow } from "@/utils/functions";
 import Delete from "@mui/icons-material/Delete";
 import { memo, useMemo, useState } from "react";
@@ -28,9 +27,7 @@ type IProps = {
 
 const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
   const { data: session } = useSession();
-
-  const { socket } = useListGroupChatContext();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [openConfirm, setOpenConfirm] = useState<boolean>(false);
   const [openOptions, setOpenOptions] = useState<null | HTMLElement>(null);
 
@@ -53,8 +50,11 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
 
   // Delete chat
   const handleDelete = async () => {
+    setLoading(true);
     await onDelete(chat._id);
+    setLoading(false);
     setOpenConfirm(false);
+
     handleCloseOptions();
   };
 
@@ -86,17 +86,22 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
 
           {/* SEO */}
           {chat.seo && (
-            <Paper elevation={2} sx={{ p: 1, mt: 1 }}>
+            <Paper elevation={2} sx={{ p: 1, mt: 1, overflow: "hidden" }}>
               <Link href={chat.seo.href} target="_blank" sx={{ display: "block" }}>
                 <Typography variant="body1" gutterBottom>
                   {chat.seo.ogTitle}
                 </Typography>
                 <img
                   src={chat.seo.ogImage.url}
+                  loading="lazy"
                   alt="title seo"
-                  width={100}
-                  height={100}
-                  style={{ objectFit: "cover", width: "100%", height: "100%", maxHeight: "30vh" }}
+                  style={{
+                    objectFit: "contain",
+                    objectPosition: "left",
+                    width: "100%",
+                    height: "100%",
+                    maxHeight: "30vh",
+                  }}
                 />
                 <Typography variant="body1">{chat.seo.ogDescription}</Typography>
               </Link>
@@ -183,9 +188,10 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
 
       {openConfirm && (
         <MyDialog
-          content="Do you want to delete this chat? "
-          onClose={handleToggleConfirm}
           title="Chat"
+          content="Do you want to delete this chat? "
+          loading={loading}
+          onClose={handleToggleConfirm}
           onSubmit={handleDelete}
         />
       )}

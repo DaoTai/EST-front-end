@@ -1,3 +1,4 @@
+import { Dispatch } from "react";
 import { Socket } from "socket.io-client";
 
 export interface IResponse {
@@ -17,4 +18,5 @@ export interface ListGroupChatContextProps {
   socket: Socket | undefined;
   updateLatestMessage: (newChat: IChat) => void;
   appendToLatestRead: (idGroupChat: string) => void;
+  setListGroupChats: Dispatch<React.SetStateAction<IGroupChat[]>>;
 }

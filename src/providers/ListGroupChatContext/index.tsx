@@ -35,6 +35,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     socket.current = io(process.env.BACK_END_URI as string);
+
     return () => {
       socket.current?.close();
     };
@@ -130,6 +131,7 @@ const ListGroupChatProvider = ({ children }: { children: React.ReactNode }) => {
     updateLatestMessage,
     socket: socket.current,
     appendToLatestRead,
+    setListGroupChats,
   };
 
   if (error) {

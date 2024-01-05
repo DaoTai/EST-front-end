@@ -31,6 +31,10 @@ const Heading = dynamic(() => import("./Heading"), {
 });
 
 const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IProfile }) => {
+  const constraintAudioMedia: MediaTrackConstraints = {
+    echoCancellation: true,
+    noiseSuppression: true,
+  };
   const [isSharingScreen, setSharingScreen] = useState<boolean>(false);
   const [openCamera, setOpenCamera] = useState<boolean>(true);
   const [listFriends, setListFriends] = useState<IFriendVideo[]>([]);
@@ -47,7 +51,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     try {
       const screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
-        audio: true,
+        audio: constraintAudioMedia,
       });
       setStream(screenStream);
       if (myVideoRef.current) {
@@ -76,7 +80,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     try {
       const videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
+        audio: constraintAudioMedia,
       });
       setStream(videoStream);
       !openCamera && setOpenCamera(true);
@@ -178,7 +182,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: true,
+        audio: constraintAudioMedia,
       })
       .then((stream) => {
         // Get TURN credential in production mode
@@ -393,7 +397,13 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
           {idSocketSharingScreen && (
             <Box boxShadow={2} p={1} mb={4} border={1} overflow={"hidden"} width={"100%"}>
               <Typography gutterBottom>Video share screen</Typography>
-              <video ref={largeScreenRef} autoPlay style={{ width: "100%", height: "100%" }} />
+              <video
+                playsInline
+                ref={largeScreenRef}
+                autoPlay
+                muted
+                style={{ width: "100%", height: "100%" }}
+              />
             </Box>
           )}
           {/* List videos */}

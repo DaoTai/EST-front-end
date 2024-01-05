@@ -117,10 +117,6 @@ const Notifications = () => {
     }
   };
 
-  if (error) {
-    return <Typography variant="body1">Having issue in notification</Typography>;
-  }
-
   return (
     <>
       {/* Notifycation */}
@@ -245,7 +241,6 @@ const Notifications = () => {
           </MyList>
 
           {/* Load more */}
-
           {size < maxPage && (
             <Box display={"flex"} justifyContent={"center"}>
               <Chip clickable label="View more" size="small" onClick={handleLoadMore} />

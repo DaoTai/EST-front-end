@@ -25,7 +25,7 @@ const ListGroupChats = () => {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
+  const { socket, isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
     useListGroupChatContext();
 
   const handleExit = () => {
