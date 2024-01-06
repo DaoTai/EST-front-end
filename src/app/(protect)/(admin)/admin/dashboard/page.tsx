@@ -7,7 +7,7 @@ const BarRaceChart = () => {
     <Paper>
       <Divider>
         <Typography variant="h4" fontWeight={500} gutterBottom>
-          User
+          Members
         </Typography>
       </Divider>
       <Users />

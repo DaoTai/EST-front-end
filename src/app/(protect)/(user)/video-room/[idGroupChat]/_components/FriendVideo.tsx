@@ -24,7 +24,6 @@ const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps
 
     peer.on("error", (err) => {
       setError(true);
-      console.log("Friend lỗi kết nối");
       console.log("Peer error friend video: ", err);
     });
   }, [peer]);

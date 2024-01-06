@@ -1,8 +1,7 @@
 "use client";
 import NormalHeader from "@/components/common/NormalHeader";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import StartIcon from "@mui/icons-material/Start";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -17,11 +16,11 @@ import Typography from "@mui/material/Typography";
 import { IMyAnswer } from "@/types/IAnswer";
 import Fab from "@mui/material/Fab";
 import axios from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import ListCorrectAnswers from "./_components/ListCorrectAnswers";
 import ListQuestions from "./_components/ListQuestions";
-import { Helmet } from "react-helmet";
 
 const SelfTraining = () => {
   const [type, setType] = useState<string>("byFavouriteProgrammingLanguages");
@@ -30,6 +29,8 @@ const SelfTraining = () => {
   const [score, setScore] = useState<null | number>(null);
   const [listQuestions, setListQuestions] = useState<IQuestion[]>([]);
   const [myAnswers, setMyAnswers] = useState<IMyAnswer[]>([]);
+
+  const containerRef = useRef<HTMLDivElement>();
 
   //   Change type self-train
   const handleChange = (event: SelectChangeEvent) => {
@@ -80,10 +81,18 @@ const SelfTraining = () => {
       });
     });
     setScore(totalMyCorrectAnswers);
+    handleScrollToTop();
+  };
+
+  // Scroll to top
+  const handleScrollToTop = () => {
+    containerRef.current?.scrollIntoView({
+      block: "start",
+    });
   };
 
   return (
-    <Box>
+    <Box ref={containerRef}>
       <Helmet>
         <title>EST Edu | Training</title>
       </Helmet>
@@ -103,20 +112,40 @@ const SelfTraining = () => {
               <MenuItem value={"bySuitableJobs"}>Suitable job in registered courses </MenuItem>
             </Select>
           </FormControl>
-          <Fab disabled={isLoading} color="info" sx={{ p: 1 }} onClick={fetchQuestions}>
-            {isLoading ? "Loading" : "Start"}
+          <Fab
+            disabled={isLoading}
+            color="info"
+            sx={{
+              p: 1,
+
+              boxShadow: (theme) => `0px 0px 8px ${theme.palette.info.light}`,
+              ":hover": {
+                boxShadow: (theme) => `0px 0px 12px ${theme.palette.info.dark}`,
+              },
+            }}
+            onClick={fetchQuestions}
+          >
+            Start
           </Fab>
         </Stack>
 
         {isLoading && (
-          <Typography variant="h6" textAlign={"center"}>
-            EST Edu is creating questions for you ...
-          </Typography>
+          <>
+            <Typography variant="h6" textAlign={"center"}>
+              EST Edu is creating questions for you ...
+            </Typography>
+          </>
         )}
 
         {/* Score */}
         {score && (
-          <Typography variant="body1">
+          <Typography
+            variant="body1"
+            className="bg-gradient"
+            width={"fit-content"}
+            borderRadius={12}
+            p={1}
+          >
             Score: <b style={{ color: "red" }}>{score}</b> / {listQuestions.length}
           </Typography>
         )}
@@ -130,14 +159,22 @@ const SelfTraining = () => {
           />
         )}
 
+        {/* Buttons */}
         {listQuestions.length > 0 && !score && (
           <Stack flexDirection={"row"} justifyContent={"space-between"}>
-            {/* Reset button */}
+            {/* Reset button & Scroll top button*/}
             <Tooltip arrow placement="right-end" title="Reset">
               <IconButton onClick={() => setMyAnswers([])}>
                 <RestartAltIcon />
               </IconButton>
             </Tooltip>
+
+            <IconButton
+              onClick={handleScrollToTop}
+              sx={{ position: "fixed", bottom: "10%", right: 0, border: 1 }}
+            >
+              <KeyboardArrowUpIcon />
+            </IconButton>
             <Button
               variant="contained"
               disabled={myAnswers.length !== listQuestions.length}

@@ -24,12 +24,10 @@ const getData = async (
 };
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  // read route params
-
-  // fetch data
   const data = await getData(params.id);
   const profile = data.profile;
   const image = profile?.avatar.uri;
+
   return {
     title: profile?.username,
     description: profile?.bio,

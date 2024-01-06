@@ -33,7 +33,7 @@ const RegisterByProrammingLanguages = () => {
             type: "pie",
           },
           title: {
-            text: "Trending Register User Programming Languages / Teachnologies ",
+            text: "Trending Technologies In Register Course",
           },
           series: [
             {

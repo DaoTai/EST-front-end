@@ -38,7 +38,7 @@ const ProgrammingLanguages = () => {
             type: "bar",
           },
           title: {
-            text: "Programming Languages / Teachnologies in Courses",
+            text: "Teachnologies in courses",
           },
           xAxis: {
             categories,

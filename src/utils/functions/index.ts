@@ -84,8 +84,6 @@ export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
 export const fetchTURNCredential = async (): Promise<any> => {
   const env = process.env.NODE_ENV;
   if (env == "development") {
-    console.log("Đang ở mode dev ko cần");
-
     return [];
   } else if (env == "production") {
     const res = await axios.get(

@@ -38,18 +38,14 @@ const SearchBox = ({
       value={value}
       InputProps={{
         endAdornment: (
-          <>
-            {value && (
-              <Stack flexDirection={"row"} alignItems="center" gap={1}>
-                <IconButton onClick={handleClear}>
-                  <CloseIcon fontSize="small" color="action" />
-                </IconButton>
-                <IconButton className="bg-gradient" onClick={onSearch}>
-                  <SearchIcon color="action" fontSize="medium" />
-                </IconButton>
-              </Stack>
-            )}
-          </>
+          <Stack id="controls" flexDirection={"row"} alignItems="center" gap={1}>
+            <IconButton onClick={handleClear}>
+              <CloseIcon fontSize="small" color="action" />
+            </IconButton>
+            <IconButton className="bg-gradient" onClick={onSearch}>
+              <SearchIcon color="action" fontSize="medium" />
+            </IconButton>
+          </Stack>
         ),
         inputRef: inputRef,
       }}

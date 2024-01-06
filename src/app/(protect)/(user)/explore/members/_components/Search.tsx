@@ -9,10 +9,10 @@ import Stack from "@mui/material/Stack";
 import { ForwardRefRenderFunction, forwardRef, memo, useImperativeHandle, useState } from "react";
 import SearchBox from "@/components/common/SearchBox";
 
-type IProps = { totalResult: number; onSearch: (value: string, role: string) => Promise<void> };
+type IProps = { onSearch: (value: string, role: string) => Promise<void> };
 type IRef = { value: string; role: string };
 
-const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ totalResult, onSearch }, ref) => {
+const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ onSearch }, ref) => {
   const [value, setValue] = useState<string>("");
   const [role, setRole] = useState<string>("");
 
@@ -72,12 +72,6 @@ const SearchBar: ForwardRefRenderFunction<IRef, IProps> = ({ totalResult, onSear
           </Select>
         </FormControl>
       </Stack>
-
-      {value.trim() && (
-        <Typography variant="subtitle1" gutterBottom marginTop={1}>
-          Searched results: <b>{totalResult}</b>
-        </Typography>
-      )}
     </>
   );
 };

@@ -19,11 +19,9 @@ type ISearchProfileResult = {
 
 const ExplorePage = () => {
   const { data: session } = useSession();
-
   const [listMember, setListMember] = useState<IProfile[]>([]);
   const [page, setPage] = useState<number>(1);
   const maxPageRef = useRef<number>(1);
-  const totalResult = useRef<number>(0);
   const SearchBarRef = useRef<{ value: string; role: string }>({ value: "", role: "" });
 
   // Serching member
@@ -39,7 +37,6 @@ const ExplorePage = () => {
       const data: ISearchProfileResult = await res.json();
       setListMember(data?.users ?? []);
       maxPageRef.current = data?.maxPage as number;
-      totalResult.current = data?.total as number;
     } catch (error) {
       toast.error("Get infor failed");
     }
@@ -64,7 +61,7 @@ const ExplorePage = () => {
 
   return (
     <Container>
-      <Search ref={SearchBarRef} totalResult={totalResult.current} onSearch={onSearch} />
+      <Search ref={SearchBarRef} onSearch={onSearch} />
 
       {/* List member */}
       <Grid container mt={1} spacing={2}>
