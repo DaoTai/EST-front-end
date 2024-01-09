@@ -12,7 +12,6 @@ import Typography from "@mui/material/Typography";
 
 import axios, { AxiosError } from "axios";
 import dayjs from "dayjs";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { toast } from "react-toastify";
@@ -63,7 +62,7 @@ const Content = ({ register }: { register: IRegisterCourse }) => {
               <Chip label={register?.course.level} />
             </Tooltip>
             <Tooltip arrow title="Type">
-              <Chip label={register?.course.type} />
+              <Chip label={register?.course.type} color="info" />
             </Tooltip>
 
             <Chip label={register?.course?.lessons?.length + " lessons"} className="bg-gradient" />

@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
 import Link from "next/link";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
@@ -61,9 +62,17 @@ const Teacher = () => {
   if (listCourses)
     return (
       <Container sx={{ pt: 1, pb: 4 }}>
-        <Typography gutterBottom variant="h3" className="underline-gradient" margin={"0 auto"}>
-          List courses
-        </Typography>
+        <Divider>
+          <Typography
+            gutterBottom
+            fontWeight={600}
+            variant="h4"
+            textAlign={"center"}
+            margin={"0 auto"}
+          >
+            List courses
+          </Typography>
+        </Divider>
         <Box mt={2}>
           <Typography gutterBottom variant="body1">
             Approved courses: <b>{listCourses.length - numberPendingCourses}</b>

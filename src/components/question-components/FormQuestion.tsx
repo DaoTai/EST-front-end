@@ -159,7 +159,7 @@ const FormQuestion = ({ question, onSubmit, type = "create" }: QuestionProps) =>
   return (
     <Container>
       <Divider>
-        <Typography variant="h4" textAlign={"center"} gutterBottom>
+        <Typography variant="h4" fontWeight={500} textAlign={"center"} gutterBottom>
           Question
         </Typography>
       </Divider>

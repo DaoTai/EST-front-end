@@ -43,7 +43,7 @@ const DetailCourse = ({ params }: { params: { id: string } }) => {
           </Grid>
           <Grid item md={8} xs={12}>
             <Divider>
-              <Typography gutterBottom variant="h5">
+              <Typography gutterBottom variant="h5" fontWeight={500}>
                 Lessons
               </Typography>
             </Divider>

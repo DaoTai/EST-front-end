@@ -19,6 +19,7 @@ import useSWR, { Fetcher, mutate } from "swr";
 import Detail from "./_components/Detail";
 import Table from "./_components/Table";
 import MyDialog from "@/components/custom/Dialog";
+import { Helmet } from "react-helmet";
 
 type IResponse = {
   listCvs: ICv[];
@@ -97,6 +98,9 @@ const CvPage = () => {
 
   return (
     <Box p={2}>
+      <Helmet>
+        <title>Admin | CV</title>
+      </Helmet>
       <Divider>
         <Typography variant="h4" fontWeight={500} gutterBottom>
           List CV
@@ -161,7 +165,7 @@ const CvPage = () => {
         </>
       )}
 
-      {/* COnfirm dialog */}
+      {/* Confirm dialog */}
       {openConfirm && (
         <MyDialog
           title="CV"

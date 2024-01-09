@@ -27,7 +27,7 @@ const Table = ({ total, cvs, onSelectRow, onDetail }: IProps) => {
       {
         field: "authorized",
         headerName: "Authorized",
-        width: 80,
+        width: 90,
         renderCell: (params) => {
           const cv: ICv = params.row;
           return cv.user.roles.includes(cv.role) ? (
@@ -94,14 +94,14 @@ const Table = ({ total, cvs, onSelectRow, onDetail }: IProps) => {
           const cv: ICv = params.row;
           return (
             <Box display={"flex"} gap={2}>
-              <Tooltip title="Watch profile">
-                <IconButton color="info" LinkComponent={Link} href={"/profile/" + cv.user._id}>
-                  <AccountBoxIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="CV">
+              <Tooltip title="View CV">
                 <IconButton color="secondary" onClick={() => onDetail(cv)}>
                   <MailIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="View profile">
+                <IconButton color="info" LinkComponent={Link} href={"/profile/" + cv.user._id}>
+                  <AccountBoxIcon color="info" />
                 </IconButton>
               </Tooltip>
             </Box>

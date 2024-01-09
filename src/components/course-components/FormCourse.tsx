@@ -136,10 +136,10 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
     <Box pt={1} pb={2}>
       <Typography
         gutterBottom
+        fontWeight={500}
         mb={2}
-        variant="h3"
-        className="underline-gradient"
-        margin={"0 auto"}
+        variant="h4"
+        textAlign="center"
         textTransform="capitalize"
       >
         {action} course
@@ -268,9 +268,7 @@ const FormCourse = ({ action, course, onSubmit }: IPropsFormCourse) => {
         <Grid item md={12} xs={12}>
           {action === "watch" ? (
             <>
-              <Typography variant="h6" gutterBottom>
-                Intro
-              </Typography>
+              <Typography variant="h6">Intro</Typography>
               <Typography
                 variant="body1"
                 dangerouslySetInnerHTML={{ __html: values.intro }}

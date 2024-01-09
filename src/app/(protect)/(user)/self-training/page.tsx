@@ -97,7 +97,17 @@ const SelfTraining = () => {
         <title>EST Edu | Training</title>
       </Helmet>
       <NormalHeader />
-      <Typography gutterBottom variant="h4" fontWeight={500} textAlign={"center"}>
+      <Typography
+        gutterBottom
+        variant="h4"
+        fontWeight={600}
+        textAlign={"center"}
+        sx={{
+          background: (theme) => theme.palette.gradient.main,
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }}
+      >
         Quizzes
       </Typography>
       <Box p={1}>
@@ -146,7 +156,7 @@ const SelfTraining = () => {
             borderRadius={12}
             p={1}
           >
-            Score: <b style={{ color: "red" }}>{score}</b> / {listQuestions.length}
+            Score: <b style={{ color: "green" }}>{score}</b> / {listQuestions.length}
           </Typography>
         )}
 

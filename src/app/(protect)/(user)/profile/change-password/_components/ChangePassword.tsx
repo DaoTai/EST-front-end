@@ -22,13 +22,7 @@ const ChangePwd = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      <Typography
-        gutterBottom
-        variant="h3"
-        className="underline-gradient"
-        textAlign="center"
-        sx={{ width: "fit-content", display: "block", margin: "0 auto" }}
-      >
+      <Typography gutterBottom variant="h4" fontWeight={500} textAlign="center">
         Password
       </Typography>
 

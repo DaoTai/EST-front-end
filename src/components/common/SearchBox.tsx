@@ -43,7 +43,7 @@ const SearchBox = ({
               <CloseIcon fontSize="small" color="action" />
             </IconButton>
             <IconButton className="bg-gradient" onClick={onSearch}>
-              <SearchIcon color="action" fontSize="medium" />
+              <SearchIcon fontSize="medium" />
             </IconButton>
           </Stack>
         ),

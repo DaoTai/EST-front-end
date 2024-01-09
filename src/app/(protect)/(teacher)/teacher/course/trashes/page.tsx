@@ -56,6 +56,7 @@ const TrashedCourses = () => {
           renderCell: (params) => {
             return (
               <Chip
+                size="small"
                 color={params.value === "public" ? "success" : "info"}
                 label={params.value}
                 sx={{ textTransform: "capitalize" }}
@@ -71,7 +72,8 @@ const TrashedCourses = () => {
           renderCell: (params) => {
             return (
               <Chip
-                color={params.value === "pending" ? "warning" : "secondary"}
+                size="small"
+                color={params.value === "pending" ? "warning" : "info"}
                 label={params.value}
                 sx={{ textTransform: "capitalize" }}
               />
@@ -261,17 +263,19 @@ const TrashedCourses = () => {
 
   return (
     <Box pt={1} pl={2} pr={2}>
-      <Typography
-        variant="h3"
-        className="underline-gradient"
-        textAlign={"center"}
-        ml={"auto"}
-        mr={"auto"}
-        display={"block"}
-        gutterBottom
-      >
-        Trash courses
-      </Typography>
+      <Divider>
+        <Typography
+          variant="h4"
+          textAlign={"center"}
+          ml={"auto"}
+          mr={"auto"}
+          display={"block"}
+          gutterBottom
+          fontWeight={500}
+        >
+          Trash courses
+        </Typography>
+      </Divider>
       {rows.length > 0 && (
         <Box>
           <DataGrid

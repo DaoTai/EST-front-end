@@ -20,7 +20,7 @@ const RootLayout: React.FC<IProps> = ({ children, languages, registerByLanguages
     <>
       <Divider>
         <Typography variant="h4" fontWeight={500} gutterBottom textAlign={"center"}>
-          Course
+          Trending courses
         </Typography>
       </Divider>
       <Grid container spacing={1}>

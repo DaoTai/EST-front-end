@@ -62,7 +62,7 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
             alt="thumbnail"
             width={280}
             height={250}
-            style={{ borderRadius: 12 }}
+            style={{ borderRadius: 12, boxShadow: "0px 0px 8px rgba(0,0,0,0.3)" }}
           />
         )}
         {/* Information  */}
@@ -82,7 +82,7 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
           {course.roadmap && (
             <Box component={"li"}>
               <Typography variant="body1" gutterBottom>
-                Roadmap:
+                Roadmap
               </Typography>
               <Image
                 unoptimized
@@ -95,6 +95,7 @@ const AboutCourse = ({ course, type }: { course: ICourse; type?: "create" | "edi
                   width: "100%",
                   objectFit: "contain",
                   objectPosition: "left center",
+                  filter: "drop-shadow(0px 0px 8px rgba(0,0,0,0.2))",
                 }}
               />
             </Box>

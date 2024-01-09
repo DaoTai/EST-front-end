@@ -56,7 +56,17 @@ const Main = () => {
 
   return (
     <Stack width={"100%"} height={"100%"} gap={2} alignItems={"center"} p={1}>
-      <Typography textAlign={"center"} variant="h4" gutterBottom>
+      <Typography
+        textAlign={"center"}
+        variant="h4"
+        fontWeight={500}
+        gutterBottom
+        sx={{
+          background: (theme) => theme.palette.gradient.main,
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }}
+      >
         Predict suitable jobs
       </Typography>
       <Button disabled={loading} variant="contained" onClick={handlePredict}>
@@ -76,7 +86,7 @@ const Main = () => {
         >
           {jobPercentTages.map((jobPercent, index) => {
             return (
-              <Stack key={index} flexDirection={"row"} gap={2} width={"100%"}>
+              <Stack key={index} flexDirection={"row"} gap={2} width={"100%"} sx={{}}>
                 <Typography variant="body1" fontWeight={500} gutterBottom>
                   {jobPercent.job}
                 </Typography>
