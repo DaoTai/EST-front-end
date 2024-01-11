@@ -2,6 +2,7 @@
 import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -9,7 +10,7 @@ import { toast } from "react-toastify";
 
 import CardMember from "./_components/CardMember";
 import Search from "./_components/Search";
-import { Container } from "@mui/material";
+import Spinner from "@/components/custom/Spinner";
 
 type ISearchProfileResult = {
   users: IProfile[];
@@ -19,6 +20,7 @@ type ISearchProfileResult = {
 
 const ExplorePage = () => {
   const { data: session } = useSession();
+  const [loading, setLoading] = useState<boolean>(false);
   const [listMember, setListMember] = useState<IProfile[]>([]);
   const [page, setPage] = useState<number>(1);
   const maxPageRef = useRef<number>(1);
@@ -31,7 +33,7 @@ const ExplorePage = () => {
       role: role || "",
       page: String(currentPage),
     });
-
+    setLoading(true);
     try {
       const res = await fetch("/api/user/profile?" + query);
       const data: ISearchProfileResult = await res.json();
@@ -39,6 +41,8 @@ const ExplorePage = () => {
       maxPageRef.current = data?.maxPage as number;
     } catch (error) {
       toast.error("Get infor failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,6 +87,9 @@ const ExplorePage = () => {
           onChange={handleChange}
         />
       </Stack>
+
+      {/* Loading */}
+      {loading && <Spinner />}
     </Container>
   );
 };

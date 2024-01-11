@@ -55,8 +55,8 @@ export const getDistanceTimeToNow = (timestamp: string) => {
 // Display toast Axios Error
 
 const showToast = (message: string, option?: ToastOptions) => {
-  if (message) {
-    toast.error(message.substring(0, 200), option);
+  if (message.length <= 80) {
+    toast.error(message, option);
   } else {
     toast.error("Failed", option);
   }
@@ -82,13 +82,13 @@ export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
 
 // Get TURN Credential
 export const fetchTURNCredential = async (): Promise<any> => {
-  const env = process.env.NODE_ENV;
-  if (env == "development") {
+  const mode = process.env.NODE_ENV;
+  const uri =
+    "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=ae7f71b5dd4068008d178d5761fc927adafc";
+  if (mode == "development") {
     return [];
-  } else if (env == "production") {
-    const res = await axios.get(
-      "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=ae7f71b5dd4068008d178d5761fc927adafc"
-    );
+  } else if (mode == "production") {
+    const res = await axios.get(uri);
     return res.data;
   }
 };

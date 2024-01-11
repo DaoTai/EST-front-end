@@ -11,6 +11,7 @@ interface IProps extends Pick<IFriendVideo, "friend" | "peer"> {
 }
 
 const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps) => {
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [isError, setError] = useState<boolean>(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -20,6 +21,7 @@ const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps
       isError && setError(false);
       if (videoRef.current) videoRef.current.srcObject = stream;
       setStream(stream);
+      setLoading(false);
     });
 
     peer.on("error", (err) => {
@@ -74,6 +76,9 @@ const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps
         <Chip color="info" label={friend?.username} />
         <Typography component={"span"} variant="body1">
           {isError && "is having error connection"}
+        </Typography>
+        <Typography component={"span"} variant="body1">
+          {isLoading && "is loading ..."}
         </Typography>
       </Stack>
     </Stack>
