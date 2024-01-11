@@ -47,7 +47,7 @@ const ListGroupChats = () => {
       </Divider>
       {/* Search & Actions */}
       <Stack
-        gap={2}
+        gap={1}
         mb={1}
         flexDirection={"row"}
         justifyContent={"space-between"}

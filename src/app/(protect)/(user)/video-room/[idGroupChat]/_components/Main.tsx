@@ -1,5 +1,5 @@
 "use client";
-
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -25,6 +25,8 @@ import {
 } from "@/types/VideoRoom";
 import { Helmet } from "react-helmet";
 import { fetchTURNCredential, showErrorToast } from "@/utils/functions";
+import IconButton from "@mui/material/IconButton";
+import { Tooltip } from "@mui/material";
 
 const Heading = dynamic(() => import("./Heading"), {
   ssr: false,
@@ -45,7 +47,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   const myVideoRef = useRef<HTMLVideoElement | any>();
   const largeScreenRef = useRef<HTMLVideoElement | null>(null);
   const peersRef = useRef<PeerRef[]>([]);
-
   // share screen
   const handleShareScreen = async () => {
     try {
@@ -330,7 +331,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     }
   }, [idSocketSharingScreen]);
 
-  const diableShareScreen = useMemo<boolean>(() => {
+  const disableShareScreen = useMemo<boolean>(() => {
     return !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id);
   }, [socket.current, idSocketSharingScreen]);
 
@@ -369,6 +370,19 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     setSharingScreen(!isSharingScreen);
   }, [isSharingScreen]);
 
+  // Toggle open/exit full screen
+  const handleToggleFullScreen = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await largeScreenRef.current?.requestFullscreen();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  };
+
   if (!groupChat) {
     return redirect("/");
   }
@@ -392,14 +406,33 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
 
           {/* Share screen */}
           {idSocketSharingScreen && (
-            <Box boxShadow={2} p={1} mb={4} border={1} overflow={"hidden"} width={"100%"}>
-              <Typography gutterBottom>Video share screen</Typography>
-              <video
-                playsInline
-                ref={largeScreenRef}
-                autoPlay
-                style={{ width: "100%", height: "100%" }}
-              />
+            <Box
+              boxShadow={2}
+              p={1}
+              mb={4}
+              border={1}
+              overflow={"hidden"}
+              width={"100%"}
+              sx={{
+                border: 1,
+                borderColor: (theme) => theme.palette.info.main,
+                video: {
+                  width: "100%",
+                  height: "100%",
+                },
+              }}
+            >
+              <Chip label="Sharing screen" color="info" />
+              <Box p={1}>
+                <video playsInline ref={largeScreenRef} autoPlay />
+                <Stack flexDirection={"row"} justifyContent={"end"} border={1} p={1}>
+                  <Tooltip title="Turn on/off full screen" arrow>
+                    <IconButton size="large" color="info" onClick={handleToggleFullScreen}>
+                      <FullscreenIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
+              </Box>
             </Box>
           )}
           {/* List videos */}
@@ -484,7 +517,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
             stream={stream}
             isSharingScreen={isSharingScreen}
             openCamera={openCamera}
-            disabledSharing={diableShareScreen}
+            disabledSharing={disableShareScreen}
             handleToggleCamera={handleToggleCamera}
             handleToggleShareScreen={handleToggleShareScreen}
           />

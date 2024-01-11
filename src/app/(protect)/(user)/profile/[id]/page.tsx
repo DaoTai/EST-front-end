@@ -1,16 +1,15 @@
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import HeadingProfile from "@/components/profile-components/Heading";
 import Intro from "@/components/profile-components/Intro";
 import serverAxios from "@/config/axios/server-side";
-import dayjs from "dayjs";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import ListCreatedCourses from "./_components/ListCreatedCourses";
+import ListRegisterCourses from "./_components/ListRegisterCourses";
 // Check log back-end to see this page be cached
 const getData = async (
   id: string
@@ -20,6 +19,16 @@ const getData = async (
     return res.data;
   } catch (error) {
     notFound();
+  }
+};
+
+// If user is teacher
+const getCreatedCourses = async (userId: string): Promise<ICourse[]> => {
+  try {
+    const res = await serverAxios.get("/user/profile/" + userId + "/created-courses");
+    return res.data;
+  } catch (error) {
+    return [];
   }
 };
 
@@ -44,6 +53,10 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
     notFound();
   } else {
     const { profile, listCourses } = data;
+    let listCreatedCourses: ICourse[] = [];
+    if (profile.roles.includes("teacher")) {
+      listCreatedCourses = await getCreatedCourses(params.id);
+    }
     return (
       <>
         {profile && (
@@ -61,69 +74,36 @@ const DetailProfile = async ({ params }: { params: { id: string } }) => {
                   </Suspense>
                 </Paper>
               </Grid>
-              <Grid item md={8} xs={12}>
-                <Grid container spacing={2}>
-                  {listCourses.length > 0 ? (
-                    listCourses?.map((register) => (
-                      <Grid key={register._id} item sm={6} xs={12} gap={1}>
-                        <Paper
-                          elevation={4}
-                          sx={{
-                            pb: 2,
-                            borderRadius: 3,
-                            height: "100%",
-                          }}
-                        >
-                          <Image
-                            src={
-                              register?.course?.thumbnail
-                                ? (register?.course?.thumbnail?.uri as string)
-                                : "/default-fallback-image.png"
-                            }
-                            alt="thumbnail"
-                            width={100}
-                            height={200}
-                            style={{
-                              width: "100%",
-                              borderTopLeftRadius: 3,
-                              borderTopRightRadius: 3,
-                            }}
-                          />
-
-                          {/* Texts */}
-                          <Stack alignItems={"start"} gap={0.5} pl={1} pr={1}>
-                            <Typography variant="h6">{register.course.name}</Typography>
-                            <Typography variant="subtitle2">
-                              Joined time:
-                              {dayjs(register.createdAt).format("DD/MM/YYYY")}
-                            </Typography>
-                            <Chip
-                              size="small"
-                              label={register.course.type}
-                              color={register.course.type === "private" ? "info" : "success"}
-                              sx={{ textTransform: "capitalize" }}
-                            />
-                            <Stack mt={1} flexDirection={"row"} flexWrap={"wrap"} gap={1}>
-                              {register.course.programmingLanguages?.map((lang, i) => (
-                                <Chip
-                                  key={i}
-                                  className="bg-gradient"
-                                  size="small"
-                                  label={lang}
-                                  sx={{ textTransform: "capitalize" }}
-                                />
-                              ))}
-                            </Stack>
-                          </Stack>
-                        </Paper>
-                      </Grid>
-                    ))
-                  ) : (
-                    <Typography variant="body1" width={"100%"} textAlign={"center"} gutterBottom>
-                      No course
+              <Grid item md={8} xs={12} display={"flex"} flexDirection={"column"} gap={2}>
+                {/* List created courses */}
+                {profile.roles.includes("teacher") && (
+                  <Box>
+                    <Typography
+                      gutterBottom
+                      variant="h4"
+                      className="underline-gradient"
+                      fontWeight={500}
+                      pb={0.5}
+                    >
+                      Owner courses
                     </Typography>
-                  )}
-                </Grid>
+                    <ListCreatedCourses listCreatedCourses={listCreatedCourses} />
+                  </Box>
+                )}
+
+                {/* List register courses */}
+                <Box>
+                  <Typography
+                    gutterBottom
+                    variant="h4"
+                    className="underline-gradient"
+                    fontWeight={500}
+                    pb={0.5}
+                  >
+                    Register courses
+                  </Typography>
+                  <ListRegisterCourses listRegisterCourses={listCourses} />
+                </Box>
               </Grid>
             </Grid>
           </>

@@ -30,7 +30,7 @@ const CardMember = ({ data }: { data: IProfile }) => {
           </Typography>
         )}
 
-        <Stack flexDirection="row" gap={1}>
+        <Stack flexDirection="row" flexWrap={"wrap"} gap={1}>
           {data?.favouriteProrammingLanguages.map((lang, i) => (
             <Chip size="small" className="bg-gradient" key={i} label={lang} />
           ))}
