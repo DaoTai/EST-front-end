@@ -100,9 +100,11 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
                 }}
               />
             </Tooltip>
-            <Typography variant="subtitle2">
-              Latest learned time: {getDistanceTimeToNow(data.updatedAt)}
-            </Typography>
+            <Tooltip placement="left" title={dayjs(data.updatedAt).format("DD/MM/YYYY")}>
+              <Typography variant="subtitle2">
+                Latest learned time: {getDistanceTimeToNow(data.updatedAt)}
+              </Typography>
+            </Tooltip>
           </Box>
         </Grid>
       </Grid>

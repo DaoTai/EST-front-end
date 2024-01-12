@@ -46,7 +46,7 @@ const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps
       height={"100%"}
       position={"relative"}
       sx={{ width: "100%", position: "relative" }}
-      borderColor={isSharing ? "cyan" : "divider"}
+      borderColor={isSharing ? "error.main" : "divider"}
     >
       <Box
         position="relative"
@@ -78,7 +78,7 @@ const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps
           {isError && "is having error connection"}
         </Typography>
         <Typography component={"span"} variant="body1">
-          {isLoading && "is loading ..."}
+          {isLoading && "is connecting ..."}
         </Typography>
       </Stack>
     </Stack>

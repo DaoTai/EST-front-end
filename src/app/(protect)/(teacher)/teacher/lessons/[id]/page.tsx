@@ -88,14 +88,16 @@ const Lesson = ({ params }: { params: { id: string } }) => {
           {/* Reports */}
           {data && data?.reports?.length > 0 && (
             <Box mt={2}>
-              <Accordion>
+              <Accordion sx={{ border: 2, borderColor: "info.main", boxShadow: 0 }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="subtitle1">Reports</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   {data?.reports.map((report, i) => (
                     <Stack key={i} flexDirection={"row"} justifyContent={"space-between"}>
-                      <Typography variant="subtitle1">{report.content}</Typography>
+                      <Typography variant="subtitle1">
+                        {i + 1}. {report.content}
+                      </Typography>
                       <Typography variant="subtitle2">
                         {dayjs(report.createdAt).format("DD/MM/YYYY")}
                       </Typography>

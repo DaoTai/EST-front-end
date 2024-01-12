@@ -1,5 +1,6 @@
 "use client";
 
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -52,15 +53,15 @@ const DetailLesson = ({ params }: { params: { id: string } }) => {
           {/* Reports */}
           {data && data?.reports?.length > 0 && (
             <Box mt={2}>
-              <Accordion>
-                <AccordionSummary>
+              <Accordion sx={{ border: 2, borderColor: "info.main", boxShadow: 0 }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography variant="subtitle1">Reports</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   {data?.reports.map((report, i) => (
                     <Stack key={i} flexDirection={"row"} justifyContent={"space-between"}>
                       <Typography variant="subtitle1" textAlign={"justify"}>
-                        {report.content}
+                        {i + 1}. {report.content}
                       </Typography>
                       <Typography variant="subtitle2">
                         {dayjs(report.createdAt).format("DD/MM/YYYY")}

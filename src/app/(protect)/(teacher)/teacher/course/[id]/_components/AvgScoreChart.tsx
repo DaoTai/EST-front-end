@@ -85,7 +85,9 @@ const AvgScoreChart = ({ id }: { id: string }) => {
           Loading ...
         </Typography>
       )}
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+      {data && data.length > 0 && (
+        <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+      )}
     </Paper>
   );
 };

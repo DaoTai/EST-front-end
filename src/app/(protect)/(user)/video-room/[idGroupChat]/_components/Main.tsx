@@ -69,8 +69,6 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
           );
         }
       });
-
-      // Emit
     } catch (error) {
       toast.warn("Denied accessing screen for video call");
     }
@@ -407,32 +405,38 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
           {/* Share screen */}
           {idSocketSharingScreen && (
             <Box
-              boxShadow={2}
               p={1}
               mb={4}
-              border={1}
+              border={2}
+              borderColor={"error.main"}
               overflow={"hidden"}
               width={"100%"}
+              borderRadius={2}
               sx={{
-                border: 1,
-                borderColor: (theme) => theme.palette.info.main,
                 video: {
                   width: "100%",
                   height: "100%",
+                  border: 2,
                 },
               }}
             >
               <Chip label="Sharing screen" color="info" />
               <Box p={1}>
                 <video playsInline ref={largeScreenRef} autoPlay />
-                <Stack flexDirection={"row"} justifyContent={"end"} border={1} p={1}>
-                  <Tooltip title="Turn on/off full screen" arrow>
-                    <IconButton size="large" color="info" onClick={handleToggleFullScreen}>
-                      <FullscreenIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Stack>
               </Box>
+              <Stack
+                flexDirection={"row"}
+                justifyContent={"end"}
+                border={2}
+                borderRadius={2}
+                borderColor={"info.main"}
+              >
+                <Tooltip title="Turn on/off full screen" arrow>
+                  <IconButton color="info" onClick={handleToggleFullScreen}>
+                    <FullscreenIcon fontSize="large" />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
             </Box>
           )}
           {/* List videos */}
@@ -444,7 +448,9 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                 gap={1}
                 border={socket.current?.id === idSocketSharingScreen ? 3 : 1}
                 borderRadius={2}
-                borderColor={socket.current?.id === idSocketSharingScreen ? "cyan" : "divider"}
+                borderColor={
+                  socket.current?.id === idSocketSharingScreen ? "error.main" : "divider"
+                }
                 height={"100%"}
                 width={"100%"}
                 justifyContent={"space-between"}

@@ -45,7 +45,7 @@ export const getDistanceTimeToNow = (timestamp: string) => {
     return `${diffInMinutes}m`;
   } else if (diffInHours < 24) {
     return `${diffInHours}h`;
-  } else if (diffInDays < 7) {
+  } else if (diffInDays < 30) {
     return `${diffInDays}d`;
   } else {
     return time.format("DD/MM/YYYY"); // Hiển thị ngày tháng năm
