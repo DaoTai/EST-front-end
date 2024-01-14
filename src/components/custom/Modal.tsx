@@ -18,7 +18,7 @@ const style: SxProps = {
   p: 4,
   pl: 2,
   pr: 2,
-  maxHeight: "100vh",
+  maxHeight: "95vh",
   minWidth: 400,
   overflowY: "overlay",
 };

@@ -19,6 +19,7 @@ import { SyntheticEvent, useMemo, useState } from "react";
 import useSWR, { Fetcher, mutate } from "swr";
 import Question from "./Question";
 import ReportBox from "./ReportBox";
+import { Helmet } from "react-helmet";
 
 const lessonFetcher: Fetcher<{ lesson: ILesson; listAnswerRecords: IAnswerRecord[] }, string> = (
   url: string
@@ -32,7 +33,6 @@ const lessonFetcher: Fetcher<{ lesson: ILesson; listAnswerRecords: IAnswerRecord
   });
 
 const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: string }) => {
-  // openComment
   const { data: session } = useSession();
   const router = useRouter();
   const { data: response, isLoading } = useSWR(
@@ -67,7 +67,7 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
   if (isLoading && !response) {
     return (
       <Typography variant="body1" textAlign={"center"}>
-        Loading lesson
+        Loading ...
       </Typography>
     );
   }
@@ -86,6 +86,9 @@ const DetailLesson = ({ idLesson, idCourse }: { idLesson: string; idCourse: stri
   if (response?.lesson && response.listAnswerRecords) {
     return (
       <>
+        <Helmet>
+          <title>{response.lesson.name}</title>
+        </Helmet>
         {response?.lesson?.video && <VideoPlayer uri={response?.lesson?.video.uri} />}
         <Box pr={1} pl={1}>
           <Box mt={1} mb={1} border={1} borderColor={"divider"}>

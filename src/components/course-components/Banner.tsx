@@ -28,16 +28,21 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
       overflow={"hidden"}
       sx={{
         color: "text.primary",
-        textTransform: "capitalize",
         bgcolor: "rgba(255,255,255,0.1)",
         img: {
           width: "100%",
           transition: "all linear 0.2s",
           borderRadius: 2,
         },
+
+        ":hover": {
+          "#course__time .MuiChip-root": {
+            transform: "scale(1) ",
+          },
+        },
       }}
     >
-      <Grid item lg={3} md={3} xs={12}>
+      <Grid item lg={3} md={3} xs={12} position={"relative"}>
         <Image
           alt="thumbnail-course"
           src={
@@ -46,6 +51,31 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           width={200}
           height={200}
         />
+        <Box
+          id="course__time"
+          display={"flex"}
+          flexDirection={"column"}
+          gap={2}
+          position={"absolute"}
+          top="50%"
+          left={"50%"}
+          sx={{
+            transform: "translate(-50%,-50%) ",
+            ".MuiChip-root": {
+              transform: "scale(0)",
+              transition: "0.3s linear all",
+            },
+          }}
+        >
+          <Chip
+            className="bg-gradient"
+            label={"Created at: " + dayjs(course.createdAt).format("DD/MM/YYYY")}
+          />
+          <Chip
+            className="bg-gradient"
+            label={"Updated at: " + dayjs(course.updatedAt).format("DD/MM/YYYY")}
+          />
+        </Box>
       </Grid>
 
       {/* Content  */}
@@ -60,6 +90,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
                 label={course.type}
                 size="small"
                 color={course.type === "public" ? "success" : "info"}
+                style={{ textTransform: "capitalize" }}
               />
 
               {mode === "manager" && (
@@ -91,11 +122,13 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           {mode === "visitor" && (
             <Typography variant="subtitle2">Teacher: {course.createdBy.username}</Typography>
           )}
-          <Typography variant="subtitle2">Level: {course.level}</Typography>
+          <Typography variant="subtitle2" textTransform={"capitalize"}>
+            Level: {course.level}
+          </Typography>
 
           {mode === "visitor" && course.type === "private" && (
             <>
-              <Typography variant="subtitle2" mt={1}>
+              <Typography variant="subtitle2">
                 Open time: {dayjs(course.openDate).format("DD/MM/YYYY")}
               </Typography>
               <Typography variant="subtitle2">
@@ -130,7 +163,6 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
           )}
 
           <Stack mt={1} spacing={1} direction="row" textTransform={"lowercase"}>
-            {}
             <Chip
               label={((course?.totalLessons || course?.lessons?.length) ?? 0) + " lesson"}
               className="bg-gradient"

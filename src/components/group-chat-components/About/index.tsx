@@ -135,7 +135,7 @@ const About = () => {
         <Drawer open={toggle} anchor="right" onClose={handleToggle}>
           <Paper
             elevation={5}
-            sx={{ p: 1, pb: 4, height: "100%", minWidth: "25vw", overflowY: "auto" }}
+            sx={{ p: 1, pb: 4, height: "100%", maxWidth: "20vw", overflowY: "auto" }}
           >
             <IconButton onClick={handleToggle}>
               <ArrowBackIos />
@@ -198,9 +198,6 @@ const About = () => {
               </Typography>
               <Stack gap={2}>
                 {data.members.map((member) => {
-                  // console.log("onlineIds: ", onlineIds);
-                  // console.log("Id member: ", member._id);
-
                   return (
                     <Stack
                       key={member._id}

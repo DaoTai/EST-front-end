@@ -78,8 +78,6 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
   const handleUploadVideo = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file && file.type.startsWith("video")) {
-      const fileSizeInBytes = file.size;
-      const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
       setVideo(file);
     }
   };
@@ -238,7 +236,7 @@ const FormLesson = ({ type, lesson, onSubmit }: Props) => {
               startIcon={<FileUploadIcon />}
             >
               Upload video
-              <VisuallyHiddenInput type="file" onChange={handleUploadVideo} />
+              <VisuallyHiddenInput type="file" accept="video/*" onChange={handleUploadVideo} />
             </Button>
             <Typography variant="caption" display={"block"}>
               {video && video.name}

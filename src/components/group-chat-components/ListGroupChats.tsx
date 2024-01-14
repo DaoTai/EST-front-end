@@ -28,6 +28,7 @@ const ListGroupChats = () => {
   const { socket, isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
     useListGroupChatContext();
 
+  // Handle back
   const handleExit = () => {
     router.replace("/");
   };

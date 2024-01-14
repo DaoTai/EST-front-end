@@ -17,6 +17,7 @@ import useSWR, { Fetcher, mutate } from "swr";
 
 import MyDialog from "@/components/custom/Dialog";
 import Spinner from "@/components/custom/Spinner";
+import dayjs from "dayjs";
 
 type IProps = { idCourse: string; preHrefLesson?: string };
 
@@ -121,11 +122,13 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
                 {lesson.reports.length > 0 && (
                   <Chip size="small" label={lesson.reports.length + " report"} />
                 )}
-                <Chip
-                  size="small"
-                  label={lesson.isLaunching ? "Launched" : "Unlaunched"}
-                  color={lesson.isLaunching ? "success" : "warning"}
-                />
+                <Tooltip title={dayjs(lesson.createdAt).format("DD/MM/YYYY")}>
+                  <Chip
+                    size="small"
+                    label={lesson.isLaunching ? "Launched" : "Unlaunched"}
+                    color={lesson.isLaunching ? "success" : "warning"}
+                  />
+                </Tooltip>
               </Stack>
             </Stack>
             <Tooltip arrow title="Delete lesson">
