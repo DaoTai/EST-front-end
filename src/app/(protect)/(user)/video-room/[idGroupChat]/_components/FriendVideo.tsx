@@ -43,9 +43,8 @@ const FriendVideo = ({ isSharing = false, peer, friend, setStreamShare }: IProps
       p={1}
       borderRadius={2}
       width={"100%"}
-      height={"100%"}
       position={"relative"}
-      sx={{ width: "100%", position: "relative" }}
+      height={isSharing ? "fit-content" : "100%"}
       borderColor={isSharing ? "error.main" : "divider"}
     >
       <Box

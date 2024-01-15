@@ -24,7 +24,11 @@ const Heading = ({ groupChat }: { groupChat: IGroupChat }) => {
   return (
     <>
       <Stack
+        flexDirection={"row"}
+        justifyContent={"space-between"}
+        alignItems={"start"}
         p={1}
+        pt={0}
         minHeight={60}
         boxShadow={2}
         sx={{
@@ -32,31 +36,29 @@ const Heading = ({ groupChat }: { groupChat: IGroupChat }) => {
           zIndex: 999,
         }}
       >
-        <Stack flexDirection={"row"} justifyContent={"space-between"} alignItems={"start"}>
-          <Box>
-            <Typography variant="h6" lineHeight={1.8} fontWeight={500}>
-              {groupChat.name}
-            </Typography>
-            <Typography variant="body1" lineHeight={1.8} fontWeight={500} gutterBottom>
-              Host: {groupChat.host.username}
-            </Typography>
-          </Box>
+        <Box>
+          <Typography variant="h6" lineHeight={1.8} fontWeight={500}>
+            {groupChat.name}
+          </Typography>
+          <Typography variant="body1" lineHeight={1.8} fontWeight={500} gutterBottom>
+            Host: {groupChat.host.username}
+          </Typography>
+        </Box>
 
-          <Stack flexDirection={"row"} gap={2}>
-            <ToggleModeTheme />
-            <Tooltip title="Exit video room" arrow>
-              <IconButton
-                onClick={handleToggleConfirm}
-                color="error"
-                sx={{
-                  border: 1,
-                  borderColor: "currentColor",
-                }}
-              >
-                <PhoneDisabledIcon />
-              </IconButton>
-            </Tooltip>
-          </Stack>
+        <Stack flexDirection={"row"} gap={2} pt={1}>
+          <ToggleModeTheme />
+          <Tooltip title="Exit video room" arrow>
+            <IconButton
+              onClick={handleToggleConfirm}
+              color="error"
+              sx={{
+                border: 1,
+                borderColor: "currentColor",
+              }}
+            >
+              <PhoneDisabledIcon />
+            </IconButton>
+          </Tooltip>
         </Stack>
       </Stack>
 

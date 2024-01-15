@@ -15,7 +15,7 @@ interface ICreatePeerParams {
   friendSocketId: string;
   callerId: string;
   stream: MediaStream;
-  user: Pick<IProfile, "avatar" | "username">;
+  user: Pick<IProfile, "avatar" | "username" | "_id">;
   iceServers: any[];
 }
 
@@ -29,17 +29,18 @@ interface IAddPeerParams {
 interface IEventUserJoinParams {
   signal: SimplePeer.SignalData;
   callerId: string;
-  user: Pick<IProfile, "avatar" | "username">;
+  user: Pick<IProfile, "avatar" | "username" | "_id">;
 }
 
 interface IPayload {
   socketId: string;
   username: string;
   avatar: IProfile["avatar"];
+  _id: string;
 }
 
 interface IFriendVideo {
   peer: PeerInstance;
-  friend?: Pick<IProfile, "avatar" | "username">;
+  friend?: Pick<IProfile, "avatar" | "username" | "_id">;
   socketId: string;
 }

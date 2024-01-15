@@ -7,4 +7,5 @@ interface IQuestion {
   explaination?: string;
   createdAt: Date;
   updatedAt: Date;
+  lesson?: ILesson;
 }

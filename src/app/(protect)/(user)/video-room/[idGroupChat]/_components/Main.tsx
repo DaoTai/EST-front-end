@@ -6,12 +6,14 @@ import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import SimplePeer from "simple-peer";
+import { Helmet } from "react-helmet";
 import { Socket, io } from "socket.io-client";
 import ControlMedia from "./ControlMedia";
 import FriendVideo from "./FriendVideo";
@@ -23,10 +25,7 @@ import {
   IPayload,
   PeerRef,
 } from "@/types/VideoRoom";
-import { Helmet } from "react-helmet";
 import { fetchTURNCredential, showErrorToast } from "@/utils/functions";
-import IconButton from "@mui/material/IconButton";
-import { Tooltip } from "@mui/material";
 
 const Heading = dynamic(() => import("./Heading"), {
   ssr: false,
@@ -103,7 +102,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
 
   // Tạo một peer initiator để gửi tín hiệu và thông tin cá nhân đến friend (Khi room đã có người vào trước đó)
   /*
- - userId: id của friend
+ - friendSocketId: socket id của friend
  - user: thông tin của mình
  - callerId: socket id của mình
  - stream: MediaStream của mình
@@ -194,6 +193,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
               user: {
                 username: profile.username,
                 avatar: profile.avatar,
+                _id: profile._id,
               },
             });
 
@@ -210,6 +210,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                   user: {
                     username: profile.username,
                     avatar: profile.avatar,
+                    _id: profile._id,
                   },
                   iceServers: data,
                 });
@@ -295,8 +296,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       })
 
       .catch((err) => {
-        console.error("Error accessing media devices:", err);
-        toast.error("Error accessing media devices");
+        toast.error("Browser denied accessing media devices");
       });
 
     return () => {
@@ -329,6 +329,15 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     }
   }, [idSocketSharingScreen]);
 
+  // You are joined so forbidden open new tab
+  const isJoined = useMemo(() => {
+    const isExisted = listFriends.some((item) => {
+      return item.friend?._id === profile._id;
+    });
+    return isExisted;
+  }, [profile, listFriends]);
+
+  // Disable share screen because friend is sharing
   const disableShareScreen = useMemo<boolean>(() => {
     return !!(idSocketSharingScreen && idSocketSharingScreen !== socket.current?.id);
   }, [socket.current, idSocketSharingScreen]);
@@ -381,7 +390,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     }
   };
 
-  if (!groupChat) {
+  if (!groupChat || isJoined) {
     return redirect("/");
   }
 
@@ -398,122 +407,133 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
           height={"100%"}
           boxShadow={2}
           p={1}
-          sx={{ flex: "2 1 auto", overflow: "scroll" }}
+          sx={{ flex: "2 1 auto", overflow: "auto" }}
         >
           <Typography gutterBottom>Total friends joined: {listFriends.length}</Typography>
-
-          {/* Share screen */}
-          {idSocketSharingScreen && (
-            <Box
-              p={1}
-              mb={4}
-              border={2}
-              borderColor={"error.main"}
-              overflow={"hidden"}
-              width={"100%"}
-              borderRadius={2}
-              sx={{
-                video: {
-                  width: "100%",
-                  height: "100%",
-                  border: 2,
-                },
-              }}
-            >
-              <Chip label="Sharing screen" color="info" />
-              <Box p={1}>
-                <video playsInline ref={largeScreenRef} autoPlay />
-              </Box>
-              <Stack
-                flexDirection={"row"}
-                justifyContent={"end"}
-                border={2}
-                borderRadius={2}
-                borderColor={"info.main"}
-              >
-                <Tooltip title="Turn on/off full screen" arrow>
-                  <IconButton color="info" onClick={handleToggleFullScreen}>
-                    <FullscreenIcon fontSize="large" />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Box>
-          )}
-          {/* List videos */}
-          <Grid container spacing={1}>
-            {/* My video */}
-            <Grid item md={4} sm={6} xs={12}>
-              <Stack
+          <Grid container spacing={1} p={1} alignItems={"start"}>
+            {/* Share screen */}
+            {idSocketSharingScreen && (
+              <Grid
+                item
+                md={10}
+                xs={12}
                 p={1}
-                gap={1}
-                border={socket.current?.id === idSocketSharingScreen ? 3 : 1}
-                borderRadius={2}
-                borderColor={
-                  socket.current?.id === idSocketSharingScreen ? "error.main" : "divider"
-                }
-                height={"100%"}
+                mb={4}
+                border={2}
+                borderColor={"error.main"}
+                overflow={"hidden"}
                 width={"100%"}
-                justifyContent={"space-between"}
-                position={"relative"}
-              >
-                <video
-                  ref={myVideoRef}
-                  muted
-                  autoPlay
-                  style={{
+                borderRadius={2}
+                sx={{
+                  video: {
                     width: "100%",
-                    objectFit: "cover",
+                    height: "100%",
+                    border: 2,
                     borderRadius: "inherit",
-                    height: 280,
-                  }}
-                />
+                  },
+                }}
+              >
+                <video playsInline ref={largeScreenRef} autoPlay />
+                <Stack
+                  mt={1}
+                  border={1}
+                  borderRadius={1}
+                  flexDirection={"row"}
+                  justifyContent={"end"}
+                  borderColor={"info.main"}
+                >
+                  <Tooltip title="Turn on/off full screen" arrow>
+                    <IconButton color="info" onClick={handleToggleFullScreen}>
+                      <FullscreenIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Stack>
+              </Grid>
+            )}
 
-                {/* Display avatar & name when off camera */}
-                {openCamera ? (
-                  <Stack flexDirection={"row"} justifyContent={"center"}>
-                    <Chip className="bg-gradient" label={profile.username} />
-                  </Stack>
-                ) : (
-                  !isSharingScreen && (
-                    <Stack
-                      gap={2}
-                      position={"absolute"}
-                      sx={{ inset: "0 0 0 0" }}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                      width={"100%"}
-                      overflow={"hidden"}
-                    >
-                      <Avatar
-                        alt="avatar"
-                        src={profile.avatar.uri}
-                        sx={{ width: 150, height: 150 }}
-                      />
-                      <Chip
-                        className="bg-gradient"
-                        label={profile.username}
-                        style={{ color: "#fff" }}
-                      />
-                    </Stack>
-                  )
-                )}
-              </Stack>
-            </Grid>
-
-            {/* Friend's videos */}
-            {listFriends.map((item, index) => {
-              const isSharing = idSocketSharingScreen === item.socketId;
-              return (
-                <Grid key={index} item md={4} sm={6} xs={12}>
-                  <FriendVideo
-                    isSharing={isSharing}
-                    peer={item.peer}
-                    friend={item.friend}
-                    setStreamShare={setStreamShare}
+            {/* List videos */}
+            <Grid
+              spacing={1.5}
+              item
+              container
+              xs={12}
+              md={idSocketSharingScreen ? 2 : 12}
+              sx={{ maxHeight: idSocketSharingScreen ? "100vh" : "auto" }}
+            >
+              {/* My video */}
+              <Grid item md={idSocketSharingScreen ? 12 : 4} sm={6} xs={12}>
+                <Stack
+                  p={1}
+                  gap={1}
+                  borderRadius={2}
+                  width={"100%"}
+                  height={"100%"}
+                  justifyContent={"space-between"}
+                  position={"relative"}
+                  border={socket.current?.id === idSocketSharingScreen ? 3 : 1}
+                  borderColor={
+                    socket.current?.id === idSocketSharingScreen ? "error.main" : "divider"
+                  }
+                >
+                  <video
+                    ref={myVideoRef}
+                    muted
+                    autoPlay
+                    style={{
+                      width: "100%",
+                      objectFit: "cover",
+                      borderRadius: "inherit",
+                      height: 280,
+                    }}
                   />
-                </Grid>
-              );
-            })}
+
+                  {/* Display avatar & name when off camera */}
+                  {openCamera ? (
+                    <Stack flexDirection={"row"} justifyContent={"center"}>
+                      <Chip className="bg-gradient" label={profile.username} />
+                    </Stack>
+                  ) : (
+                    !isSharingScreen && (
+                      <Stack
+                        gap={2}
+                        position={"absolute"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        width={"100%"}
+                        overflow={"hidden"}
+                        sx={{ inset: "0 0 0 0" }}
+                      >
+                        <Avatar
+                          alt="avatar"
+                          src={profile.avatar.uri}
+                          sx={{ width: 150, height: 150 }}
+                        />
+                        <Chip
+                          className="bg-gradient"
+                          label={profile.username}
+                          style={{ color: "#fff" }}
+                        />
+                      </Stack>
+                    )
+                  )}
+                </Stack>
+              </Grid>
+
+              {/* Friend's videos */}
+              {listFriends.map((item, index) => {
+                const isSharing = idSocketSharingScreen === item.socketId;
+                return (
+                  <Grid key={index} item md={idSocketSharingScreen ? 12 : 4} sm={6} xs={12}>
+                    <FriendVideo
+                      isSharing={isSharing}
+                      peer={item.peer}
+                      friend={item.friend}
+                      setStreamShare={setStreamShare}
+                    />
+                  </Grid>
+                );
+              })}
+            </Grid>
           </Grid>
         </Box>
 

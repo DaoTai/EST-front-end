@@ -4,14 +4,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 
 import SearchBox from "@/components/common/SearchBox";
 import GroupChat from "@/components/group-chat-components/GroupChat";
 import NewGroup from "@/components/group-chat-components/NewGroupIcon";
 import useListGroupChatContext from "@/hooks/useListGroupChatContext";
-import { Divider, IconButton, useMediaQuery } from "@mui/material";
-
-import useTheme from "@mui/material/styles/useTheme";
 
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
@@ -23,9 +22,7 @@ const ToggleModeTheme = dynamic(() => import("@/components/common/ToggleModeThem
 const ListGroupChats = () => {
   const params = useParams();
   const router = useRouter();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { socket, isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
+  const { isLoadingInitial, isValidating, listGroupChats, search, setSearch } =
     useListGroupChatContext();
 
   // Handle back
@@ -72,19 +69,17 @@ const ListGroupChats = () => {
       </Stack>
 
       {/* List group */}
-      <>
-        <Stack gap={1} mt={2}>
-          {listGroupChats.map((groupChat) => {
-            const isActive = groupChat._id === params.id;
-            return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
-          })}
-        </Stack>
-        {isValidating && !isLoadingInitial && (
-          <Typography variant="body1" textAlign={"center"} mt={1}>
-            Loading ...
-          </Typography>
-        )}
-      </>
+      <Stack gap={1} mt={2}>
+        {listGroupChats.map((groupChat) => {
+          const isActive = groupChat._id === params.id;
+          return <GroupChat key={groupChat._id} groupChat={groupChat} isActive={isActive} />;
+        })}
+      </Stack>
+      {isValidating && !isLoadingInitial && (
+        <Typography variant="body1" textAlign={"center"} mt={1}>
+          Loading ...
+        </Typography>
+      )}
     </Box>
   );
 };

@@ -159,6 +159,10 @@ const Questions = () => {
                         );
                       })}
                     </Box>
+
+                    <Typography variant="body1" gutterBottom>
+                      <b>Lesson:</b> {question.lesson?.name}
+                    </Typography>
                   </AccordionDetails>
                 </Accordion>
 
