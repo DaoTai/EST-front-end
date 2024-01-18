@@ -74,6 +74,11 @@ const CoursePage = () => {
     router.push(pathName + "?language=" + lang);
   };
 
+  // Search by job
+  const onSearchByJob = async (lang: string) => {
+    router.push(pathName + "?job=" + lang);
+  };
+
   const onCloseFilter = useCallback(() => {
     setOpenFilter(false);
   }, []);
@@ -86,6 +91,18 @@ const CoursePage = () => {
         return [...acc, ...languages];
       }, []);
       return Array.from(new Set(programmingLanguages));
+    }
+    return [];
+  }, [data]);
+
+  // List languages suggest
+  const listSuitableJobs = useMemo(() => {
+    if (data) {
+      const suitableJobs = data.courses.reduce((acc: string[], course) => {
+        const suitableJob = course.suitableJob;
+        return [...acc, suitableJob];
+      }, []);
+      return Array.from(new Set(suitableJobs));
     }
     return [];
   }, [data]);
@@ -115,7 +132,7 @@ const CoursePage = () => {
         />
       </Stack>
 
-      {/* Suggest search by language */}
+      {/* Suggestion search */}
       <Stack m={1} gap={1} flexDirection={"row"} flexWrap={"wrap"}>
         {listLanguages.map((lang, i) => {
           return (
@@ -125,6 +142,20 @@ const CoursePage = () => {
               label={lang}
               size="small"
               onClick={() => onSearchByLanguage(lang)}
+            />
+          );
+        })}
+      </Stack>
+      <Stack m={1} gap={1} flexDirection={"row"} flexWrap={"wrap"}>
+        {listSuitableJobs.map((job, i) => {
+          return (
+            <Chip
+              clickable
+              key={i}
+              label={job}
+              color="info"
+              size="small"
+              onClick={() => onSearchByJob(job)}
             />
           );
         })}

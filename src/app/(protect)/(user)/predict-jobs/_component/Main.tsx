@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import predictService from "@/services/user/predictJobs";
 import { showErrorToast } from "@/utils/functions";
+import { toast } from "react-toastify";
 
 type IPercentage = {
   job: string;
@@ -45,6 +46,10 @@ const Main = () => {
     setLoading(true);
     try {
       const result = await predictService.predictSuitableJobs();
+      if (!Array.isArray(result)) {
+        toast.error("Prediction has error");
+        return;
+      }
       const percent = getPercent(result);
       setJobPercentages(percent);
     } catch (error) {

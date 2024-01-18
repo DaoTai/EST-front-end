@@ -20,10 +20,8 @@ const SignIn = () => {
   const { values, errors, touched, isValid, isSubmitting, handleSubmit, handleBlur, handleChange } =
     useFormik({
       initialValues: {
-        // email: "daoductai24102001@gmail.com",
-        // password: "123123",
         email: "",
-        password: "123123",
+        password: "",
       },
       validationSchema: SignInSchema,
       onSubmit: async (values) => {
@@ -59,7 +57,7 @@ const SignIn = () => {
             label="Email"
             name="email"
             type="email"
-            placeholder="example@gmail.com"
+            placeholder="example11@gmail.com"
             variant="outlined"
             margin="normal"
             value={values.email}
