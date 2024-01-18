@@ -53,6 +53,16 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
         video: true,
         audio: myConstraintAudioMedia,
       });
+      const screenTrack = screenStream.getVideoTracks()[0];
+
+      screenTrack.onended = async () => {
+        await handleUsingMediaStream();
+        socket.current?.emit("off sharing screen", {
+          idGroupChat: groupChat._id,
+          socketId: socket.current.id,
+        });
+        setSharingScreen(false);
+      };
       setStream(screenStream);
       if (myVideoRef.current) {
         myVideoRef.current.srcObject = screenStream;
@@ -61,20 +71,12 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
       // Notify peers about the screen sharing
       peersRef.current.forEach((peerRef) => {
         if (!peerRef.peer.destroyed) {
-          peerRef.peer.replaceTrack(
-            peerRef.peer.streams[0].getVideoTracks()[0],
-            screenStream.getVideoTracks()[0],
-            peerRef.peer.streams[0]
-          );
-
-          peerRef.peer.addTrack(
-            peerRef.peer.streams[0].getAudioTracks()[0],
-            peerRef.peer.streams[0]
-          );
+          const currentStreamTrack = peerRef.peer.streams[0].getVideoTracks()[0];
+          peerRef.peer.replaceTrack(currentStreamTrack, screenTrack, peerRef.peer.streams[0]);
         }
       });
     } catch (error) {
-      toast.warn("Denied accessing screen for video call");
+      toast.warn("Denied accessing shared screen");
     }
   };
 
@@ -438,7 +440,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                   },
                 }}
               >
-                <video muted playsInline ref={largeScreenRef} autoPlay />
+                <video muted={isSharingScreen} playsInline ref={largeScreenRef} autoPlay />
                 <Stack
                   mt={1}
                   border={1}
