@@ -59,7 +59,7 @@ const MyCourse = ({ direction = "column", data }: IProps) => {
         </Grid>
         <Grid item sm={direction === "row" ? 8 : 12} xs={direction === "row" ? 8 : 12}>
           <Box p={1}>
-            <Typography variant="h6" fontWeight={500} gutterBottom>
+            <Typography variant="h6" fontWeight={500}>
               {data.course.name}
             </Typography>
             <Chip

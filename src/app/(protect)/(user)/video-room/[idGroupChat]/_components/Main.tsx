@@ -66,6 +66,11 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
             screenStream.getVideoTracks()[0],
             peerRef.peer.streams[0]
           );
+
+          peerRef.peer.addTrack(
+            peerRef.peer.streams[0].getAudioTracks()[0],
+            peerRef.peer.streams[0]
+          );
         }
       });
     } catch (error) {
@@ -433,7 +438,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                   },
                 }}
               >
-                <video playsInline ref={largeScreenRef} autoPlay />
+                <video muted playsInline ref={largeScreenRef} autoPlay />
                 <Stack
                   mt={1}
                   border={1}
