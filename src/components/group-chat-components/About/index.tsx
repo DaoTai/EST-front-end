@@ -25,7 +25,6 @@ import { Helmet } from "react-helmet";
 import useSWR, { Fetcher } from "swr";
 import Actions from "./Actions";
 import BlockedMember from "./BlockedMember";
-// import { Helmet } from "react-helmet";
 
 const fetcher: Fetcher<IGroupChat, string> = (url: string) =>
   fetch(url).then((res) => {
@@ -61,6 +60,12 @@ const About = () => {
       }
     }
   }, [data, session]);
+
+  useEffect(() => {
+    socket?.on("online room", (data: any) => {
+      console.log("data: ", data);
+    });
+  }, [socket, params]);
 
   // Toggle display options
   const handleToggle = () => {

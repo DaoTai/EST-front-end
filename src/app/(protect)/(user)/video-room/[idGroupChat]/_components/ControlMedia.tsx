@@ -1,44 +1,37 @@
 "use client";
-import PresentToAllIcon from "@mui/icons-material/PresentToAll";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import NoPhotographyIcon from "@mui/icons-material/NoPhotography";
+import PresentToAllIcon from "@mui/icons-material/PresentToAll";
+import { Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import { memo, useState } from "react";
-import { Tooltip } from "@mui/material";
 
 type IProps = {
-  stream: MediaStream;
   openCamera: boolean;
   isSharingScreen: boolean;
   disabledSharing: boolean;
   handleToggleCamera: () => void;
+  handleToggleMic: () => void;
   handleToggleShareScreen: () => Promise<void>;
 };
 
 const ControlMedia: React.FC<IProps> = ({
   isSharingScreen,
-  stream,
   disabledSharing,
   openCamera,
   handleToggleCamera,
   handleToggleShareScreen,
+  handleToggleMic,
 }) => {
   const [openMic, setOpenMic] = useState<boolean>(true);
 
-  // Toggle mic
-  const handleToggleMic = () => {
+  const onToggleMic = () => {
     setOpenMic(!openMic);
-    if (stream) {
-      const audioTracks = stream.getAudioTracks();
-      if (audioTracks.length > 0) {
-        const track = audioTracks[0];
-        track.enabled = !track.enabled;
-      }
-    }
+    handleToggleMic();
   };
 
   return (
@@ -82,7 +75,7 @@ const ControlMedia: React.FC<IProps> = ({
         </IconButton>
 
         {/* Mic */}
-        <IconButton color="info" className="icon-control" onClick={handleToggleMic}>
+        <IconButton color="info" className="icon-control" onClick={onToggleMic}>
           {openMic ? <MicIcon /> : <MicOffIcon />}
         </IconButton>
       </Box>
