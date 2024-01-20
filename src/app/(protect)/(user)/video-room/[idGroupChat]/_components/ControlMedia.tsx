@@ -16,6 +16,7 @@ type IProps = {
   isSharingScreen: boolean;
   disabledSharing: boolean;
   handleToggleCamera: () => void;
+  handleToggleMic: () => void;
   handleToggleShareScreen: () => Promise<void>;
 };
 
@@ -26,20 +27,26 @@ const ControlMedia: React.FC<IProps> = ({
   openCamera,
   handleToggleCamera,
   handleToggleShareScreen,
+  handleToggleMic,
 }) => {
   const [openMic, setOpenMic] = useState<boolean>(true);
 
-  // Toggle mic
-  const handleToggleMic = () => {
+  const onToggleMic = () => {
     setOpenMic(!openMic);
-    if (stream) {
-      const audioTracks = stream.getAudioTracks();
-      if (audioTracks.length > 0) {
-        const track = audioTracks[0];
-        track.enabled = !track.enabled;
-      }
-    }
+    handleToggleMic();
   };
+
+  // Toggle mic
+  // const handleToggleMic = () => {
+  //   setOpenMic(!openMic);
+  //   if (stream) {
+  //     const audioTracks = stream.getAudioTracks();
+  //     if (audioTracks.length > 0) {
+  //       const track = audioTracks[0];
+  //       track.enabled = !track.enabled;
+  //     }
+  //   }
+  // };
 
   return (
     <Stack
@@ -82,7 +89,7 @@ const ControlMedia: React.FC<IProps> = ({
         </IconButton>
 
         {/* Mic */}
-        <IconButton color="info" className="icon-control" onClick={handleToggleMic}>
+        <IconButton color="info" className="icon-control" onClick={onToggleMic}>
           {openMic ? <MicIcon /> : <MicOffIcon />}
         </IconButton>
       </Box>

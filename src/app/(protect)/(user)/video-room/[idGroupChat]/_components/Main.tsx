@@ -361,6 +361,17 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
     }
   }, [openCamera, stream]);
 
+  // Toggle mic
+  const handleToggleMic = useCallback(() => {
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      if (audioTracks.length > 0) {
+        const track = audioTracks[0];
+        track.enabled = !track.enabled;
+      }
+    }
+  }, [stream]);
+
   // Toggle share screen
   const handleToggleShareScreen = useCallback(async () => {
     if (isSharingScreen) {
@@ -553,6 +564,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
             disabledSharing={disableShareScreen}
             handleToggleCamera={handleToggleCamera}
             handleToggleShareScreen={handleToggleShareScreen}
+            handleToggleMic={handleToggleMic}
           />
         )}
       </Box>
