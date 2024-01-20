@@ -34,18 +34,6 @@ const ControlMedia: React.FC<IProps> = ({
     handleToggleMic();
   };
 
-  // Toggle mic
-  // const handleToggleMic = () => {
-  //   setOpenMic(!openMic);
-  //   if (stream) {
-  //     const audioTracks = stream.getAudioTracks();
-  //     if (audioTracks.length > 0) {
-  //       const track = audioTracks[0];
-  //       track.enabled = !track.enabled;
-  //     }
-  //   }
-  // };
-
   return (
     <Stack
       p={0.5}
