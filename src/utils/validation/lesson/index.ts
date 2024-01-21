@@ -10,7 +10,7 @@ export const FormLessonSchema = Yup.object().shape({
     .required(MessageValidation.required)
     .trim()
     .min(3, minCharacterValidator("Name", 3))
-    .max(50, maxCharacterValidator("Name", 50)),
+    .max(100, maxCharacterValidator("Name", 100)),
   isLaunching: Yup.boolean().required(MessageValidation.required),
   theory: Yup.string().min(5, minCharacterValidator("Theory", 5)),
   references: Yup.array().of(Yup.string().trim().min(3, minCharacterValidator("link", 3))),

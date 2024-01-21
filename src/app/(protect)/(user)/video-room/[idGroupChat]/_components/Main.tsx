@@ -437,16 +437,15 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
                 xs={12}
                 p={1}
                 mb={4}
-                border={2}
+                border={1}
                 borderColor={"error.main"}
                 overflow={"hidden"}
-                width={"100%"}
                 borderRadius={2}
                 sx={{
                   video: {
                     width: "100%",
                     height: "100%",
-                    border: 2,
+                    border: 1,
                     borderRadius: "inherit",
                   },
                 }}
