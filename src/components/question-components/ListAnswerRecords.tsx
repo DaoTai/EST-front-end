@@ -1,5 +1,5 @@
 "use client";
-import { Button, Link } from "@mui/material";
+import { Link } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -12,9 +12,7 @@ import Typography from "@mui/material/Typography";
 
 import dayjs from "dayjs";
 import useSWR, { Fetcher } from "swr";
-import { CSVLink } from "react-csv";
 import FormAnswerRecord from "./FormAnswerRecord";
-import { useMemo } from "react";
 
 const fetcher: Fetcher<IAnswerRecord[], string> = (url: string) =>
   fetch(url).then((res) => {
@@ -33,41 +31,39 @@ const ListAnswerRecords = ({ question }: { question: IQuestion }) => {
       revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-      onSuccess(data, key, config) {
-        // console.log("data: ", data);
-      },
+      onSuccess(data, key, config) {},
     }
   );
 
-  const download = useMemo(() => {
-    return listAnswerRecords?.map((record, i) => ({
-      order: i + 1,
-      user: record.user.username,
-      answer: record.answers[0],
-      score: record.score,
-      comment: record.comment,
-    }));
-  }, [listAnswerRecords]);
+  // const download = useMemo(() => {
+  //   return listAnswerRecords?.map((record, i) => ({
+  //     order: i + 1,
+  //     user: record.user.username,
+  //     answer: record.answers[0],
+  //     score: record.score,
+  //     comment: record.comment,
+  //   }));
+  // }, [listAnswerRecords]);
 
-  const headers = useMemo(() => {
-    if (download && download.length > 0) {
-      return Object.keys(download[0]).map((key) => ({
-        label: key,
-        key,
-      }));
-    }
-    return null;
-  }, [download]);
+  // const headers = useMemo(() => {
+  //   if (download && download.length > 0) {
+  //     return Object.keys(download[0]).map((key) => ({
+  //       label: key,
+  //       key,
+  //     }));
+  //   }
+  //   return null;
+  // }, [download]);
 
   return (
     <Box p={1}>
-      {headers && download && (
+      {/* {headers && download && (
         <CSVLink headers={headers} data={download} filename={question._id + ".csv"}>
           <Button variant="contained" color="success" sx={{ mb: 2 }}>
             Export to CSV
           </Button>
         </CSVLink>
-      )}
+      )} */}
       <Typography gutterBottom variant="body1" fontWeight={500}>
         <b>Question:</b> {question.content}
       </Typography>
@@ -101,7 +97,7 @@ const ListAnswerRecords = ({ question }: { question: IQuestion }) => {
                       <TableCell>{i + 1}</TableCell>
                       <TableCell>{record.user.username}</TableCell>
                       <TableCell>{record.score ?? "Pending"}</TableCell>
-                      <TableCell sx={{ maxWidth: "30%" }}>
+                      <TableCell sx={{ maxWidth: "30%", textAlign: "justify" }}>
                         {record.comment ?? "No comment"}
                       </TableCell>
                       <TableCell sx={{ maxWidth: "30%" }}>

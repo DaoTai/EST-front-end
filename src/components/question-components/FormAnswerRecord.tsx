@@ -26,6 +26,7 @@ const FormAnswerRecord = ({ idAnswerRecord, idQuestion }: IProps) => {
     // Submit
     try {
       setLoading(true);
+      setComment("");
       await axios.patch("/api/teacher/answer-records/detail/" + idAnswerRecord, {
         score,
         comment: comment.trim(),

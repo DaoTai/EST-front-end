@@ -58,9 +58,11 @@ const AddMembers = ({ existUsers, onAdd }: IProps) => {
   }
 
   return (
-    <Box mt={2} boxShadow={2}>
+    <Box mt={2}>
       {/* Search */}
-      <SearchBox value={name} onChange={(val) => setName(val)} onClear={() => setName("")} />
+      <Box mb={1}>
+        <SearchBox value={name} onChange={(val) => setName(val)} onClear={() => setName("")} />
+      </Box>
       <Divider />
       {isLoading || isValidating ? (
         <Typography variant="body1" textAlign={"center"}>
