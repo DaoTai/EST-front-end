@@ -10,8 +10,8 @@ import Typography from "@mui/material/Typography";
 
 import axios from "axios";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 
@@ -25,29 +25,28 @@ const fetcher: Fetcher<{ listLessons: ILesson[]; maxPage: number }, string> = (u
   fetch(url).then((res) => res.json());
 
 const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) => {
-  const path = usePathname();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [lesson, setLesson] = useState<ILesson | null>(null);
-  const maxPageRef = useRef<number>(1);
+  const [page, setPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
 
   const { data, isLoading, error } = useSWR(
-    `/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`,
+    `/api/teacher/lessons/${idCourse}?page=${page}`,
     fetcher,
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
       onSuccess(data, key, config) {
-        maxPageRef.current = data.maxPage;
+        setMaxPage(data.maxPage);
       },
     }
   );
 
   // Handle moving page
   const handlePaginate = (event: React.ChangeEvent<unknown>, value: number) => {
-    router.push(path + "?page=" + value);
+    setPage(value);
   };
 
   // Click icon trash
@@ -145,8 +144,8 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
           <Pagination
             variant="outlined"
             color="primary"
-            page={Number(searchParams?.get("page")) || 1}
-            count={maxPageRef.current}
+            page={page}
+            count={maxPage}
             onChange={handlePaginate}
           />
         </Stack>

@@ -83,8 +83,10 @@ export const fetcherLessons: Fetcher<ILesson, string> = (url: string) =>
 // Get TURN Credential
 export const fetchTURNCredential = async (): Promise<any> => {
   const mode = process.env.NODE_ENV;
+  // const uri =
+  //   "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=ae7f71b5dd4068008d178d5761fc927adafc";
   const uri =
-    "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=ae7f71b5dd4068008d178d5761fc927adafc";
+    "https://est-edu.metered.live/api/v1/turn/credentials?apiKey=f451bd2b3987d020158971d3de79ac19da62";
   if (mode == "development") {
     return [];
   } else if (mode == "production") {

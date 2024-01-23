@@ -214,7 +214,7 @@ const GroupChat = ({ params }: { params: { id: string } }) => {
         sx={{
           height: "100vh",
           overflowY: "overlay",
-          pt: "50px",
+          pt: "60px",
           display: "flex",
           flexDirection: "column",
         }}

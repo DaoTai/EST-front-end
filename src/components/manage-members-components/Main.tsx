@@ -126,7 +126,7 @@ const Main = () => {
         sx={{
           a: {
             textDecoration: "underline !important",
-            color: (theme) => theme.palette.info.main + "!important",
+            color: "#29b6f6 !important",
           },
         }}
       >

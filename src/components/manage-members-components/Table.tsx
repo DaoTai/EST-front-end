@@ -23,6 +23,7 @@ const Table = ({ total, users, onSelectRow }: IProps) => {
       { field: "username", headerName: "User name", width: 100 },
       { field: "email", headerName: "Email", width: 250 },
       { field: "roles", headerName: "Roles", width: 250 },
+      { field: "provider", headerName: "Provider", width: 100 },
       {
         field: "actions",
         headerName: "Actions",
@@ -38,11 +39,6 @@ const Table = ({ total, users, onSelectRow }: IProps) => {
                   </IconButton>
                 </Link>
               </Tooltip>
-              {/* <Tooltip title="Block">
-                <IconButton>
-                  <LockIcon color="warning" />
-                </IconButton>
-              </Tooltip> */}
             </Box>
           );
         },

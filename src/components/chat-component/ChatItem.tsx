@@ -127,7 +127,7 @@ const ChatItem: React.FC<IProps> = ({ chat, onDelete }) => {
                 if (attachment.type === "image") {
                   return (
                     <Box key={i} width={"100%"}>
-                      <Image
+                      <img
                         src={attachment.uri}
                         alt="attachment"
                         width={200}

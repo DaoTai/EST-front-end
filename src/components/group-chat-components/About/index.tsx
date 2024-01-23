@@ -46,7 +46,7 @@ const About = () => {
     "/api/user/group-chat/" + params.id,
     fetcher,
     {
-      revalidateIfStale: false,
+      revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       onSuccess(data, key, config) {},
@@ -60,12 +60,6 @@ const About = () => {
       }
     }
   }, [data, session]);
-
-  useEffect(() => {
-    socket?.on("online room", (data: any) => {
-      console.log("data: ", data);
-    });
-  }, [socket, params]);
 
   // Toggle display options
   const handleToggle = () => {
