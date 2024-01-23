@@ -13,7 +13,7 @@ import AvgScoreChart from "./_components/AvgScoreChart";
 import Spinner from "@/components/custom/Spinner";
 
 const DetailCourse = ({ params }: { params: { id: string } }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [course, setCourse] = useState<ICourse | undefined>();
 
   useEffect(() => {

@@ -10,8 +10,8 @@ import Typography from "@mui/material/Typography";
 
 import axios from "axios";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useSWR, { Fetcher, mutate } from "swr";
 
@@ -25,6 +25,8 @@ const fetcher: Fetcher<{ listLessons: ILesson[]; maxPage: number }, string> = (u
   fetch(url).then((res) => res.json());
 
 const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) => {
+  const path = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [lesson, setLesson] = useState<ILesson | null>(null);
@@ -32,21 +34,24 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
   const [maxPage, setMaxPage] = useState(1);
 
   const { data, isLoading, error } = useSWR(
-    `/api/teacher/lessons/${idCourse}?page=${page}`,
+    `/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`,
     fetcher,
     {
       revalidateIfStale: true,
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
-      onSuccess(data, key, config) {
-        setMaxPage(data.maxPage);
-      },
+      onSuccess(data, key, config) {},
     }
   );
+
+  useEffect(() => {
+    if (data) setMaxPage(data.maxPage);
+  }, [data]);
 
   // Handle moving page
   const handlePaginate = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+    router.push(path + "?page=" + value);
   };
 
   // Click icon trash
@@ -65,7 +70,6 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
     try {
       await axios.delete("/api/teacher/lessons/detail/" + lesson?._id);
       mutate(`/api/teacher/lessons/${idCourse}?page=${searchParams.get("page")}`);
-      // router.refresh();
       toast.success("Delete lesson " + lesson?.name + " successfully");
     } catch (error) {
       toast.error("Delete lesson " + lesson?.name + " failed");
@@ -144,7 +148,7 @@ const ListLessons = ({ idCourse, preHrefLesson = "/teacher/lessons/" }: IProps) 
           <Pagination
             variant="outlined"
             color="primary"
-            page={page}
+            page={Number(searchParams?.get("page")) || 1}
             count={maxPage}
             onChange={handlePaginate}
           />
