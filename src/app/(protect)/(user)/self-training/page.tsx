@@ -15,12 +15,19 @@ import Typography from "@mui/material/Typography";
 
 import { IMyAnswer } from "@/types/IAnswer";
 import Fab from "@mui/material/Fab";
+import Pagination from "@mui/material/Pagination";
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import ListCorrectAnswers from "./_components/ListCorrectAnswers";
 import ListQuestions from "./_components/ListQuestions";
+
+type IResponse = {
+  listQuestions: IQuestion[];
+  page: number;
+  maxPage: number;
+};
 
 const SelfTraining = () => {
   const [type, setType] = useState<string>("byFavouriteProgrammingLanguages");
@@ -28,32 +35,42 @@ const SelfTraining = () => {
   const [isStarted, setStarted] = useState<boolean>(false);
   const [score, setScore] = useState<null | number>(null);
   const [listQuestions, setListQuestions] = useState<IQuestion[]>([]);
+  const [page, setPage] = useState<number>(1);
   const [myAnswers, setMyAnswers] = useState<IMyAnswer[]>([]);
 
   const containerRef = useRef<HTMLDivElement>();
+  const maxPage = useRef<number>(1);
 
+  useEffect(() => {
+    isStarted && fetchQuestions();
+  }, [page, isStarted, type]);
   //   Change type self-train
   const handleChange = (event: SelectChangeEvent) => {
     setType(event.target.value as string);
+    setPage(1);
   };
 
   //   Get questions
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const res = await axios.get<IQuestion[]>("/api/user/self-train?type=" + type);
-      setListQuestions(res.data);
+      const res = await axios.get<IResponse>("/api/user/self-train?type=" + type + "&page=" + page);
+      setListQuestions(res.data.listQuestions);
+      maxPage.current = res.data.maxPage;
       setMyAnswers([]);
-      setStarted(true);
       score && setScore(null);
     } catch (error) {
       toast.error("Fetch questions failed", {
         theme: "colored",
-        position: "bottom-center",
       });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStart = async () => {
+    setStarted(true);
+    await fetchQuestions();
   };
 
   // Handle answer all questions
@@ -122,24 +139,24 @@ const SelfTraining = () => {
               <MenuItem value={"bySuitableJobs"}>Suitable job in registered courses </MenuItem>
             </Select>
           </FormControl>
+
           <Fab
             disabled={isLoading}
             color="info"
             sx={{
               p: 1,
-
-              boxShadow: (theme) => `0px 0px 8px ${theme.palette.info.light}`,
+              boxShadow: `0px 0px 8px #29b6f6`,
               ":hover": {
-                boxShadow: (theme) => `0px 0px 12px ${theme.palette.info.dark}`,
+                boxShadow: `0px 0px 12px #0288d1`,
               },
             }}
-            onClick={fetchQuestions}
+            onClick={handleStart}
           >
             Start
           </Fab>
         </Stack>
 
-        {isLoading && (
+        {isStarted && isLoading && (
           <>
             <Typography variant="h6" textAlign={"center"}>
               EST Edu is creating questions for you ...
@@ -161,7 +178,7 @@ const SelfTraining = () => {
         )}
 
         {/* List questions */}
-        {!score && (
+        {isStarted && !score && (
           <ListQuestions
             listQuestions={listQuestions}
             myAnswers={myAnswers}
@@ -196,7 +213,7 @@ const SelfTraining = () => {
         )}
 
         {/* No question */}
-        {listQuestions.length === 0 && isStarted && (
+        {!isLoading && listQuestions.length === 0 && isStarted && (
           <Typography variant="body1" textAlign={"center"}>
             No question for you. Let's register any course or submit your favourite programming
             languages
@@ -205,6 +222,28 @@ const SelfTraining = () => {
 
         {/* Correct answers */}
         {score !== null && <ListCorrectAnswers listQuestions={listQuestions} />}
+
+        {/* Pagination */}
+        {maxPage.current > 1 && (
+          <Stack
+            mt={2}
+            pb={1}
+            flexDirection={"row"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Pagination
+              variant="outlined"
+              color="primary"
+              page={page}
+              count={maxPage.current}
+              onChange={async (event: React.ChangeEvent<unknown>, value: number) => {
+                setPage(value);
+                handleScrollToTop();
+              }}
+            />
+          </Stack>
+        )}
       </Box>
     </Box>
   );

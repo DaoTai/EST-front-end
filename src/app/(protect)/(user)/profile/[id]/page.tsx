@@ -1,17 +1,17 @@
 "use client";
 import Spinner from "@/components/custom/Spinner";
 import HeadingProfile from "@/components/profile-components/Heading";
+import Intro from "@/components/profile-components/Intro";
 import clientSideAxios from "@/config/axios/client-side";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { notFound, redirect, useParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ListCreatedCourses from "./_components/ListCreatedCourses";
 import ListRegisterCourses from "./_components/ListRegisterCourses";
-import Intro from "@/components/profile-components/Intro";
 
 type IUserState =
   | {
