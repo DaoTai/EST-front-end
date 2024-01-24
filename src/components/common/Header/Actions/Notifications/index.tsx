@@ -12,8 +12,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Paper from "@mui/material/Paper";
 import Popover from "@mui/material/Popover";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -47,9 +47,7 @@ const Notifications = () => {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       refreshInterval: 10 * 60 * 1000, //  10 phút sẽ recall
-      onSuccess(data, key, config) {
-        // console.log("data: ", data);
-      },
+      onSuccess(data, key, config) {},
     }
   );
   //   listNotifications
@@ -101,6 +99,9 @@ const Notifications = () => {
           break;
         case "answer-code-question":
           router.push("/teacher/lessons/" + notification.endpoint);
+          break;
+        case "detail-course":
+          router.push("/my-courses/" + notification.endpoint);
           break;
       }
     }

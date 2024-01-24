@@ -4,11 +4,11 @@ interface INotification {
   avatar?: IAttachment;
   field:
     | "lesson-comment"
-    | "lesson-comment"
     | "my-course"
     | "others"
     | "approved-course"
-    | "answer-code-question";
+    | "answer-code-question"
+    | "detail-course";
   sender: string | IProfile;
   receiver: string | IProfile;
   isRead: boolean;
