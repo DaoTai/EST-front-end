@@ -146,7 +146,7 @@ const Banner = ({ course, mode = "visitor" }: Props) => {
                 textTransform={"lowercase"}
                 sx={{ color: "warning.dark" }}
               >
-                {course?.averageRating} stars
+                {course?.averageRating.toFixed(2)} stars
               </Typography>
               <Stack
                 flexDirection={"row"}
