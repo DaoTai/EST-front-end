@@ -40,6 +40,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
   const [openCamera, setOpenCamera] = useState<boolean>(true);
   const [listFriends, setListFriends] = useState<IFriendVideo[]>([]);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [openMic, setOpenMic] = useState<boolean>(true);
   const [streamShare, setStreamShare] = useState<MediaStream | null>(null);
   const [idSocketSharingScreen, setIdSocketSharingScreen] = useState<string | null>(null);
   const socket = useRef<Socket>();
@@ -369,6 +370,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
         const track = audioTracks[0];
         track.enabled = !track.enabled;
       }
+      setOpenMic(!openMic);
     }
   }, [stream]);
 
@@ -557,6 +559,7 @@ const VideoRoom = ({ groupChat, profile }: { groupChat: IGroupChat; profile: IPr
         {/* Control camera & mic*/}
         {stream && (
           <ControlMedia
+            openMic={openMic}
             isSharingScreen={isSharingScreen}
             openCamera={openCamera}
             disabledSharing={disableShareScreen}

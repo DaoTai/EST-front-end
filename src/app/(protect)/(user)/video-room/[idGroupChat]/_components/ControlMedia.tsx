@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import { memo, useState } from "react";
 
 type IProps = {
+  openMic: boolean;
   openCamera: boolean;
   isSharingScreen: boolean;
   disabledSharing: boolean;
@@ -21,19 +22,13 @@ type IProps = {
 
 const ControlMedia: React.FC<IProps> = ({
   isSharingScreen,
+  openMic,
   disabledSharing,
   openCamera,
   handleToggleCamera,
   handleToggleShareScreen,
   handleToggleMic,
 }) => {
-  const [openMic, setOpenMic] = useState<boolean>(true);
-
-  const onToggleMic = () => {
-    setOpenMic(!openMic);
-    handleToggleMic();
-  };
-
   return (
     <Stack
       p={0.5}
@@ -75,7 +70,7 @@ const ControlMedia: React.FC<IProps> = ({
         </IconButton>
 
         {/* Mic */}
-        <IconButton color="info" className="icon-control" onClick={onToggleMic}>
+        <IconButton color="info" className="icon-control" onClick={handleToggleMic}>
           {openMic ? <MicIcon /> : <MicOffIcon />}
         </IconButton>
       </Box>
