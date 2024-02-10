@@ -79,11 +79,12 @@ const Footer = () => {
     <>
       <Grid
         container
-        boxShadow={6}
         rowSpacing={3}
+        borderTop={1}
         pt={1}
         pb={4}
         sx={{
+          borderColor: "#ccc",
           a: {
             textDecoration: "none",
           },

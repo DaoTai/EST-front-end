@@ -136,7 +136,6 @@ const Navbar = () => {
     <Stack
       p={1}
       spacing={2}
-      boxShadow={1}
       flexShrink={0}
       minHeight={isMobile ? "unset" : "100vh"}
       sx={styleNavBar}
