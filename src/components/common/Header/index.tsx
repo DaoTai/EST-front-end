@@ -1,10 +1,11 @@
-import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
+import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
+import Link from "next/link";
 import Actions from "./Actions";
 import Logo from "./Logo";
-import SearchBar from "./SearchBar";
 import Title from "./Title";
+import NavBar from "./NavBar";
 const Header = () => {
   return (
     <AppBar position="fixed" sx={{ height: 80, p: "unset !important" }}>
@@ -21,11 +22,12 @@ const Header = () => {
           <Logo />
           <Title />
         </Stack>
-        {/* <SearchBar /> */}
+
+        <NavBar />
 
         <Actions />
       </Toolbar>
-    </AppBar>
+    </AppBar >
   );
 };
 

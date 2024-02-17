@@ -5,20 +5,19 @@ import Typography from "@mui/material/Typography";
 
 const Intro = () => {
   return (
-    <Box>
+    <Box id="features">
       <Divider>
-        <Typography variant="h4" gutterBottom fontWeight={600}>
+        <Typography variant="h4" gutterBottom fontWeight={600} letterSpacing={1}>
           Features
         </Typography>
       </Divider>
       <Grid container spacing={2}>
         <Grid item md={7} xs={12}>
           <Box>
-            <Divider>
-              <Typography fontWeight={600} textAlign={"center"} variant="h6">
-                Admin
-              </Typography>
-            </Divider>
+
+            <Typography fontWeight={600} textAlign={"center"} variant="h6">
+              Admin
+            </Typography>
             <Box component={"ul"}>
               <li>Manage accounts</li>
               <li>Manage courses</li>
@@ -29,11 +28,9 @@ const Intro = () => {
             </Box>
           </Box>
           <Box>
-            <Divider>
-              <Typography fontWeight={600} textAlign={"center"} variant="h6">
-                Teacher
-              </Typography>
-            </Divider>
+            <Typography fontWeight={600} textAlign={"center"} variant="h6">
+              Teacher
+            </Typography>
             <Box component={"ul"}>
               <li>Manage courses</li>
               <li>Manage lessons</li>
@@ -42,11 +39,9 @@ const Intro = () => {
             </Box>
           </Box>
           <Box>
-            <Divider>
-              <Typography fontWeight={600} textAlign={"center"} variant="h6">
-                User
-              </Typography>
-            </Divider>
+            <Typography fontWeight={600} textAlign={"center"} variant="h6">
+              User
+            </Typography>
             <Box component={"ul"}>
               <li>Manage profile, password, CV</li>
               <li>Manage notifications</li>

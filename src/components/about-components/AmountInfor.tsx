@@ -22,101 +22,101 @@ const AmountInfor = async () => {
   const data = (await res.json()) as IResponse;
 
   return (
-    <Grid
-      container
-      spacing={1}
-      sx={{
-        ".MuiCardContent-root": {
-          position: "relative",
-        },
-        ".btn": {
-          position: "absolute",
-          bottom: 16,
-          right: 16,
-          display: "block",
-          padding: "8px 16px",
-          borderRadius: 2,
-          color: "#fff",
-          textDecoration: "none",
-          width: "fit-content",
-          mt: "auto",
-          "&:hover": {
-            opacity: 0.8,
+    <Box>
+      <Divider>
+        <Typography id="about" variant="h4" fontWeight={600} letterSpacing={1} gutterBottom>
+          About
+        </Typography>
+      </Divider>
+      <Grid
+        container
+        spacing={1}
+        sx={{
+          ".MuiCardContent-root": {
+            position: "relative",
           },
-        },
-      }}
-    >
-      <Grid item md={6} sm={6} xs={12}>
-        <Paper sx={{ height: "100%" }}>
-          <CardContent sx={{ height: "100%" }}>
-            <Box pb={4}>
-              <Divider>
-                <Typography variant="h5" gutterBottom fontWeight={500}>
+          ".btn": {
+            position: "absolute",
+            bottom: 16,
+            right: 16,
+            display: "block",
+            padding: "8px 16px",
+            borderRadius: 2,
+            color: "#fff",
+            textDecoration: "none",
+            width: "fit-content",
+            mt: "auto",
+            "&:hover": {
+              opacity: 0.8,
+            },
+          },
+        }}
+      >
+        <Grid item md={6} sm={6} xs={12}>
+          <Paper sx={{ height: "100%" }}>
+            <CardContent sx={{ height: "100%" }}>
+              <Box pb={4}>
+                <Typography variant="h5" textAlign={'center'} gutterBottom fontWeight={600}>
                   Member
                 </Typography>
-              </Divider>
-              <Typography variant="h6">We have {data.totalUsers} members</Typography>
-            </Box>
-            <Link href="/explore/members" className="btn bg-gradient">
-              Watch
-            </Link>
-          </CardContent>
-        </Paper>
-      </Grid>
-      <Grid item md={6} sm={6} xs={12}>
-        <Paper sx={{ height: "100%" }}>
-          <CardContent sx={{ height: "100%" }}>
-            <Box pb={4}>
-              <Divider>
-                <Typography variant="h5" gutterBottom fontWeight={500}>
+                <Typography variant="h6">We have {data.totalUsers} members</Typography>
+              </Box>
+              <Link href="/explore/members" className="btn bg-gradient">
+                Watch
+              </Link>
+            </CardContent>
+          </Paper>
+        </Grid>
+        <Grid item md={6} sm={6} xs={12}>
+          <Paper sx={{ height: "100%" }}>
+            <CardContent sx={{ height: "100%" }}>
+              <Box pb={4}>
+                <Typography variant="h5" textAlign={'center'} gutterBottom fontWeight={600}>
                   Teacher
                 </Typography>
-              </Divider>
-              <Typography variant="h6">We have {data.totalTeachers} teachers</Typography>
-            </Box>
-            <Link href="/explore/members" className="btn bg-gradient">
-              Watch
-            </Link>
-          </CardContent>
-        </Paper>
-      </Grid>
-      <Grid item md={6} sm={6} xs={12}>
-        <Paper sx={{ height: "100%" }}>
-          <CardContent sx={{ height: "100%" }}>
-            <Box pb={4}>
-              <Divider>
-                <Typography variant="h5" gutterBottom fontWeight={500}>
+                <Typography variant="h6">We have {data.totalTeachers} teachers</Typography>
+              </Box>
+              <Link href="/explore/members" className="btn bg-gradient">
+                Watch
+              </Link>
+            </CardContent>
+          </Paper>
+        </Grid>
+        <Grid item md={6} sm={6} xs={12}>
+          <Paper sx={{ height: "100%" }}>
+            <CardContent sx={{ height: "100%" }}>
+              <Box pb={4}>
+                <Typography variant="h5" textAlign={'center'} gutterBottom fontWeight={600}>
                   Course
                 </Typography>
-              </Divider>
-              <Typography variant="h6">We have {data.totalCourses} courses</Typography>
-            </Box>
-            <Link href="/search/course" className="btn bg-gradient">
-              Watch
-            </Link>
-          </CardContent>
-        </Paper>
-      </Grid>
-      <Grid item md={6} sm={6} xs={12}>
-        <Paper sx={{ height: "100%" }}>
-          <CardContent sx={{ height: "100%" }}>
-            <Box pb={4}>
-              <Divider>
-                <Typography variant="h5" gutterBottom fontWeight={500}>
+                <Typography variant="h6">We have {data.totalCourses} courses</Typography>
+              </Box>
+              <Link href="/search/course" className="btn bg-gradient">
+                Watch
+              </Link>
+            </CardContent>
+          </Paper>
+        </Grid>
+        <Grid item md={6} sm={6} xs={12}>
+          <Paper sx={{ height: "100%" }}>
+            <CardContent sx={{ height: "100%" }}>
+              <Box pb={4}>
+                <Typography variant="h5" textAlign={'center'} gutterBottom fontWeight={600}>
                   Technology
                 </Typography>
-              </Divider>
-              <Typography variant="h6">
-                Courses have {data.totalProgrammingLanguages} technologies
-              </Typography>
-            </Box>
-            <Link href="/search/course" className="btn bg-gradient">
-              Watch
-            </Link>
-          </CardContent>
-        </Paper>
+                <Typography variant="h6">
+                  Courses have {data.totalProgrammingLanguages} technologies
+                </Typography>
+              </Box>
+              <Link href="/search/course" className="btn bg-gradient">
+                Watch
+              </Link>
+            </CardContent>
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </Box>
+
   );
 };
 
