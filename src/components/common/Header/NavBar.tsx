@@ -15,15 +15,14 @@ const NavBar = () => {
   }
 
   return (
-    <Stack flex={'2 1 auto'} gap={4} flexDirection={'row'} justifyContent={'end'} mr={2} sx={{
+    <Stack flex={'2 1 auto'} gap={4} flexDirection={'row'} alignItems={'center'} ml={4} sx={{
       color: 'text.primary', a: {
         p: 1,
         fontWeight: 500,
         letterSpacing: 1,
         borderRadius: 2,
-        transition: 'all 0.2s ease',
+        transition: 'all 0.3s ease',
         position: "relative",
-
         "&:before": {
           content: '""',
           position: "absolute",
@@ -37,7 +36,7 @@ const NavBar = () => {
           transition: 'inherit'
         },
         ":hover": {
-          opacity: 0.8,
+          opacity: 0.9,
           "&:before": {
             transform: "scale(1)",
           }
