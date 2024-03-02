@@ -1,3 +1,4 @@
+![image](https://github.com/DaoTai/EST-front-end/assets/88814089/f0c1f44c-2035-4e39-9070-efa83dfc74b7)
 # Video demo: https://tinyurl.com/3dbha6ux
 # Link: https://est-front-end-git-main-daotai.vercel.app/
 # Target
@@ -26,4 +27,5 @@ admin manage system informations like accounts, courses, ... by export files, ch
 1. Admin: manage accounts (block,authorize), courses, lessons, questions, CV, statistical charts, ...
 2. Teacher: manage quanlity their courses, lessons, questions, members, ...
 3. User: manage profile (information, password, CV), private courses (lessons, questions, comment), chat (message, video call), notifications from system, ...
-  
+
+
